@@ -47,7 +47,7 @@ class Login extends CI_Controller {
 				$data['msg'] = '<div class="alert alert-danger">'.validation_errors().'</div>';
 			} 
 		}
-		
+		 
 		$this->load->view('login', $data);
 	}	
 	
