@@ -15,7 +15,7 @@ class Membership extends MY_Controller {
 	}
 	
 	public function ajax_membership_transaction(){
-		
+			
 	}
 }
 
