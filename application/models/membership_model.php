@@ -8,7 +8,11 @@ class Membership_Model extends CI_Model {
 	
     function get(){
  
-                $aColumns = array('created_date', 'date_received', 'es_from', 'cust_name', 'email_address', 'serial_no', 'es_min', 'es_contact','brands', 'issues_cat', 'issues_cat_other', 'issues_details', 'ca_ticket_no', 'sent_fj', 'block_email_fj', 'root_cause', 'system_impacting', 'resolution', 'cr_no', 'cr_deploy_date', 'po_cust_impact', 'es_status', 'user_fullname', 'last_updateby_fullname' );
+                $aColumns = array('created_date', 'date_received', 'es_from', 'cust_name', 'email_address', 
+                			'serial_no', 'es_min', 'es_contact','brands', 'issues_cat', 
+                			'issues_cat_other', 'issues_details', 'ca_ticket_no', 'sent_fj', 'block_email_fj', 
+                			'root_cause', 'system_impacting', 'resolution', 'cr_no', 'cr_deploy_date', 
+                			'po_cust_impact', 'es_status', 'user_fullname', 'last_updateby_fullname' );
                 
 
                 /* Indexed column (used for fast and accurate table cardinality) */
