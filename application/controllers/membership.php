@@ -15,7 +15,9 @@ class Membership extends MY_Controller {
 	}
 	
 	public function ajax_membership_transaction(){
-			
+		
+		$this->load->model('Membership_Model', 'membership');	
+		$this->membership->get();
 	}
 }
 

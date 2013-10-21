@@ -36,7 +36,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Vanda Boxing Club</a>
+          <a class="navbar-brand" href="#">Project VBC</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -55,8 +55,12 @@
                 <li><a href="#">One more separated link</a></li>
               </ul>
             </li>
-			 <li><a href="logout">Logout</a></li>
+			 
           </ul>
+          
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="logout">Logout</a></li>
+		</ul>
           <!--<form class="navbar-form navbar-right">
             <div class="form-group">
               <input type="text" placeholder="Email" class="form-control">
