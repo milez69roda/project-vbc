@@ -12,10 +12,12 @@
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
 
+	<link rel="stylesheet" type="text/css" href="assets/css/DT_bootstrap.css">
+	
+	
     <!-- Custom styles for this template -->
     <link href="assets/css/custom.css" rel="stylesheet">
 	
-	<link rel="stylesheet" type="text/css" href="assets/css/DT_bootstrap.css">
 	
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

@@ -14,3 +14,12 @@ body {
   background-color: #f5f5f5;
   text-align: center;
 }
+
+
+tr.TRANSAC_TYPE_online_fp td{background-color:#f4e5a9 !important;}
+tr.TRANSAC_TYPE_online_mp  td{background-color:#f4e5a9  !important;}
+tr.TRANSAC_TYPE_offline_direct_fp  td{background-color:#a9e9f4  !important;}
+tr.TRANSAC_TYPE_offline_direct_mp  td{background-color:#a9e9f4  !important;}
+tr.TRANSAC_TYPE_offline_cash_fp  td{background-color:#a9e9f4  !important;}
+tr.TRANSAC_TYPE_offline_cash_mp  td{background-color:#a9e9f4  !important;}
+tr.TRANSAC_TYPE_expire_mem  td{background-color:#ccc  !important;}

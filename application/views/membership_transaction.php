@@ -15,11 +15,11 @@ $(document).ready( function () {
 				"sLengthMenu": "Show _MENU_ Rows",
 				"sSearch": "Search: "
 			},						
-			"iDisplayLength": 10,
+			"iDisplayLength": 25,
 			"aaSorting": [[ 1, 'desc' ]],
-			/*"aoColumnDefs":[
-				{ 'bSortable': false, 'aTargets': [ 0 ]}
-			],*/
+			"aoColumnDefs":[
+				{ 'bSortable': false, 'aTargets': [ 0, 9 ]}
+			],
 			"fnServerParams": function( aoData ){
 				/* aoData.push( { "name": "gidx", "value": x } ); 
 				aoData.push( { "name": "gidy", "value": y } );  */
