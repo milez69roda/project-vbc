@@ -10,6 +10,13 @@ class Membership_Model extends CI_Model {
  
 		$aColumns = array('tran_id','pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
 	 
+	 
+	 
+	 /* SELECT pay_mode, fname, lname, email, mem_package, CONCAT(title,' - S$',price,' per month'), temp_pay_amt 
+FROM `temp_member` 
+LEFT OUTER JOIN club_membership_type ON club_membership_type.mem_type_id =  temp_member.mem_package
+WHERE active_status = '0' 
+ORDER BY temp_id  desc */
 
 		/* Indexed column (used for fast and accurate table cardinality) */
 		$sIndexColumn = "club_transaction.tran_id";
