@@ -8,10 +8,8 @@ class Membership_Model extends CI_Model {
 	
     function get(){
  
-		$aColumns = array('tran_id','pay_ref', 'mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
-		
-		//ai_fname ai_lname
-		
+		$aColumns = array('tran_id','pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
+	 
 
 		/* Indexed column (used for fast and accurate table cardinality) */
 		$sIndexColumn = "club_transaction.tran_id";
@@ -57,26 +55,49 @@ class Membership_Model extends CI_Model {
 		 * word by word on any field. It's possible to do here, but concerned about efficiency
 		 * on very large tables, and MySQL's regex functionality is very limited
 		 */
-		$sWhere = "WHERE 1 ";
+		$sWhere = "WHERE ";
 		
 		//$sWhere .= " DATE_FORMAT(date_received,'%Y-%m-%d') BETWEEN '".$_GET['date_from']."' AND '".$_GET['date_to']."'";
 		
+		$sel_sort_view = trim($this->input->get('sel_sort_view'));
 		 
-		
-		
-				  
+		switch($sel_sort_view){
+			case 0:
+				$sWhere .= " (payment_mode = '0' and exp_stat = '0') ";
+				break;
+			case 1:
+				$sWhere .= " (payment_mode = '1'  and exp_stat = '0') ";
+				break;			
+			case 2:
+				$sWhere .= " (payment_mode = '2'  and exp_stat = '0') ";
+				break;			
+			case 3:
+				$sWhere .= " (exp_stat = '1') ";
+				break;			
+			case 5:
+				$sWhere .= " (pay_status ='3' AND exp_date !='0000-00-00' AND due_date !='0000-00-00' AND exp_stat ='0') ";
+				break;
+			default:
+				$sWhere .= " 1 ";
+				break;
+		}
 		
 		if ( $_GET['sSearch'] != "" ){
 				
 				$sWhere .= " AND (";        
 				
-				for ( $i=0 ; $i<count($aColumns) ; $i++ ){
-						$sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string( $_GET['sSearch'] )."%' OR ";
+				for ( $i=0 ; $i<count($aColumns) ; $i++ ){ 
 						
-						//if( $i == 0 )
-								//$this->db->like($_GET['sSearch'], 'match');
-						//else
-								//$this->db->or_like($_GET['sSearch'], 'match');
+						if( $aColumns[$i] == 'ai_fname'){
+							
+							$names = explode(' ',$_GET['sSearch']);
+							foreach($names as $name){
+								$sWhere .= "LOWER(ai_fname) LIKE '%".mysql_real_escape_string( $name )."%' OR ";
+								$sWhere .= "LOWER(ai_lname) LIKE '%".mysql_real_escape_string( $name )."%' OR ";
+							}
+						}else{
+							$sWhere .= "LOWER(".$aColumns[$i].") LIKE '%".mysql_real_escape_string( $_GET['sSearch'] )."%' OR ";
+						}
 				}
 				$sWhere = substr_replace( $sWhere, "", -3 );
 				$sWhere .= ')';
@@ -91,7 +112,7 @@ class Membership_Model extends CI_Model {
 						else {
 								$sWhere .= " AND";
 						}
-						$sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string($_GET['sSearch_'.$i])."%' ";
+						$sWhere .= "LOWER(".$aColumns[$i].") LIKE '%".mysql_real_escape_string($_GET['sSearch_'.$i])."%' ";
 				}
 		}
 		
@@ -163,7 +184,7 @@ class Membership_Model extends CI_Model {
 		
 			$rows = array();
 
-			$rows['DT_RowId'] = $row->tran_id;
+			$rows['DT_RowId'] = $this->common_model->enccrypData($row->tran_id);
 			   
 			if($row->pay_status ==3){
 
@@ -192,12 +213,15 @@ class Membership_Model extends CI_Model {
 				$rows[] = $row->ai_email; 
 				$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 				$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-				$rows[] = '<a href="#">Edit</a>';
+				$rows[] = '<a href="#">Details</a>|<a href="#">Form</a>|<a href="#">Delete</a>';
 
 				$output['aaData'][] = $rows;
 			}else{
+			
 				if( $row->payment_mode == 0 ){ 
-				
+					
+					$rows['DT_RowClass'] = '';
+					
 					$rows[] = $iDisplayStart++; 	 	
 					$rows[] = $row->pay_ref; 
 					$rows[] = $row->ai_fname.' '.$row->ai_lname; 
@@ -207,12 +231,17 @@ class Membership_Model extends CI_Model {
 					$rows[] = $row->ai_email; 
 					$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 					$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-					$rows[] = '<a href="#">Edit</a>';	
+					$rows[] = '<a href="#">Details</a>|<a href="#">Form</a>|<a href="#">Delete</a>';	
 					
+					$output['aaData'][] = $rows;
 				}
+				
+				
 			}
+			
+			
 		}
-			echo json_encode( $output );        
+		echo json_encode( $output );        
     
     }	 	
 }

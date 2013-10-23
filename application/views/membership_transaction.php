@@ -4,7 +4,7 @@ $(document).ready( function () {
 
 	 
 	
-	oTable = $('#transaction_list').dataTable({ 
+	var oTable = $('#transaction_list').dataTable({ 
 			"sDom": "<'row'<'pull-right'f><'pull-left'l>r<'clearfix'>>t<'row'<'pull-left'i><'pull-right'p><'clearfix'>>",
 			"sPaginationType": "bootstrap", 
 			"bProcessing": true,
@@ -21,10 +21,14 @@ $(document).ready( function () {
 				{ 'bSortable': false, 'aTargets': [ 0, 9 ]}
 			],
 			"fnServerParams": function( aoData ){
-				/* aoData.push( { "name": "gidx", "value": x } ); 
-				aoData.push( { "name": "gidy", "value": y } );  */
+				aoData.push( { "name": "sel_sort_view", "value": $("#sel_sort_view").val() } );   
 			}						
-		}); 	
+		}); 
+
+		$("#sel_sort_view").change(function(){
+			
+			oTable.fnDraw();
+		})	
 	
 });
 
@@ -32,7 +36,18 @@ $(document).ready( function () {
 
 
 	<div class="row">
-		 
+		<form name="ext_search_form" id="ext_search_form">
+			<select class="form-control" name="sel_sort_view" id="sel_sort_view">
+				<option value="-1">View All</option> 
+				<option value="0">by Card</option>
+				<option value="1">by DD</option>
+				<option value="2">by Cash</option>
+				<option value="3">by Expired</option>
+				<option value="4">by Temporary</option>
+				<option value="5">by Current Members</option>
+			</select>
+
+		</form>		
 		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list">
 			<thead>
 			<tr>
