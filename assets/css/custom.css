@@ -23,3 +23,11 @@ tr.TRANSAC_TYPE_offline_direct_mp  td{background-color:#a9e9f4  !important;}
 tr.TRANSAC_TYPE_offline_cash_fp  td{background-color:#a9e9f4  !important;}
 tr.TRANSAC_TYPE_offline_cash_mp  td{background-color:#a9e9f4  !important;}
 tr.TRANSAC_TYPE_expire_mem  td{background-color:#ccc  !important;}
+
+.td_fixed_width_300px{ width: 280px; }
+.custom_table_details td{ padding: 3px !important}
+
+.dataTables_wrapper .row{
+	margin-left: 0px;
+	margin-right: 0px;
+}

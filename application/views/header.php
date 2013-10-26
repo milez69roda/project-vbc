@@ -29,7 +29,10 @@
   </head>
 
   <body>
-
+	<?php 
+		$segment1 = $this->uri->segment(1);  
+		$segment2 = $this->uri->segment(2); 
+	?>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -38,13 +41,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project VBC</a>
+          <a class="navbar-brand" href="<?php echo base_url(); ?>">Project VBC</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="membership">Membership</a></li>
-             
+            <li class="<?php echo ($segment1 == '')?'active':''; ?>"><a href="<?php echo base_url(); ?>">Home</a></li>
+            <li class="<?php echo ($segment1 == 'membership' AND $segment2 == '')?'active':''; ?>"><a href="membership">Complete Membership List</a></li>
+            <li class="<?php echo ($segment1 == 'membership' AND $segment2 == 'temporary')?'active':''; ?>"><a href="membership/temporary">Temporary Member</a></li>
+            <li class="<?php echo ($segment1 == 'membership' AND $segment2 == 'company')?'active':''; ?>"><a href="membership/company">Company Member</a></li>
+            
+			<!--	
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -56,12 +62,12 @@
                 <li><a href="#">Separated link</a></li>
                 <li><a href="#">One more separated link</a></li>
               </ul>
-            </li>
+            </li>-->
 			 
           </ul>
           
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="logout">Logout</a></li>
+			<li><a href="logout"><?php echo $this->session->userdata('vbc_username');?> (Logout)</a></li>
 		</ul>
           <!--<form class="navbar-form navbar-right">
             <div class="form-group">
