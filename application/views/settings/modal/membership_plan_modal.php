@@ -21,7 +21,13 @@
 					<div class="col-lg-2">
 					  <input type="month" class="form-control" name="inputMonth" id="inputMonth" value="<?php echo @$row->month; ?>" placeholder="Month">
 					</div>
-				</div>
+				</div> 
+				<div class="form-group">
+					<label for="inputPrice" class="col-lg-3 control-label">Price/Month (S$)</label>
+					<div class="col-lg-4">
+						<input type="number" class="form-control" name="inputPrice" id="inputPrice" value="<?php echo @$row->price; ?>" placeholder="Price/Month">
+					</div>
+				</div> 				
 
 			</div>
 			<div class="modal-footer">
