@@ -35,7 +35,7 @@
 				</div>
 				<button type="button" class="btn btn-default" onclick="home.scan()">Search</button>
 			  </div>
-			</form> 
+			</form>  
 		</div>
  	</div>
 	<div class="row">
