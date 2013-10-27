@@ -31,7 +31,14 @@ class Common_Model extends CI_Model {
 		$sql = "SELECT * FROM `gear_country` WHERE `id` = '".$id."'"; 
 		$row = $this->db->query($sql)->row_array();  
 		return $row['countryname'];
-	}	
+	}
+
+	function getCompanyList(){	 
+		$sql = "SELECT * FROM  company WHERE active_status = '0'";
+		$result = $this->db->query($sql)->result();  
+		
+		return $result;		 
+	}
 	
 	//send email to the member
 	function tempMemActEmail($orderRef){

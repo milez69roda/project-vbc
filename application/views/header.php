@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <!--<link rel="shortcut icon" href="../../assets/ico/favicon.png"> -->
 	<base href="<?php echo base_url(); ?>" />
-    <title>Vandaboxing Admin</title>
+    <title>Project VBC Admin</title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
