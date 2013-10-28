@@ -12,8 +12,7 @@
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
 
-	<link rel="stylesheet" type="text/css" href="assets/css/DT_bootstrap.css">
-	
+	<link rel="stylesheet" type="text/css" href="assets/css/DT_bootstrap.css"> 
 	
     <!-- Custom styles for this template -->
     <link href="assets/css/custom.css" rel="stylesheet">
@@ -26,6 +25,8 @@
     <![endif]-->
 	
 	 <script src="assets/js/jquery-2.0.3.min.js"></script>
+	 
+	 <script> var oTable; </script>
   </head>
 
   <body>

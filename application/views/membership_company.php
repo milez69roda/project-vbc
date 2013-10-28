@@ -2,7 +2,7 @@
 
 $(document).ready( function () {
  
-	var oTable = $('#transaction_list').dataTable({ 
+	oTable = $('#transaction_list').dataTable({ 
 			"sDom": "<'row'<'pull-right'f><'pull-left'l>r<'clearfix'>>t<'row'<'pull-left'i><'pull-right'p><'clearfix'>>",
 			"sPaginationType": "bootstrap", 
 			"bProcessing": true,
@@ -27,6 +27,7 @@ $(document).ready( function () {
 			
 			oTable.fnDraw();
 		});	
+		 
 	
 });
 
