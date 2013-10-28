@@ -71,6 +71,18 @@ class Membership extends MY_Controller {
 		$this->load->view('footer');	
 	}
 	
+	public function company(){
+		$this->load->view('header'); 
+		$this->load->view('membership_company'); 
+		$this->load->view('footer');			
+	}
+	
+	public function ajax_membership_company(){
+		
+		$this->load->model('Membership_Model', 'membership');	
+		$this->membership->getCompany();
+	}	
+	
 	
 }
 

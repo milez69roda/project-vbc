@@ -8,9 +8,7 @@ class Settings extends MY_Controller {
 	 
 	public function index(){
 	
-		$this->load->view('header'); 
-		$this->load->view('membership_transaction'); 
-		$this->load->view('footer');	
+		redirect(base_url().'settings/membershipplan');	
 	
 	}
 	
