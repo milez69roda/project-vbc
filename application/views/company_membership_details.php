@@ -1,6 +1,6 @@
 <script type="text/javascript">
 	var processing = false;
-	var memberhipdetails = {
+	var companymemberhipdetails = {
 		
 		mailUser: function(refno, type ){
 			
@@ -8,11 +8,11 @@
 				processing = true;
 				$.ajax({
 					type: 'post',
-					url: 'membership/ajax_membership_mail',
+					url: 'membership/ajax_company_membership_mail',
 					data: {refno:refno, type:type},
 					success: function(xhr){
 						processing = false;
-						alert(xhr);		
+						alert(xhr);						
 					}
 				});
 			}else{
@@ -54,7 +54,7 @@
 			if(!processing) {
 				processing = true;
 				$.ajax({
-					url: 'membership/ajax_membership_update',
+					url: 'membership/ajax_company_membership_update',
 					type: 'post',
 					data: {ref:ref,tran_id:tran_id,pay_amt:pay_amt,active_date:active_date,due_date:due_date,exp_date:exp_date,full_payment:full_payment,payment_mode:payment_mode},
 					success: function(xhr){
@@ -74,7 +74,7 @@
 			var tran_id = document.getElementById('tran_id').value;		
 			if(!processing) {
 				processing = true;
-				$.post('membership/ajax_membership_expire',{ref:ref,tran_id:tran_id,stat:stat},function(xhr){
+				$.post('membership/ajax_company_membership_expire',{ref:ref,tran_id:tran_id,stat:stat},function(xhr){
 					processing = false;
 					alert(xhr);
 				});
@@ -84,7 +84,6 @@
 		} 
 	
 	};
-	
 		
 	function payMode(){	
 		if(document.getElementById('payment_mode2').checked==true){
@@ -98,7 +97,6 @@
 		}
 	};	
 	
-	
 	$(document).ready( function () {
 		 
 	});
@@ -106,14 +104,14 @@
 </script> 
 
 	<div class="row">
-		<h4><a href="membership">Complete Membership List</a> > Details</h4> <hr /> 
+		<h4><a href="membership/company">Company Membership List</a> > Details</h4> <hr /> 
 		<?php if( count($row) > 0): ?>
 		
 		<div class="pull-right">
-		<a href="javascript:void(0)" onclick="memberhipdetails.mailUser('<?php echo base64_encode($row->pay_ref);?>','admin')">E-Admin</a> | 
-		<a href="javascript:void(0)" onclick="memberhipdetails.mailUser('<?php echo base64_encode($row->pay_ref);?>','email')">E-Member</a> | 
-		<a href="javascript:void(0)" onclick="memberhipdetails.mailUser('<?php echo base64_encode($row->pay_ref);?>','vanda')">E-Vanda</a> | 
-		<a href="javascript:void(0)" onclick="memberhipdetails.mailUser('<?php echo base64_encode($row->pay_ref);?>','confirmation')">Activate</a>
+		<a href="javascript:void(0)" onclick="companymemberhipdetails.mailUser('<?php echo base64_encode($row->pay_ref);?>','admin')">E-Admin</a> | 
+		<a href="javascript:void(0)" onclick="companymemberhipdetails.mailUser('<?php echo base64_encode($row->pay_ref);?>','email')">E-Member</a> | 
+		<a href="javascript:void(0)" onclick="companymemberhipdetails.mailUser('<?php echo base64_encode($row->pay_ref);?>','vanda')">E-Vanda</a> | 
+		<a href="javascript:void(0)" onclick="companymemberhipdetails.mailUser('<?php echo base64_encode($row->pay_ref);?>','confirmation')">Activate</a>
 		</div>
 		
 		
@@ -203,9 +201,9 @@
 					<tr>
 						<td></td>
 						<td>
-							<button type="button" class="btn btn-primary" onclick="memberhipdetails.update()">Update</button>
-							<button type="button" class="btn btn-warning" onclick="memberhipdetails.expire(0)">Expire</button>
-							<button type="button" class="btn btn-success" onclick="memberhipdetails.expire(1)">Unexpire</button>
+							<button type="button" class="btn btn-primary" onclick="companymemberhipdetails.update()">Update</button>
+							<button type="button" class="btn btn-warning" onclick="companymemberhipdetails.expire(0)">Expire</button>
+							<button type="button" class="btn btn-success" onclick="companymemberhipdetails.expire(1)">Unexpire</button>
 						</td>
 					</tr>
 				</tbody>

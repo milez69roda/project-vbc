@@ -619,7 +619,7 @@ class Membership_Model extends CI_Model {
 				$rows[] = $row->ai_email; 
 				$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 				$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-				$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="#">Form</a>|<a href="#">Delete</a>';
+				$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="#">Form</a>|<a href="javascript:void(0)" onclick="companymembershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
 
 				$output['aaData'][] = $rows;
 			}else{
@@ -637,15 +637,14 @@ class Membership_Model extends CI_Model {
 					$rows[] = $row->ai_email; 
 					$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 					$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-					$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="#">Form</a>|<a href="#">Delete</a>';	
+					$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="#">Form</a>|<a href="javascript:void(0)" onclick="companymembershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';	
 					
 					$output['aaData'][] = $rows;
 				//} 
 			}  
 		}
 		echo json_encode( $output );       
-    }	
-		
+    }	 
 
 }
 

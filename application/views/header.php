@@ -47,9 +47,9 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="<?php echo ($segment1 == '')?'active':''; ?>"><a href="<?php echo base_url(); ?>">Home</a></li>
-            <li class="<?php echo ($segment1 == 'membership' AND $segment2 == '')?'active':''; ?>"><a href="membership">Complete Membership List</a></li>
+            <li class="<?php echo ($segment1 == 'membership' AND ($segment2 == '' OR $segment2 == 'details'))?'active':''; ?>"><a href="membership">Complete Membership List</a></li>
             <li class="<?php echo ($segment1 == 'membership' AND $segment2 == 'temporary')?'active':''; ?>"><a href="membership/temporary">Temporary Member</a></li>
-            <li class="<?php echo ($segment1 == 'membership' AND $segment2 == 'company')?'active':''; ?>"><a href="membership/company">Company Member</a></li>
+            <li class="<?php echo ($segment1 == 'membership' AND ($segment2 == 'company' OR $segment2 == 'companydetails'))?'active':''; ?>"><a href="membership/company">Company Member</a></li>
 
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>

@@ -1,5 +1,49 @@
 <script type="text/javascript">
 
+	var processing = false;
+	var companymembershiptransaction = {
+		
+		activate: function(ref){
+			
+			if( !processing ){
+				processing = true;
+				
+				$.post('membership/ajax_company_membership_transaction_sucess',{Ref:ref}, function(json){
+					processing = false;
+					if(json.status){ 
+						alert(json.msg);
+						window.location = json.url;
+					}else{
+						alert(json.msg);
+					}
+				}, 'json');
+			}else{
+				alert('Please wait, there is still transaction being process.');
+			}
+		},
+		
+		delete: function(delid){
+			if( !processing ){
+				processing = true;
+				
+				if( confirm('Do you want to delete?') ){
+					$.post('membership/ajax_company_membership_transaction_delete',{delid:delid}, function(json){
+						processing = false;
+						if(json.status){							
+							alert(json.msg);
+							window.location = json.url;
+						}else{
+							alert(json.msg);
+						}
+					}, 'json');
+				}
+			}else{
+				alert('Please wait, there is still transaction being process.');
+			}
+		}
+		
+	}
+
 $(document).ready( function () {
  
 	oTable = $('#transaction_list').dataTable({ 
@@ -7,7 +51,7 @@ $(document).ready( function () {
 			"sPaginationType": "bootstrap", 
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "membership/ajax_membership_company",
+			"sAjaxSource": "membership/ajax_company_membership",
 			"bPaginate": true,		 
 			"oLanguage": {
 				"sLengthMenu": "Show _MENU_ Rows",

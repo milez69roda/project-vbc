@@ -1,30 +1,43 @@
 <script type="text/javascript">
-
+	var processing = false;
 	var membershiptransaction = {
 		
 		activate: function(ref){
 			
-			$.post('membership/ajax_membership_sucess',{Ref:ref}, function(json){
-				if(json.status){
-					alert(json.msg);
-					window.location = json.url;
-				}else{
-					alert(json.msg);
-				}
-			}, 'json');
-		},
-		
-		delete: function(delid){
-			
-			if( confirm('Do you want to delete?') ){
-				$.post('membership/ajax_membership_transaction_delete',{delid:delid}, function(json){
-					if(json.status){
+			if( !processing ){
+				processing = true;
+				
+				$.post('membership/ajax_membership_transaction_sucess',{Ref:ref}, function(json){
+					processing = false;
+					if(json.status){ 
 						alert(json.msg);
 						window.location = json.url;
 					}else{
 						alert(json.msg);
 					}
 				}, 'json');
+			}else{
+				alert('Please wait, there is still transaction being process.');
+			}
+		},
+		
+		delete: function(delid){
+			if( !processing ){
+				processing = true;
+				
+				if( confirm('Do you want to delete?') ){
+					$.post('membership/ajax_membership_transaction_delete',{delid:delid}, function(json){
+						processing = false;
+						if(json.status){							
+							alert(json.msg);
+							window.location = json.url;
+						}else{
+							alert(json.msg);
+						}
+					}, 'json');
+				}
+			}else{
+				alert('Please wait, there is still transaction being process.');
 			}
 		}
 		

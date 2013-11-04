@@ -40,6 +40,17 @@ class Common_Model extends CI_Model {
 		return $result;		 
 	}
 	
+	function companyName($id){
+	 
+		$sql_com = "select * from company_club_membership_type where mem_type_id ='".$id."'";
+		$result_com = $this->db->query($sql_com);
+		$row_com = $result_com->row_array();
+		$sql = "SELECT * FROM company where company_id = '".$row_com['company_name']."'";
+		$result = $this->db->query($sql);
+		$row = $result->row_array();
+		return	$row['company_name'];
+	}	
+	
 	//send email to the member
 	function tempMemActEmail($orderRef){
 	   
@@ -475,6 +486,272 @@ class Common_Model extends CI_Model {
 			echo $message;
 		}
 	}
+	
+
+
+	function companyMembershipEmail($orderRef,$send){
+		 
+		$orderRef = base64_decode($orderRef);
+		$sql = "SELECT *  FROM `company_club_transaction`, `company_club_membership` where `company_club_transaction`.`pay_ref`='".$orderRef."' and `company_club_transaction`.pay_status='3' and `company_club_transaction`.`mem_id`=`company_club_membership`.`mem_id`";
+		 
+		$result = $this->db->query($sql);
+
+		$row = $result->row_array();	
+		#main information details
+	 
+		$Refno 				= $row["pay_ref"];
+		$pay_amount 		= $row["pay_amt"];
+		$member_type 		= $row["mem_name"];
+		$transction_date 	= $row["update_date"];
+		$exp_date 			= $row["exp_date"];
+		$due_date 			= $row["due_date"];
+		$name  				= $row["ai_fname"]." ".$row["ai_lname"];	 	
+		$email 				= $row["ai_email"];
+		$nric 				= @$row["ai_nric"];
+		$unit 				= $row["unit"];
+		$street1 			= $row["street1"];
+		$street2 			= $row["street2"];
+		$country 			= $row["country"];
+		$postalcode 		= $row["postalcode"];
+		$hp 				= $row["ai_hp"];
+		$full_payment 		= $row["full_payment"];
+		$payment_mode 		= $row["payment_mode"];
+		$mem_type 			= $row["mem_type"];
+		  
+		$sender="membership@vandaboxing.com";// sender email
+
+		#for monthly online payment
+		if($payment_mode==0 && $full_payment==0)
+		{
+			$subject = $this->companyName($mem_type)." Membership Payment - Monthly <".$Refno."> (SGD ".$pay_amount.") ";
+		}
+		#for full online payment
+		elseif($payment_mode==0 && $full_payment==1)
+		{
+			$subject = $this->companyName($mem_type)." Membership Payment - Full <".$Refno."> (SGD ".$pay_amount.") ";
+		}
+		#for full payment through bank
+		elseif($payment_mode==1 && $full_payment==0)
+		{
+			if($send=="confirmation" || $send=="conf_admin")
+			{
+				$subject = $this->companyName($mem_type)." Membership Confirmation - DD <".$Refno."> (SGD ".$pay_amount.") ";
+			}
+		}
+		#for FULL payment cash
+		elseif($payment_mode==2 && $full_payment==1)
+		{	
+			if($send=="confirmation" || $send=="conf_admin")
+			{
+				$subject = companyName($mem_type)." Membership Confirmation - Cash Full <".$Refno."> (SGD ".$pay_amount.") ";
+			}
+		}
+
+		$message_info = 'Thank you! Please print this email and bring it to your next visit to VBC@Finexis Building. We will verify your membership and organise your photograph to be taken for your membership card.';
+
+		// message
+		$message ='
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Vanda Boxing Club</title>
+		<script type="text/javascript" src="ajax_file.js"></script>
+		<style type="text/css">
+		<!--
+		body{font-family: Helvetica, Arial, sans-serif; font-size:12px; color: #000; width:620px;line-height:normal;}
+		a { color: #115cdd; cursor: pointer; text-decoration:none}
+		a:hover { color: #000; text-decoration:underline}
+		h2 {font-size:14px; color: #000; margin: 0 2px 10px 2px;border-bottom:1px dotted #999 }
+		#footer {font-size:11px;clear: both; height:30px; padding:15px 20px 20px 20px; margin: 0; color: #777;  }
+		#footer .blue  {color: #06c;}
+		#footer .right  { float: right; text-align: left;}
+		#footer a { text-decoration: none; color:#666}
+		#footer a:hover{ text-decoration: underline; color:#000}
+		.bluBdr{border:1px solid #1a1a1a;}
+		.blubg{background-color:#ffffff;}
+		#tablediv{font-size:12px;color: #545454;}
+		.red {color:#ff0000;}
+		.blue{color: #115cdd;}
+		.black {color: #000;}
+		-->
+		</style>
+		</head>
+		<body>
+		<div id="top" align="center">
+		';
+		$message .='
+		<table width="620" border="0" cellspacing="0" cellpadding="10" class="bluBdr" id="tablediv" align="center">
+		<tr><td width="60" align="left" valign="top"><img src="http://www.vandaboxing.com/vandastore/images/mail-logo.gif" width="60" height="61" /></td>
+		<td width="280" align="left" valign="middle">Vanda Boxing Club<br />Finexis Building<br />108 Robinson Road #01-01<br />Singapore 068900</td>
+		<td width="280" align="left" valign="middle">
+		<span class="red">T</span>&nbsp;&nbsp;&nbsp;+65 6305 2288<br />
+		<span class="red">F</span>&nbsp;&nbsp;&nbsp;+65 6305 2299<br />
+		<span class="red">E</span>&nbsp;&nbsp;&nbsp;membership@vandaboxing.com<br />
+		<span class="red">W</span>&nbsp;&nbsp;&nbsp;www.vandaboxing.com</td></tr>';
+		$message .='<tr><td colspan="3" align="left" valign="top">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="bluBdr blubg" >';
+		$message .='
+		<tr valign="top"><td colspan="3" style="padding:10px;">
+		<br />
+		Thank you for joining Vanda Boxing Club! Please print this email and bring it to your next visit to VBC@Finexis Building. We will verify your membership and organise your photograph to be taken for your membership card.
+		</td>
+		</tr>
+		<tr valign="top">
+		<td width="38%"><div align="right">Vanda Boxing Club </div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">Membership</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Reference Number </div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$Refno.'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Amount(price inclusive of 7% GST)</div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">S$'.$pay_amount.'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Membership</div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$member_type.'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Application Date</div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.date('d/m/Y',strtotime($transction_date)).'</div></td></tr>';
+
+		if($full_payment==0)
+		{
+			$message .='<tr valign="top"><td width="38%"><div align="right">Payment Mode</div></td>
+			<td width="4%"><div align="center">:</div></td>
+			<td width="58%"><div align="left">Monthly-CC'; 
+			$message .='</div></td></tr>';
+			$message .='<tr valign="top"><td width="38%"><div align="right">Due Date</div></td>
+			<td width="4%"><div align="center">:</div></td>
+			<td width="58%"><div align="left">';
+			
+			if($due_date=="0000-00-00" || $due_date==""){ 
+				$message .='0000-00-00';
+			}else{
+				$message .= date('d/m/Y',strtotime($due_date));
+			}
+			$message .= '</div></td></tr>';
+		}
+		else
+		{
+			$message .='<tr valign="top"><td width="38%"><div align="right">Payment Mode</div></td>
+			<td width="4%"><div align="center">:</div></td>
+			<td width="58%"><div align="left">Full';
+			if($payment_mode==0){
+				$message .=' - CC';
+			}else if($payment_mode==1){
+				$message .=' - Direct Debit';
+			}if($payment_mode==2){
+				$message .=' - Cash';
+			}
+			$message.='</div></td></tr>';
+		}
+
+		$message .='<tr valign="top"><td width="38%"><div align="right">Expiry Date</div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">';
+		
+		if($exp_date=="0000-00-00" || $exp_date==""){ 
+			$message .='0000-00-00';
+		}else{
+			$message .=date('d/m/Y',strtotime($exp_date));
+		}
+		
+		$message .='</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Name</div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$name.'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Company</div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$this->companyName($mem_type).'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">E-mail </div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$email.'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Address: Unit/Blk #</div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$unit.'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Street</div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$street1.'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Country </div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$this->memCountry($country).'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%"><div align="right">Postal Code </div></td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%"><div align="left">'.$postalcode.'</div></td></tr>';
+		$message .='<tr valign="top"><td width="38%" align="right">Phone</td>
+		<td width="4%"><div align="center">:</div></td>
+		<td width="58%" align="left">'.$hp.'</td></tr>';
+		$message .='<tr valign="top" colspan="3"><td >&nbsp;</td>
+		<td width="4%">&nbsp;</td>
+		<td width="58%">&nbsp;</td></tr></table>';
+
+		$message .='</div>
+		</div>
+		</body>
+		</html>';
+		
+		// To send HTML mail, the Content-type header must be set
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+		// Additional headers
+		$headers .= 'From: Vanda Boxing Club <membership@vandaboxing.com>' . "\r\n";
+		#this is for admin - sending by admin panel 
+		if($send=="admin")
+		{	
+			$email = "jeet@vandaboxing.com";
+			mail($email, $subject, $message, $headers);
+		}
+		#this is for vanda - sending by admin panel
+		if($send=="vanda")
+		{	
+			$email = "membership@vandaboxing.com";
+			mail($email, $subject, $message, $headers);
+		}
+		#this is for user - sending by admin panel
+		if($send=="email")
+		{	
+			$email = $email;
+			mail($email, $subject, $message, $headers);
+		}
+		#this mail is for online payment(Default mail)
+		if($send=="new")
+		{
+			$email = $email;
+			$vanda = "membership@vandaboxing.com";
+			mail($vanda, $subject, $message, $headers);
+			mail($email, $subject, $message, $headers);
+		}
+		#this is for Direct Debit and  Cash Payment
+		if($send=="ddcash")
+		{
+			$email = $email;
+			$vanda = "membership@vandaboxing.com";
+			mail($email, $subject, $message, $headers);
+			mail($vanda, $subject, $message, $headers);
+		}
+
+		#this is for confirmation
+		if($send=="confirmation")
+		{
+			$email = $email;
+			$vanda = "membership@vandaboxing.com";
+			mail($vanda, $subject, $message, $headers);
+			mail($email, $subject, $message, $headers);
+		}
+
+		if($send=="conf_admin")
+		{
+			$jeet = "jeet@vandaboxing.com";
+			mail($jeet, $subject, $message, $headers);
+		}
+
+		#only for display
+		if($send=="print")
+		{	
+			echo $message;
+		}
+	}	
 
 	
 }
