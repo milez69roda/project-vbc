@@ -1,5 +1,35 @@
 <script type="text/javascript">
 
+	var membershiptransaction = {
+		
+		activate: function(ref){
+			
+			$.post('membership/ajax_membership_sucess',{Ref:ref}, function(json){
+				if(json.status){
+					alert(json.msg);
+					window.location = json.url;
+				}else{
+					alert(json.msg);
+				}
+			}, 'json');
+		},
+		
+		delete: function(delid){
+			
+			if( confirm('Do you want to delete?') ){
+				$.post('membership/ajax_membership_transaction_delete',{delid:delid}, function(json){
+					if(json.status){
+						alert(json.msg);
+						window.location = json.url;
+					}else{
+						alert(json.msg);
+					}
+				}, 'json');
+			}
+		}
+		
+	}
+
 $(document).ready( function () {
  
 	oTable = $('#transaction_list').dataTable({ 

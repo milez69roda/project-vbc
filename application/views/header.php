@@ -50,7 +50,19 @@
             <li class="<?php echo ($segment1 == 'membership' AND $segment2 == '')?'active':''; ?>"><a href="membership">Complete Membership List</a></li>
             <li class="<?php echo ($segment1 == 'membership' AND $segment2 == 'temporary')?'active':''; ?>"><a href="membership/temporary">Temporary Member</a></li>
             <li class="<?php echo ($segment1 == 'membership' AND $segment2 == 'company')?'active':''; ?>"><a href="membership/company">Company Member</a></li>
-            
+
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li class="dropdown-header">Reports</li>
+					<li><a href="#">Report 1</a></li>
+					<li><a href="#">Report 2</a></li> 
+					<li class="divider"></li>
+					<!--<li class="dropdown-header">Nav header</li>
+					<li><a href="#">Separated link</a></li>
+					<li><a href="#">One more separated link</a></li> -->
+				</ul>
+            </li>            
 			
             <li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Settings <b class="caret"></b></a>
@@ -64,6 +76,8 @@
 					<li><a href="#">One more separated link</a></li> -->
 				</ul>
             </li>
+			
+			
 			 
           </ul>
           

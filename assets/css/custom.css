@@ -24,8 +24,8 @@ tr.TRANSAC_TYPE_offline_cash_fp  td{background-color:#a9e9f4  !important;}
 tr.TRANSAC_TYPE_offline_cash_mp  td{background-color:#a9e9f4  !important;}
 tr.TRANSAC_TYPE_expire_mem  td{background-color:#ccc  !important;}
 
-.td_fixed_width_300px{ width: 280px; }
-.custom_table_details td{ padding: 3px !important}
+.th_fixed_width_300px{ width: 300px; text-align: right; padding-right: 5px !important;}
+.custom_table_details tbody td, .custom_table_details tbody th{ padding: 3px !important}
 
 .dataTables_wrapper .row{
 	margin-left: 0px;
