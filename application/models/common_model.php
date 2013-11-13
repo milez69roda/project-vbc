@@ -6,6 +6,20 @@ class Common_Model extends CI_Model {
 		parent::__construct(); 
 	}  
 	
+	function randr($j = 6){
+		$string = "";
+		for($i=0;$i < $j;$i++){
+			srand((double)microtime()*1234567);
+			$x = mt_rand(0,2);
+			switch($x){
+				case 0:$string.= chr(mt_rand(97,122));break;
+				case 1:$string.= chr(mt_rand(65,90));break;
+				case 2:$string.= chr(mt_rand(48,57));break;
+			}
+		}
+		return strtoupper($string); //to uppercase
+	}	
+	
 	function urlUniqueId() {
 		$random_id_length = 10;
 		$rnd_id = crypt(uniqid(rand(),1));

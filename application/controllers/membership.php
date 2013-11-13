@@ -65,15 +65,25 @@ class Membership extends MY_Controller {
 		echo $msg;
 	} 
 	
+	public function ajax_membership_temporary_delete(){
+	
+		$json = array('status'=>false, 'url'=>'', 'msg'=>'Failed to Delete');	
+		
+		$sql= "delete  FROM `club_transaction` WHERE tran_id = '".$this->input->post("delid")."' limit 1"; 
+		if($this->db->query($sql) ){
+			$json['status'] = true;
+			$json['url'] 	= base_url().'membership/temporary';
+			$json['msg'] 	= 'Delete Successfully';
+		}		
+		
+		echo json_encode($json);		
+	
+	}	
+	
 	public function details(){
 		
 		$mem_id = $this->common_model->deccrypData(urldecode($this->uri->segment(3)));
-		
-		if( $_POST ){
-		
-			print_r($_POST);
-		
-		}
+ 
 		
 		$sql = "SELECT club_transaction.*, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1 
 				FROM club_transaction 
@@ -83,7 +93,7 @@ class Membership extends MY_Controller {
 					AND club_transaction.mem_id = $mem_id
 				LIMIT 1
 				";
-	 
+		//echo $sql;
 		$data['id'] = $this->uri->segment(3);
 		$data['row'] = $this->db->query($sql)->row();
 		
@@ -210,6 +220,8 @@ class Membership extends MY_Controller {
 		echo json_encode($json);		
 	
 	}
+	
+	
 	
 	
 	/*company transactions*/

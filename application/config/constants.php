@@ -37,5 +37,9 @@ define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 
+define('WEBSITE_HEADER',		'Project VBC Admin');
+define('WEBSITE_TITLE',		'Project VBC Admin');
+
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

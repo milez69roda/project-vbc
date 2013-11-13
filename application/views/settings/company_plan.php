@@ -4,7 +4,7 @@
 	
 		form: function(ref, formtype){
 			var content = '';
-			var title = (formtype=='update')?'Edit Company Plan':'New Company Plan'; 
+			var title = (formtype=='update')?'Edit Company Plan':'New Promo Code'; 
 			var tpl = $('<div class="modal fade"></div>').load('settings/ajax_companyplan_form/?_t='+(new Date).getTime(), {ref:ref, formtype:formtype, title:title});	
 							
 			$(tpl).modal().on('hidden.bs.modal', function () {

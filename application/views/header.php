@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <!--<link rel="shortcut icon" href="../../assets/ico/favicon.png"> -->
 	<base href="<?php echo base_url(); ?>" />
-    <title>Project VBC Admin</title>
+    <title><?php echo WEBSITE_TITLE; ?></title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -42,22 +42,49 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo base_url(); ?>">Project VBC</a>
+          <a class="navbar-brand" href="<?php echo base_url(); ?>"><?php echo WEBSITE_HEADER; ?></a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="<?php echo ($segment1 == '')?'active':''; ?>"><a href="<?php echo base_url(); ?>">Home</a></li>
-            <li class="<?php echo ($segment1 == 'membership' AND ($segment2 == '' OR $segment2 == 'details'))?'active':''; ?>"><a href="membership">Complete Membership List</a></li>
+			
+			
+			<li class="<?php echo ($segment1 == '')?'active':''; ?>"><a href="<?php echo base_url(); ?>">Home</a></li>
+            
+			<!--<li class="<?php echo ($segment1 == 'membership' AND ($segment2 == '' OR $segment2 == 'details'))?'active':''; ?>"><a href="membership">Complete Membership List</a></li>
             <li class="<?php echo ($segment1 == 'membership' AND $segment2 == 'temporary')?'active':''; ?>"><a href="membership/temporary">Temporary Member</a></li>
-            <li class="<?php echo ($segment1 == 'membership' AND ($segment2 == 'company' OR $segment2 == 'companydetails'))?'active':''; ?>"><a href="membership/company">Company Member</a></li>
+            <li class="<?php echo ($segment1 == 'membership' AND ($segment2 == 'company' OR $segment2 == 'companydetails'))?'active':''; ?>"><a href="membership/company">Company Member</a></li>-->
 
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Membership <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+	
+					<li class="<?php echo ($segment1 == 'membership' AND ($segment2 == '' OR $segment2 == 'details'))?'active':''; ?>"><a href="membership">Complete Membership List</a></li>
+					<li class="<?php echo ($segment1 == 'membership' AND $segment2 == 'temporary')?'active':''; ?>"><a href="membership/temporary">Temporary Member</a></li>
+					<li class="<?php echo ($segment1 == 'membership' AND ($segment2 == 'company' OR $segment2 == 'companydetails'))?'active':''; ?>"><a href="membership/company">Company Member</a></li>
+
+					<li class="divider"></li>
+					<!--<li class="dropdown-header">Nav header</li>
+					<li><a href="#">Separated link</a></li>
+					<li><a href="#">One more separated link</a></li> -->
+				</ul>
+            </li>  			
+			
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
 				<ul class="dropdown-menu">
-					<li class="dropdown-header">Reports</li>
-					<li><a href="#">Report 1</a></li>
-					<li><a href="#">Report 2</a></li> 
+					<li class="dropdown-header">Schedule Payments</li>
+					<li class="<?php echo ($segment1 == 'reports' AND $segment2 == 'schedulepayments' )?'active':''; ?>"><a href="reports/schedulepayments">Schedule Payments</a></li>
+					<li class="<?php echo ($segment1 == 'reports' AND $segment2 == 'uploadschedulepayments' )?'active':''; ?>"><a href="reports/uploadschedulepayments">Upload</a></li>
 					<li class="divider"></li>
+					<li><a href="#">Sign Ups</a></li> 
+					<li><a href="#">Terminated</a></li> 
+					<li><a href="#">Suspended</a></li> 
+					<li><a href="#">Current</a></li> 
+					<li><a href="#">CC</a></li> 
+					<li><a href="#">Cash</a></li>  
+					<li class="divider"></li>
+					<li><a href="#">Terms</a></li>  
+					<li><a href="#">Freebies</a></li>  
 					<!--<li class="dropdown-header">Nav header</li>
 					<li><a href="#">Separated link</a></li>
 					<li><a href="#">One more separated link</a></li> -->
@@ -68,15 +95,15 @@
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Settings <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li class="dropdown-header">Packages</li>
-					<li><a href="settings/membershipplan">Membership Plan</a></li>
-					<li><a href="settings/companyplan">Company Plan</a></li> 
+					<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'membershipplan' )?'active':''; ?>"><a href="settings/membershipplan">Membership Plan</a></li>
+					<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'companyplan' )?'active':''; ?>"><a href="settings/companyplan">Company Plan</a></li> 
 					<li class="divider"></li>
+					<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'promocodes' )?'active':''; ?>"><a href="settings/promocodes">Promo Codes</a></li>
 					<!--<li class="dropdown-header">Nav header</li>
 					<li><a href="#">Separated link</a></li>
 					<li><a href="#">One more separated link</a></li> -->
 				</ul>
             </li>
-			
 			
 			 
           </ul>

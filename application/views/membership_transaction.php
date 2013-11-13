@@ -5,27 +5,28 @@
 		activate: function(ref){
 			
 			if( !processing ){
-				processing = true;
-				
-				$.post('membership/ajax_membership_transaction_sucess',{Ref:ref}, function(json){
-					processing = false;
-					if(json.status){ 
-						alert(json.msg);
-						window.location = json.url;
-					}else{
-						alert(json.msg);
-					}
-				}, 'json');
+			
+				if( confirm('Do you want to Activate?') ){	
+					processing = true; 
+					$.post('membership/ajax_membership_transaction_sucess',{Ref:ref}, function(json){
+						processing = false;
+						if(json.status){ 
+							alert(json.msg);
+							window.location = json.url;
+						}else{
+							alert(json.msg);
+						}
+					}, 'json'); 
+				}
 			}else{
 				alert('Please wait, there is still transaction being process.');
 			}
 		},
 		
 		delete: function(delid){
-			if( !processing ){
-				processing = true;
-				
+			if( !processing ){ 
 				if( confirm('Do you want to delete?') ){
+					processing = true;
 					$.post('membership/ajax_membership_transaction_delete',{delid:delid}, function(json){
 						processing = false;
 						if(json.status){							

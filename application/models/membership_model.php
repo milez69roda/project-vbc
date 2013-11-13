@@ -209,12 +209,12 @@ class Membership_Model extends CI_Model {
 				$rows[] = $row->pay_ref; 
 				$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 				$rows[] = substr( $row->mem_name, 0,12); 
-				$rows[] = 'S$'.$row->pay_amt; 
+				$rows[] = 'SGD <strong>'.$row->pay_amt.'</strong>'; 
 				$rows[] = $row->ai_hp; 
 				$rows[] = $row->ai_email; 
 				$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 				$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-				$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="#">Form</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
+				$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
 
 				$output['aaData'][] = $rows;
 			}else{
@@ -227,12 +227,12 @@ class Membership_Model extends CI_Model {
 					$rows[] = $row->pay_ref; 
 					$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 					$rows[] = substr( $row->mem_name, 0,12); 
-					$rows[] = 'S$'.$row->pay_amt; 
+					$rows[] = 'SGD <strong>'.$row->pay_amt.'</strong>'; 
 					$rows[] = $row->ai_hp; 
 					$rows[] = $row->ai_email; 
 					$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 					$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-					$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="#">Form</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>|<a href="javascript:void(0)" onclick="membershiptransaction.activate(\''.$row->pay_ref.'\')">ACT</a>';	
+					$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>|<a href="javascript:void(0)" onclick="membershiptransaction.activate(\''.$row->pay_ref.'\')">ACT</a>';	
 					
 					$output['aaData'][] = $rows;
 				} 
@@ -395,7 +395,7 @@ class Membership_Model extends CI_Model {
 			//$rows['DT_RowClass'] ="TRANSAC_TYPE_expire_mem";
 			//$link_activate = base_url().'membership/ajax_membership_temporary_activate/'.$row->pay_ref;	 
 			$link_edit = base_url().'membership/tempEdit/'.urlencode($this->common_model->enccrypData($row->tran_id));	 
-			$link_delete = base_url().'membership/tempDelete/'.urlencode($this->common_model->enccrypData($row->tran_id));	 
+			//$link_delete = base_url().'membership/tempDelete/'.urlencode($this->common_model->enccrypData($row->tran_id));	 
 	   
 			$rows[] = $iDisplayStart++; 	 	
 			$rows[] = $row->payment_mode1; 
@@ -407,7 +407,7 @@ class Membership_Model extends CI_Model {
 			$rows[] = ($row->create_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->create_date));  
 			$rows[] = '<a onclick="temporary.activate(\''.$row->pay_ref.'\')" href="javascript:void(0)">Activate</a>|
 					<a href="'.$link_edit.'">Edit</a>|
-					<a href="'.$link_delete.'">Delete</a>';
+					<a href="javascript:void(0)" onclick="temporary.delete('.$row->tran_id.')">Delete</a>';
 
 			$output['aaData'][] = $rows; 
 	
@@ -619,7 +619,7 @@ class Membership_Model extends CI_Model {
 				$rows[] = $row->ai_email; 
 				$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 				$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-				$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="#">Form</a>|<a href="javascript:void(0)" onclick="companymembershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
+				$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="javascript:void(0)" onclick="companymembershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
 
 				$output['aaData'][] = $rows;
 			}else{
@@ -637,7 +637,7 @@ class Membership_Model extends CI_Model {
 					$rows[] = $row->ai_email; 
 					$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 					$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-					$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="#">Form</a>|<a href="javascript:void(0)" onclick="companymembershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';	
+					$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="javascript:void(0)" onclick="companymembershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';	
 					
 					$output['aaData'][] = $rows;
 				//} 

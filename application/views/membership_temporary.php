@@ -1,22 +1,49 @@
 <script type="text/javascript">
 	var oTable;
-
+	var processing = false;
+	
 	var temporary = {
 	
 		activate: function(ref){
-			if( confirm('Confirm activation!') ){
-				
-				$.ajax({
-					type:"post",
-					url: 'membership/ajax_membership_temporary_activate', 
-					data:{ref:ref},
-					success: function(jqhr){
-						alert(jqhr);
-						oTable.fnDraw();
-					}
-				}); 
+		
+			if( !processing ){ 
+				if( confirm('Confirm activation!') ){ 
+					processing = true;
+					$.ajax({
+						type:"post",
+						url: 'membership/ajax_membership_temporary_activate', 
+						data:{ref:ref},
+						success: function(jqhr){
+							processing = false;
+							alert(jqhr);
+							oTable.fnDraw();
+						}
+					}); 
+				}
+			}else{
+				alert('Please wait, there is still transaction being process.');
+			}	
+		},
+
+		delete: function(delid){
+			if( !processing ){ 
+				if( confirm('Do you want to delete?') ){
+					processing = true;
+					$.post('membership/ajax_membership_temporary_delete',{delid:delid}, function(json){
+						processing = false;
+						if(json.status){							
+							alert(json.msg);
+							window.location = json.url;
+						}else{
+							alert(json.msg);
+						}
+					}, 'json');
+				}
+			}else{
+				alert('Please wait, there is still transaction being process.');
 			}
-		} 
+		}		
+		
 	}
 
 

@@ -12,6 +12,12 @@ class Settings extends MY_Controller {
 	
 	}
 	
+	/**
+	*
+	* MEMBERSHIP PLAN
+	*
+	**/	
+	
 	public function membershipplan(){
 	
 		$data['results'] = $this->db->query("SELECT * FROM club_membership_type WHERE mem_flag !='2' ORDER BY mem_type_id DESC")->result();
@@ -79,6 +85,12 @@ class Settings extends MY_Controller {
 		} 
 		echo json_encode($json);
 	}		
+	
+	/**
+	*
+	* COMPANY PLAN
+	*
+	**/
 	
 	public function companyplan(){
 		$sql = "SELECT company_club_membership_type.*,company.company_name as co_name
@@ -181,7 +193,90 @@ class Settings extends MY_Controller {
 			$json['status'] = TRUE;
 		} 
 		echo json_encode($json);
-	} 			
+	} 	
+	
+	/**
+	*
+	* PROMO CODES
+	*
+	**/	
+
+	public function promocodes(){
+		$sql = "SELECT * FROM promo_codes ORDER BY date_created DESC";
+		
+		$data['results'] = $this->db->query($sql)->result();
+		
+		$this->load->view('header'); 
+		$this->load->view('settings/promo_codes', $data); 
+		$this->load->view('footer');	 
+	} 
+	
+	public function ajax_promocodes_form(){
+	
+		if(isset($_POST['type']) AND $this->input->post('type') == 'update'){
+		
+			
+		}elseif(isset($_POST['type']) AND $this->input->post('type') == 'new'){
+			
+			$json = array('status'=>FALSE,"msg"=>"Failed to add!", 'redirect'=>base_url().'settings/promocodes');
+			
+			$amount 	= $this->input->post('inputAmount');	
+			$promo_code = $this->input->post('inputAmount').$this->common_model->randr();
+			$operator 	= $this->input->post('operator'); 
+			
+			$set["promo_code"] 		= $promo_code;
+			$set["total_unit"] 		= $this->input->post('totalunit');
+			$set["avail_unit"] 		= $this->input->post('totalunit');
+			
+			
+			switch($operator){
+				case 'percent':
+					$promo_name = $amount.'% Discount';
+					break;
+				default:
+					break;
+			}
+			
+			$set["promo_name"] 		= $promo_name; 
+			$set["operator"] 		= $operator;
+			$set["promo_val"] 		= $amount;
+			$set["company_name"] 	= $this->input->post('inputCompany');
+			
+			if($this->db->insert('promo_codes', $set)){	
+				$json['msg'] = "Added Successfully!";	
+				$json['status'] = TRUE;
+			}
+			echo json_encode($json);	
+			
+		}else{
+			$data['type'] = $this->input->post('formtype');
+			$data['title'] = $this->input->post('title');
+		 
+			$this->load->view('settings/modal/promo_codes_modal', $data); 
+		}
+	}
+
+	public function ajax_delete_promocode(){
+		$json = array('status'=>FALSE,"msg"=>"Failed to delete!", 'redirect'=>base_url().'settings/promocodes');
+		$id 	= $this->input->post('id');
+		$code 	= $this->input->post('pcode');
+		
+		$row = $this->db->get_where('promo_codes',array('id'=>$id))->row();
+		
+		if( $row->total_unit == $row->avail_unit ){
+		
+			$this->db->where('id', $id);
+			if( $this->db->delete('promo_codes') ){
+				$json['msg'] = "Promo Code ".$code." Successfully Deleted! ";	
+				$json['status'] = TRUE;
+			} 
+		
+		}else{
+			$json['msg'] = "Promo Code ".$code." is already in used ";	
+		}
+		echo json_encode($json);
+	} 	
+	
 }
 
 /* End of file settings.php */

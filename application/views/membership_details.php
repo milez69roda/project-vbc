@@ -104,9 +104,9 @@
 	});
 
 </script> 
-
+	<h4><a href="membership">Complete Membership List</a> > Details</h4> <hr /> 
 	<div class="row">
-		<h4><a href="membership">Complete Membership List</a> > Details</h4> <hr /> 
+		
 		<?php if( count($row) > 0): ?>
 		
 		<div class="pull-right">

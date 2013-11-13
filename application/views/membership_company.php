@@ -23,10 +23,9 @@
 		},
 		
 		delete: function(delid){
-			if( !processing ){
-				processing = true;
-				
+			if( !processing ){ 
 				if( confirm('Do you want to delete?') ){
+					processing = true;
 					$.post('membership/ajax_company_membership_transaction_delete',{delid:delid}, function(json){
 						processing = false;
 						if(json.status){							
