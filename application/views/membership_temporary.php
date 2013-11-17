@@ -81,7 +81,8 @@
 
 
 	<div class="row">
-	 	<h4>Temporary</h4> <hr />
+	
+	 	<h4>Temporary Member</h4> <hr />
 		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list">
 			<thead>
 			<tr>
@@ -94,8 +95,7 @@
 			<td><strong>$</strong></td>
 			<td><strong>Signup</strong></td> 
 			<td><strong>ACTION</strong></td>
-			</tr>
-			
+			</tr> 
 		</table>	
-		 
+
 	</div> 

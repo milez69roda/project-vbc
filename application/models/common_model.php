@@ -46,6 +46,16 @@ class Common_Model extends CI_Model {
 		$row = $this->db->query($sql)->row_array();  
 		return $row['countryname'];
 	}
+	
+	function getCountryDropdown(){
+		$sql = "SELECT * FROM `gear_country` "; 
+		$result = $this->db->query($sql)->result();  
+		$countries = array();
+		foreach($result as $row){
+			$countries[$row->id] = $row->countryname;
+		}
+		return $countries;
+	}	
 
 	function getCompanyList(){	 
 		$sql = "SELECT * FROM  company WHERE active_status = '0'";
@@ -63,7 +73,16 @@ class Common_Model extends CI_Model {
 		$result = $this->db->query($sql);
 		$row = $result->row_array();
 		return	$row['company_name'];
-	}	
+	}
+
+	function getSchedulePayment_by_ref($ref){
+		
+		$this->db->select(" Tran_date, status ");
+		$this->db->where('Merchant_Ref', $ref);
+		
+		return $this->db->get('scheduled_payments')->result();
+	}
+	
 	
 	//send email to the member
 	function tempMemActEmail($orderRef){

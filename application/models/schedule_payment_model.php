@@ -155,7 +155,10 @@ class Schedule_payment_model extends CI_Model {
 			$rows[] = $row->Tran_Date; 
 			$rows[] = $row->Currency.' '.$row->Amount; 
 			$rows[] = $row->Payment_Ref; 
-			$rows[] = $row->status; 
+			if( $row->status == 'Accepted' ) $rows[] = '<span class="label label-success">'.$row->status.'</span>'; 
+			elseif( $row->status == 'Rejected' ) $rows[] = '<span class="label label-warning">'.$row->status.'</span>'; 
+			elseif( $row->status == 'Suspend' )	$rows[] = '<span class="label label-default">'.$row->status.'</span>'; 
+			else;
 			$rows[] = $row->date_created; 
  
 			$output['aaData'][] = $rows;

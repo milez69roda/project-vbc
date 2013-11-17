@@ -41,5 +41,10 @@ define('WEBSITE_HEADER',		'Project VBC Admin');
 define('WEBSITE_TITLE',		'Project VBC Admin');
 
 
+define('ROLLING_MONTLY',		'1'); 
+define('EXPIRED',				'2'); 
+define('SUSPENSION',			'3'); 
+define('TERMINATION',			'4'); 
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

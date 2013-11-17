@@ -21,6 +21,15 @@
 		<script src="assets/js/html5shiv.js"></script>
 		<script src="assets/js/respond.min.js"></script>
     <![endif]-->
+	
+	<script src="assets/js/jquery-2.0.3.min.js"></script>
+	 
+	<script>
+		$(document).ready(function(){
+			$("#InputUsername1").focus();	
+		});
+	</script>
+	
   </head>
 
   <body>
@@ -67,5 +76,6 @@
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
+   <script src="assets/js/bootstrap.min.js"></script>
    
   </html>

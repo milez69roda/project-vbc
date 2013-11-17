@@ -108,6 +108,28 @@ class Membership extends MY_Controller {
 		$this->load->view('footer');
 	}
 	
+	public function ajax_membership_details(){
+		$token = $this->input->post('token');
+		$mem_id = $this->common_model->deccrypData($token);
+		
+		$sql = "SELECT club_transaction.*, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, unit 
+				FROM club_transaction 
+				LEFT OUTER JOIN club_membership ON club_membership.mem_id = club_transaction.mem_id 
+			 
+				WHERE `club_transaction`.pay_status='3' 
+					AND club_transaction.mem_id = $mem_id
+				LIMIT 1
+				";		
+		$row = $this->db->query($sql)->row();
+		$data['row'] = $row;
+		 
+		$data['schedulepayements'] = @$this->common_model->getSchedulePayment_by_ref($row->pay_ref);
+		$data['countries'] = $this->common_model->getCountryDropdown();
+		$data['title'] = $this->input->post('title');
+		$data['token'] = $token;
+		$this->load->view('modal/membership_details', $data); 
+	}
+	
 	public function ajax_membership_mail(){
 		
 		$refno = $this->input->post('refno');
@@ -137,7 +159,7 @@ class Membership extends MY_Controller {
 		} 
 	}
 	
-	public function ajax_membership_update(){
+	/*public function ajax_membership_update(){
 		
 		if($this->input->post("active_date")=="")
 		{
@@ -173,6 +195,33 @@ class Membership extends MY_Controller {
 		}else{
 			echo "Failed to Update";
 		}		
+	}*/
+	
+	public function ajax_membership_update_details(){
+		
+		$response = array('status'=>false, 'msg'=>'Failed to update');
+		
+		$token = $this->input->post('token');
+		$mem_id = $this->common_model->deccrypData($token);
+		
+		$set['ai_fname'] 	= $this->input->post('firstname');
+		$set['ai_lname'] 	= $this->input->post('lastname');
+		$set['ai_email'] 	= $this->input->post('email');
+		$set['unit'] 		= $this->input->post('unit');
+		$set['street1'] 	= $this->input->post('street1');
+		$set['country'] 	= $this->input->post('country');
+		$set['postalcode'] 	= $this->input->post('postalcode');
+		$set['ai_hp'] 		= $this->input->post('phone');
+		
+		$this->db->where('mem_id', $mem_id);
+		if( $this->db->update('club_membership', $set) ){
+			$response['status'] = true;
+			$response['msg'] = 'Successfully Updated';
+			
+			$response['fullname'] = $this->input->post('firstname').' '.$this->input->post('lastname');
+		}
+		
+		echo json_encode($response);
 	}
 	
 	public function ajax_membership_expire(){

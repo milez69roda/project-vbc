@@ -2,6 +2,18 @@
 	var processing = false;
 	var membershiptransaction = {
 		
+		details: function(id){
+			
+			var title = 'Membership Details';
+			var tpl = $('<div class="modal fade"></div>').load('membership/ajax_membership_details/?_t='+(new Date).getTime(), {token:id, title:title});	
+							
+			$(tpl).modal({ backdrop: 'static', keyboard: true }).on('hidden.bs.modal', function () {
+					//if( redirect != '' ) window.location = redirect;
+					//tpl = null;
+					$('.modal').remove();
+			});			
+		}, 		
+		
 		activate: function(ref){
 			
 			if( !processing ){
@@ -40,8 +52,31 @@
 			}else{
 				alert('Please wait, there is still transaction being process.');
 			}
-		}
+		},
 		
+		updateInfo: function( form ){
+
+			if( !processing ){ 
+				data = $(form).serialize()	
+				processing = true;
+				$.post('membership/ajax_membership_update_details',data, function(json){
+					processing = false;
+					if(json.status){							
+						alert(json.msg);
+						//window.location = json.url; 
+						$('#label-top-fname').html(json.fullname);
+						oTable.fnDraw();
+					}else{
+						alert(json.msg);
+					}
+				}, 'json');
+				 
+			}else{
+				alert('Please wait, there is still transaction being process.');
+			}
+			
+			return false;
+		} 
 	}
 
 $(document).ready( function () {
@@ -69,14 +104,15 @@ $(document).ready( function () {
 
 	$("#sel_sort_view").change(function(){ 
 		oTable.fnDraw();
-	});	 
-	
+	});	  
 });
 
 </script>
 
 	<div class="row">
+		 
 		<h4>Complete Membership List</h4> <hr /> 
+		
 		<div class="col-lg-5"> 
 			<form class="form-horizontal" role="form">
 			 

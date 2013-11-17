@@ -3,15 +3,24 @@
 
 
 
-	<div id="footer">
-		<div class="container">
+	<!--<div id="footer">
+		<div class="container">-->
 			<!--<p class="credit">57 Mohamed Sultan Road, Block F, #01-05 Sultan Link, Singapore 238997</p>-->
 			<!--<p class="credit"> &copy 2013 | <a href="http://www.vandaboxing.com">Vanda Boxing Club</a></p>-->
- 			<p class="credit">Page Load in {elapsed_time}s</a></p>
+ 			<!--<p class="credit">Page Load in {elapsed_time}s</a></p>
  			<p class="credit"> &copy 2013 | <a href="<?php echo base_url(); ?>"><?php echo WEBSITE_TITLE ?></a></p>
 		 
 		</div>
-	</div>
+	</div>-->
+	
+    <div id="footer">
+      <div class="container"> 
+		<!--<p class="credit">Page Load in {elapsed_time}s</a></p>-->
+		<p class="credit"> &copy 2013 | <a href="<?php echo base_url(); ?>"><?php echo WEBSITE_TITLE ?></a></p>
+      </div>
+    </div>
+
+	
     </div> <!-- /container -->
 
 

@@ -185,8 +185,10 @@ class Membership_Model extends CI_Model {
 
 			$rows['DT_RowId'] = $this->common_model->enccrypData($row->tran_id);
 			
-			$link_details = base_url().'membership/details/'.urlencode($this->common_model->enccrypData($row->mem_id));	
-	 
+			//$link_details = base_url().'membership/details/'.urlencode($this->common_model->enccrypData($row->mem_id));	
+			$link_details = 'javascript:void(0)';	
+			$enc_mem_id = $this->common_model->enccrypData($row->mem_id);
+			
 			if($row->pay_status ==3){
 
 				if($row->payment_mode ==0 && $row->full_payment ==0  && $row->exp_stat ==0) {
@@ -214,7 +216,7 @@ class Membership_Model extends CI_Model {
 				$rows[] = $row->ai_email; 
 				$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 				$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-				$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
+				$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
 
 				$output['aaData'][] = $rows;
 			}else{
@@ -232,7 +234,7 @@ class Membership_Model extends CI_Model {
 					$rows[] = $row->ai_email; 
 					$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 					$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-					$rows[] = '<a href="'.$link_details.'">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>|<a href="javascript:void(0)" onclick="membershiptransaction.activate(\''.$row->pay_ref.'\')">ACT</a>';	
+					$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>|<a href="javascript:void(0)" onclick="membershiptransaction.activate(\''.$row->pay_ref.'\')">ACT</a>';	
 					
 					$output['aaData'][] = $rows;
 				} 
