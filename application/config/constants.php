@@ -41,10 +41,19 @@ define('WEBSITE_HEADER',		'Project VBC Admin');
 define('WEBSITE_TITLE',		'Project VBC Admin');
 
 
-define('ROLLING_MONTLY',		'1'); 
-define('EXPIRED',				'2'); 
-define('SUSPENSION',			'3'); 
-define('TERMINATION',			'4'); 
+define('TERM_CURRENT',			'0'); //Active
+define('TERM_EXPIRED',			'1'); //Expired
+define('TERM_SUSPENSION',		'2'); //Suspension
+define('TERM_TERMINATION',		'3'); //Termination
+define('TERM_ROLLING_MONTLY',	'4'); //Rolling Monthly
+define('TERM_EXTEND_6',			'5'); //Extend 6 months
+define('TERM_EXTEND_12',		'6'); //Extend 12 months
+
+define('PAY_STATUS_0', 0); //no payment yet
+define('PAY_STATUS_1', 1);
+define('PAY_STATUS_2', 2);
+define('PAY_STATUS_3', 3); //payment accepted
+
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

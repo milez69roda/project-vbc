@@ -73,7 +73,13 @@ class Membership_Model extends CI_Model {
 				$sWhere .= " (payment_mode = '2'  and exp_stat = '0') ";
 				break;			
 			case 3:
-				$sWhere .= " (exp_stat = '1') ";
+				$sWhere .= " (term_type = ".TERM_EXPIRED.") ";
+				break;					
+			case 4:
+				$sWhere .= " (term_type = ".TERM_SUSPENSION.") ";
+				break;					
+			case 6:
+				$sWhere .= " (term_type = ".TERM_TERMINATION.") ";
 				break;			
 			case 5:
 				$sWhere .= " (pay_status ='3' AND exp_date !='0000-00-00' AND due_date !='0000-00-00' AND exp_stat ='0') ";
@@ -137,7 +143,8 @@ class Membership_Model extends CI_Model {
 					payment_mode,
 					full_payment,
 					exp_stat,
-					pay_status	
+					pay_status,
+					term_type					
 				FROM $sTable
 				$sJoin
 				$sWhere
@@ -190,21 +197,34 @@ class Membership_Model extends CI_Model {
 			$enc_mem_id = $this->common_model->enccrypData($row->mem_id);
 			
 			if($row->pay_status ==3){
-
-				if($row->payment_mode ==0 && $row->full_payment ==0  && $row->exp_stat ==0) {
-					$rows['DT_RowClass'] = "TRANSAC_TYPE_online_mp";
-				}elseif($row->payment_mode ==0 && $row->full_payment ==1 && $row->exp_stat ==0) {
-					$rows['DT_RowClass'] = "TRANSAC_TYPE_online_fp";
-				}elseif($row->payment_mode ==1 && $row->full_payment ==0 && $row->exp_stat ==0) {
-					$rows['DT_RowClass'] = "TRANSAC_TYPE_offline_direct_mp";
-				}elseif($row->payment_mode ==1 && $row->full_payment ==1 && $row->exp_stat ==0) {
-					$rows['DT_RowClass'] = "TRANSAC_TYPE_offline_direct_fp";
-				}elseif($row->payment_mode ==2 && $row->full_payment ==0 && $row->exp_stat ==0) {
-					$rows['DT_RowClass'] = "TRANSAC_TYPE_offline_cash_mp"; 
-				}elseif($row->payment_mode ==2 && $row->full_payment ==1 && $row->exp_stat ==0) {
-					$rows['DT_RowClass'] ="TRANSAC_TYPE_offline_cash_fp";
-				}elseif($row->exp_stat ==1) {
-					$rows['DT_RowClass'] ="TRANSAC_TYPE_expire_mem";
+				
+				if( $row->term_type == TERM_EXPIRED OR $row->term_type == TERM_SUSPENSION OR $row->term_type == TERM_TERMINATION ){
+					
+					if( $row->term_type == TERM_EXPIRED ){
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_expire";
+					}elseif( $row->term_type == TERM_SUSPENSION) {
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_online_suspended";
+					}elseif( $row->term_type == TERM_TERMINATION) {
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_online_terminated";
+					}else{}	
+					
+				}else{
+				
+					if($row->payment_mode ==0 && $row->full_payment ==0 ) {
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_online_mp";
+					}elseif($row->payment_mode ==0 && $row->full_payment ==1) {
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_online_fp";
+					}elseif($row->payment_mode ==1 && $row->full_payment ==0) {
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_offline_direct_mp";
+					}elseif($row->payment_mode ==1 && $row->full_payment ==1) {
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_offline_direct_fp";
+					}elseif($row->payment_mode ==2 && $row->full_payment ==0) {
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_offline_cash_mp"; 
+					}elseif($row->payment_mode ==2 && $row->full_payment ==1) {
+						$rows['DT_RowClass'] ="TRANSAC_TYPE_offline_cash_fp";
+					}/* elseif($row->exp_stat == 1) {
+						$rows['DT_RowClass'] ="TRANSAC_TYPE_expire_mem";
+					} */
 				}
 			 
 				$rows[] = $iDisplayStart++; 	 	

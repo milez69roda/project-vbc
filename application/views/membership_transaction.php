@@ -54,7 +54,7 @@
 			}
 		},
 		
-		updateInfo: function( form ){
+		updateInfo: function(form){
 
 			if( !processing ){ 
 				data = $(form).serialize()	
@@ -76,7 +76,29 @@
 			}
 			
 			return false;
-		} 
+		},
+
+		savefreebies: function(form){
+
+			if( !processing ){ 
+				processing = true;
+				data = $(form).serialize();
+				$.post('membership/ajax_membership_freebies_save',data, function(json){
+					processing = false;
+					if(json.status){							
+						alert(json.msg);  
+						oTable.fnDraw();
+					}else{
+						alert(json.msg);
+					}
+				}, 'json'); 	
+			
+			}else{
+				alert('Please wait, there is still transaction being process.');
+			}
+	
+			return false;
+		}
 	}
 
 $(document).ready( function () {
@@ -125,10 +147,11 @@ $(document).ready( function () {
 						<option value="1">by DD</option>
 						<option value="2">by Cash</option>
 						<option value="3">by Expired</option> 
+						<option value="4">by Suspension</option> 
+						<option value="6">by Termination</option> 
 						<option value="5">by Current Members</option>
 					</select>
-				</div>
-				 
+				</div> 
 			  </div>
 			</form>  
 		</div>

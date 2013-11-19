@@ -112,14 +112,17 @@ class Membership extends MY_Controller {
 		$token = $this->input->post('token');
 		$mem_id = $this->common_model->deccrypData($token);
 		
-		$sql = "SELECT club_transaction.*, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, unit 
+		$sql = "SELECT club_transaction.*, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, unit, 
+					emg_unit, emg_street1, emg_street2, emg_country, emg_postalcode,
+					mh_curr_condi, mh_medicine
 				FROM club_transaction 
 				LEFT OUTER JOIN club_membership ON club_membership.mem_id = club_transaction.mem_id 
 			 
-				WHERE `club_transaction`.pay_status='3' 
-					AND club_transaction.mem_id = $mem_id
+				WHERE  club_transaction.mem_id = $mem_id
 				LIMIT 1
 				";		
+				//`club_transaction`.pay_status='3' 
+				//	AND
 		$row = $this->db->query($sql)->row();
 		$data['row'] = $row;
 		 
@@ -213,6 +216,15 @@ class Membership extends MY_Controller {
 		$set['postalcode'] 	= $this->input->post('postalcode');
 		$set['ai_hp'] 		= $this->input->post('phone');
 		
+		$set['emg_unit'] 		= $this->input->post('emg_unit');
+		$set['emg_street1'] 		= $this->input->post('emg_street1');
+		$set['emg_street2'] 		= $this->input->post('emg_street2');
+		$set['emg_country'] 		= $this->input->post('emg_country');
+		$set['emg_postalcode'] 		= $this->input->post('emg_postalcode');
+		
+		$set['mh_curr_condi'] 		= $this->input->post('mh_curr_condi');
+		$set['mh_medicine'] 		= $this->input->post('mh_medicine');
+		
 		$this->db->where('mem_id', $mem_id);
 		if( $this->db->update('club_membership', $set) ){
 			$response['status'] = true;
@@ -224,7 +236,7 @@ class Membership extends MY_Controller {
 		echo json_encode($response);
 	}
 	
-	public function ajax_membership_expire(){
+	/*public function ajax_membership_expire(){
 		
 		 	 
 		$exp_stat = $this->input->post('stat');
@@ -238,7 +250,7 @@ class Membership extends MY_Controller {
 			echo "Failed to Process Request";
 		}
 	
-	}
+	}*/
 	 
 	public function ajax_membership_transaction_sucess(){
 		
@@ -270,8 +282,10 @@ class Membership extends MY_Controller {
 	
 	}
 	
-	
-	
+	public function ajax_membership_freebies_save(){
+		
+		
+	}
 	
 	/*company transactions*/
 	public function company(){
@@ -432,6 +446,19 @@ class Membership extends MY_Controller {
 		echo json_encode($json);		
 	
 	}	
+	
+	public function runtest(){
+		
+		$sql = "SELECT exp_stat, term_type FROM club_transaction WHERE exp_stat = '1'";
+		$result = $this->db->query($sql)->result();
+		
+		foreach( $result as $row){
+			
+			$temp = $this->db->update_string('club_transaction', array('term_type'=>$row->exp_stat), ' exp_stat=1');
+			echo $temp.'<br/>';
+		}		
+		
+	}
 	
 }
 
