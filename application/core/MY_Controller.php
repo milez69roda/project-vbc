@@ -5,6 +5,8 @@ class MY_Controller extends CI_Controller {
 	public $logged_in;
 	public $user_name;
 	protected $user_id;
+	public $terms_desc;
+	public $terms_active;
 	
 	function __construct(){
 		parent::__construct();
@@ -15,7 +17,20 @@ class MY_Controller extends CI_Controller {
 		
 		$this->logged_in 	= $this->session->userdata('logged_in'); 
 		$this->user_id 		= $this->session->userdata('vbc_userid'); 
-		$this->user_name 	= $this->session->userdata('vbc_username'); 
+		$this->user_name 	= $this->session->userdata('vbc_username');
+		
+		$this->terms_desc = array(
+			TERM_ACTIVE 		=> 'Activated/Reactivated',
+			TERM_EXPIRED 		=> 'Expired',
+			TERM_SUSPENSION 	=> 'Suspension',
+			TERM_TERMINATION 	=> 'Termination',
+			TERM_ROLLING_MONTLY => 'Rolling Montly',
+			TERM_DELETED 		=> 'Deleted',
+			TERM_EXTEND_6 		=> 'Extend 6 Months',
+			TERM_EXTEND_12 		=> 'Extend 12 Months', 
+		);		
+
+		$this->terms_active = array(TERM_ACTIVE, TERM_ROLLING_MONTLY, TERM_EXTEND_6, TERM_EXTEND_12 ); //collection of active term indicator		
 	}  
 }
 

@@ -80,7 +80,7 @@ class Membership extends MY_Controller {
 	
 	}	
 	
-	public function details(){
+	/* public function details(){
 		
 		$mem_id = $this->common_model->deccrypData(urldecode($this->uri->segment(3)));
  
@@ -106,13 +106,19 @@ class Membership extends MY_Controller {
 		$this->load->view('header'); 
 		$this->load->view('membership_details', $data); 
 		$this->load->view('footer');
-	}
+	} */
 	
 	public function ajax_membership_details(){
-		$token = $this->input->post('token');
-		$mem_id = $this->common_model->deccrypData($token);
 		
-		$sql = "SELECT club_transaction.*, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, unit, 
+		$this->load->model('Terms_model', 'terms_model');
+		$this->load->model('Freebies_model', 'freebies_model');
+		$this->load->model('Schedule_payment_model', 'schedule_payment_model');
+		
+		$token = $this->input->post('token');
+		//$mem_id = $this->common_model->deccrypData($token);
+		$mem_id = $token;
+		
+		$sql = "SELECT club_transaction.*, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, street2, unit, 
 					emg_unit, emg_street1, emg_street2, emg_country, emg_postalcode,
 					mh_curr_condi, mh_medicine
 				FROM club_transaction 
@@ -123,13 +129,76 @@ class Membership extends MY_Controller {
 				";		
 				//`club_transaction`.pay_status='3' 
 				//	AND
-		$row = $this->db->query($sql)->row();
-		$data['row'] = $row;
-		 
-		$data['schedulepayements'] = @$this->common_model->getSchedulePayment_by_ref($row->pay_ref);
-		$data['countries'] = $this->common_model->getCountryDropdown();
-		$data['title'] = $this->input->post('title');
-		$data['token'] = $token;
+				
+		$row 								= $this->db->query($sql)->row();
+		$data['row'] 						= $row;
+		
+		//$data['alerts']
+		
+		//check if payment is done on cc
+		/* $data['alerts'][] = array(
+								$row->pay_status =>PAY_STATUS_3,
+								$row->payment_mode =>PAYMENT_MODE_CC,
+								$row->full_payment =>PAYMENT_CC_MONTLY,
+								'term_type' =>$row->term_type
+							);
+		 */
+		
+		if( $row->pay_status == PAY_STATUS_3 AND $row->payment_mode == PAYMENT_MODE_CC AND $row->full_payment == PAYMENT_CC_MONTLY AND in_array($row->term_type, $this->terms_active) ){
+			
+			//check for date expirate and alert
+			$exp_date = strtotime($row->exp_date);
+			$now = strtotime(date('Y-m-d'));
+
+			$timeDiff = $exp_date-$now; 
+			$numberDays = $timeDiff/86400;  // 86400 seconds in one day 
+			
+			$numberDays = intval($numberDays);	// and you might want to convert to integer		
+			
+			if( $numberDays < 36 ){
+				
+				if( $numberDays < 0 ){
+					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Expired date was already past more than a month(s)</div>'; 
+				}else{
+					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">'.$numberDays.' days before membership expired</div>'; 
+				}
+			}
+			
+			//check for payments status
+			$signup_day 			= explode('-',$row->active_date);
+			$schedule_payment_date 	= date('Y').'-'.date('m').'-'.$signup_day[2];
+
+			if( strtotime($schedule_payment_date) >= strtotime(date('Y-m-d')) ){
+				
+				$check_payment = $this->schedule_payment_model->get(" Merchant_Ref = '{$row->pay_ref}' AND Tran_Date BETWEEN '".date('Y-m-d',strtotime('first day of last month'))."' AND '".date('Y-m-d',strtotime('last day of last month'))."' ", 1);
+				$check_payment = @$check_payment[0];	
+				if( count($check_payment) == 0 ){
+					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">No Payment has been made on '.date('d/m/Y',strtotime($schedule_payment_date)).'</div>';
+				}else{
+					if($check_payment->status != 'Accepted'){
+						$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Payment for this month was '.$check_payment->status.'</div>';
+					}
+				}
+			}else{
+				$check_payment = $this->schedule_payment_model->get(array('Merchant_Ref' => $row->pay_ref), 1); 
+				$check_payment = @$check_payment[0];	 
+				if( count($check_payment) > 0 ){ 
+					if( $check_payment->status != 'Accepted' ){
+						$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Last payment of '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment->status.'</div>';
+					}
+				}
+
+			}
+		}	
+		  
+		$data['membership_type_month'] 		= @$this->common_model->getMembershipType($row->mem_type)->month; 
+		$data['schedulepayements_results'] 	= @$this->common_model->getSchedulePayment_by_ref($row->pay_ref);
+		$data['terms_results'] 				= $this->terms_model->get(array('tran_id'=>$row->tran_id));
+		$data['freebies_results'] 			= $this->freebies_model->get(array('tran_id'=>$row->tran_id));
+		$data['countries'] 					= $this->common_model->getCountryDropdown();
+		$data['title'] 						= $this->input->post('title');
+		$data['token'] 						= $token;
+		
 		$this->load->view('modal/membership_details', $data); 
 	}
 	
@@ -205,7 +274,8 @@ class Membership extends MY_Controller {
 		$response = array('status'=>false, 'msg'=>'Failed to update');
 		
 		$token = $this->input->post('token');
-		$mem_id = $this->common_model->deccrypData($token);
+		//$mem_id = $this->common_model->deccrypData($token);
+		$mem_id = $token;
 		
 		$set['ai_fname'] 	= $this->input->post('firstname');
 		$set['ai_lname'] 	= $this->input->post('lastname');
@@ -217,13 +287,13 @@ class Membership extends MY_Controller {
 		$set['ai_hp'] 		= $this->input->post('phone');
 		
 		$set['emg_unit'] 		= $this->input->post('emg_unit');
-		$set['emg_street1'] 		= $this->input->post('emg_street1');
-		$set['emg_street2'] 		= $this->input->post('emg_street2');
-		$set['emg_country'] 		= $this->input->post('emg_country');
-		$set['emg_postalcode'] 		= $this->input->post('emg_postalcode');
+		$set['emg_street1'] 	= $this->input->post('emg_street1');
+		$set['emg_street2'] 	= $this->input->post('emg_street2');
+		$set['emg_country'] 	= $this->input->post('emg_country');
+		$set['emg_postalcode'] 	= $this->input->post('emg_postalcode');
 		
-		$set['mh_curr_condi'] 		= $this->input->post('mh_curr_condi');
-		$set['mh_medicine'] 		= $this->input->post('mh_medicine');
+		$set['mh_curr_condi'] 	= $this->input->post('mh_curr_condi');
+		$set['mh_medicine'] 	= $this->input->post('mh_medicine');
 		
 		$this->db->where('mem_id', $mem_id);
 		if( $this->db->update('club_membership', $set) ){
@@ -267,7 +337,7 @@ class Membership extends MY_Controller {
 		echo json_encode($json);
 	}
 	
-	public function ajax_membership_transaction_delete(){
+	/* public function ajax_membership_transaction_delete(){
 	
 		$json = array('status'=>false, 'url'=>'', 'msg'=>'Failed to Delete');	
 		
@@ -280,11 +350,109 @@ class Membership extends MY_Controller {
 		
 		echo json_encode($json);		
 	
+	} */
+	
+	public function ajax_membership_terms_save(){
+		
+		$this->load->model('Terms_model', 'terms_model');
+		
+		$json = array('status'=>false, 'url'=>'', 'msg'=>'Submit Failed');
+		
+		$mem_id = $this->input->post('token');
+		$tran_id = $this->input->post('token1');
+		$term = $this->input->post('terms');
+		$reason = $this->input->post('reason');
+		$expire_date = $this->input->post('expire_date');
+		
+		$set1 = array();
+		$set2 = array();
+		
+		$set1['term_type']		= $term; 
+		$set1['update_date']	= date('Y-m-d H:i:s');  
+		$set1['term_updated']	= date('Y-m-d H:i:s');
+		
+
+		if( $term == TERM_ACTIVE ){ //activate or reactivate
+			$set1['pay_status']		= '3';
+			$set1['deleted']		= 0; 
+			
+			$json['term']			= $term;
+			$json['url']			= '';
+		}
+		
+		if( $term == TERM_EXTEND_6 ){ //Extend 6 months
+			
+			$xp_date = ($expire_date == '0000-00-00') ? date('Y-m-d', strtotime('NOW +6 month ')): date('Y-m-d', strtotime($this->input->post('expire_date').' +6 month '));
+			
+			$set1['exp_date']		= $xp_date;
+			$set1['pay_status']		= '3';
+			$set1['deleted']		= 0; 
+			
+			$json['term']			= $term;
+			$json['url']			= '';
+		}
+		
+		if( $term == TERM_EXTEND_12 ){ //Extend 12 months
+			
+			$xp_date = ($expire_date == '0000-00-00') ? date('Y-m-d', strtotime('NOW +12 month ')): date('Y-m-d', strtotime($this->input->post('expire_date').' +12 month '));
+			
+			$set1['exp_date']		= $xp_date;
+			$set1['pay_status']		= '3';
+			$set1['deleted']		= 0; 
+			
+			$json['term']			= $term;
+			$json['url']			= '';
+		}
+
+		if( $term == TERM_DELETED ){
+			$set1['deleted']		= 1; 
+			$set1['deleted_reason']	= $reason; 
+			$set1['deleted_user']	= $this->user_name; 
+		}		
+		
+		$set2['mem_id'] 		= $mem_id;
+		$set2['tran_id'] 		= $tran_id;
+		$set2['term_type'] 		= $term;
+		$set2['term_reason'] 	= $reason;
+		$set2['term_status'] 	= 1;
+		$set2['added_by'] 		= $this->user_name;
+		 
+		$this->db->where('tran_id', $tran_id);
+		if( $this->db->update('club_transaction', $set1) ){
+			$json['status'] = true;
+			$json['msg'] = 'Update Successfully.'; 
+			$json['msg'] .= ' Page will be refresh';
+			
+			
+			$this->terms_model->add($set2);
+		}
+		
+		echo json_encode($json);
 	}
 	
 	public function ajax_membership_freebies_save(){
 		
+		$this->load->model('Freebies_model', 'freebies_model');
 		
+		$json = array('status'=>false, 'url'=>'', 'msg'=>'Submit Failed');
+		
+		$mem_id 		= $this->input->post('token');
+		$tran_id 		= $this->input->post('token1'); 
+		$freebiesdesc 		= $this->input->post('freebiesdesc');		
+		
+		$set['mem_id'] 		= $mem_id;
+		$set['tran_id'] 	= $tran_id;
+		$set['f_desc'] 		= $freebiesdesc; 
+		$set['added_by'] 	= $this->user_name;
+		
+		if( $this->freebies_model->add($set) ){
+			$json['status'] = true;
+			$json['msg'] = 'Update Successfully.'; 
+		}
+		$set['date'] = date('Y-m-d H:i:s');
+		$json['data'] = $set;
+		
+		echo json_encode($json);
 	}
 	
 	/*company transactions*/
@@ -317,8 +485,7 @@ class Membership extends MY_Controller {
 			 
 				WHERE `company_club_transaction`.pay_status='3' 
 					AND company_club_transaction.mem_id = $mem_id
-				LIMIT 1
-				";
+				LIMIT 1 ";
 	 
 		$data['id'] = $this->uri->segment(3);
 		$data['row'] = $this->db->query($sql)->row();
@@ -336,7 +503,6 @@ class Membership extends MY_Controller {
 	
 	public function ajax_company_membership_expire(){
 		
-		 	 
 		$exp_stat = $this->input->post('stat');
 		$tran_id = $this->input->post('tran_id');
 		
@@ -449,14 +615,16 @@ class Membership extends MY_Controller {
 	
 	public function runtest(){
 		
-		$sql = "SELECT exp_stat, term_type FROM club_transaction WHERE exp_stat = '1'";
+		/* $sql = "SELECT exp_stat, term_type FROM club_transaction WHERE exp_stat = '1'";
 		$result = $this->db->query($sql)->result();
 		
 		foreach( $result as $row){
 			
 			$temp = $this->db->update_string('club_transaction', array('term_type'=>$row->exp_stat), ' exp_stat=1');
 			echo $temp.'<br/>';
-		}		
+		} */	
+
+		echo date('Y-m-d', strtotime('NOW + 2 Month'));	
 		
 	}
 	

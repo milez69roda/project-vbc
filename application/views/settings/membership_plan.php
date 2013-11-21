@@ -85,8 +85,8 @@
 					<td><?php echo $row->month;?> months</td>
 					<td>S$<?php echo $row->price;?></td>
 					<td>
-						<a href="javascript:void(0)" onclick="membershipplan.form('<?php echo $this->common_model->enccrypData($row->mem_type_id); ?>', 'update')" >Edit</a> |
-						<a href="javascript:void(0)" onclick="membershipplan.delete('<?php echo $this->common_model->enccrypData($row->mem_type_id); ?>', '<?php echo $row->title; ?>' )" >Delete</a>
+						<a href="javascript:void(0)" onclick="membershipplan.form('<?php echo $this->common_model->enccrypData($row->mem_type_id); ?>', 'update')" >Edit</a>
+						<!--| <a href="javascript:void(0)" onclick="membershipplan.delete('<?php echo $this->common_model->enccrypData($row->mem_type_id); ?>', '<?php echo $row->title; ?>' )" >Delete</a>-->
 					</td>
 				</tr>
 				<?php $i++; endforeach; ?>

@@ -10,7 +10,7 @@ class Membership_Model extends CI_Model {
    
 		$sel_sort_view = trim($this->input->get('sel_sort_view'));
 	   
-		$aColumns = array('tran_id','pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
+		$aColumns = array('tran_id', 'pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
 		
 		/* Indexed column (used for fast and accurate table cardinality) */
 		$sIndexColumn = "club_transaction.tran_id";
@@ -64,25 +64,26 @@ class Membership_Model extends CI_Model {
 		 
 		switch($sel_sort_view){
 			case 0:
-				$sWhere .= " (payment_mode = '0' and exp_stat = '0') ";
+				$sWhere .= " (payment_mode = '0' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") ) "; //by cc
 				break;
 			case 1:
-				$sWhere .= " (payment_mode = '1'  and exp_stat = '0') ";
+				$sWhere .= " (payment_mode = '1' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") )"; //by dd
 				break;			
 			case 2:
-				$sWhere .= " (payment_mode = '2'  and exp_stat = '0') ";
+				$sWhere .= " (payment_mode = '2' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") ) "; //by cash
 				break;			
 			case 3:
-				$sWhere .= " (term_type = ".TERM_EXPIRED.") ";
+				$sWhere .= " (term_type = ".TERM_EXPIRED.") "; //expired
 				break;					
 			case 4:
-				$sWhere .= " (term_type = ".TERM_SUSPENSION.") ";
+				$sWhere .= " (term_type = ".TERM_SUSPENSION.") "; //suspension
 				break;					
 			case 6:
-				$sWhere .= " (term_type = ".TERM_TERMINATION.") ";
+				$sWhere .= " (term_type = ".TERM_TERMINATION.") "; //terminate
 				break;			
 			case 5:
-				$sWhere .= " (pay_status ='3' AND exp_date !='0000-00-00' AND due_date !='0000-00-00' AND exp_stat ='0') ";
+				//$sWhere .= " (pay_status ='3' AND exp_date !='0000-00-00' AND due_date !='0000-00-00' AND exp_stat ='0') ";
+				$sWhere .= " (pay_status ='3' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") ) "; //current
 				break;
 			default:
 				$sWhere .= " 1 ";
@@ -128,8 +129,7 @@ class Membership_Model extends CI_Model {
 		 */
 		$sQuery = "
 				SELECT SQL_CALC_FOUND_ROWS
-					tran_id, 
-					club_transaction.mem_id,
+					tran_id,  
 					pay_ref, 
 					club_transaction.mem_id, 
 					ai_fname,
@@ -144,7 +144,8 @@ class Membership_Model extends CI_Model {
 					full_payment,
 					exp_stat,
 					pay_status,
-					term_type					
+					term_type,
+					club_transaction.update_date					
 				FROM $sTable
 				$sJoin
 				$sWhere
@@ -194,7 +195,8 @@ class Membership_Model extends CI_Model {
 			
 			//$link_details = base_url().'membership/details/'.urlencode($this->common_model->enccrypData($row->mem_id));	
 			$link_details = 'javascript:void(0)';	
-			$enc_mem_id = $this->common_model->enccrypData($row->mem_id);
+			//$enc_mem_id = $this->common_model->enccrypData($row->mem_id);
+			$enc_mem_id = $row->mem_id;
 			
 			if($row->pay_status ==3){
 				
@@ -228,6 +230,7 @@ class Membership_Model extends CI_Model {
 				}
 			 
 				$rows[] = $iDisplayStart++; 	 	
+				$rows[] = $row->update_date; 
 				$rows[] = $row->pay_ref; 
 				$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 				$rows[] = substr( $row->mem_name, 0,12); 
@@ -236,7 +239,8 @@ class Membership_Model extends CI_Model {
 				$rows[] = $row->ai_email; 
 				$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 				$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-				$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
+				//$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>';
+				$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>';
 
 				$output['aaData'][] = $rows;
 			}else{
@@ -246,6 +250,7 @@ class Membership_Model extends CI_Model {
 					$rows['DT_RowClass'] = '';
 					
 					$rows[] = $iDisplayStart++; 	 	
+					$rows[] = $row->update_date; 
 					$rows[] = $row->pay_ref; 
 					$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 					$rows[] = substr( $row->mem_name, 0,12); 
@@ -254,7 +259,8 @@ class Membership_Model extends CI_Model {
 					$rows[] = $row->ai_email; 
 					$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 					$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
-					$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>|<a href="javascript:void(0)" onclick="membershiptransaction.activate(\''.$row->pay_ref.'\')">ACT</a>';	
+					//$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>|<a href="javascript:void(0)" onclick="membershiptransaction.activate(\''.$row->pay_ref.'\')">ACT</a>';	
+					$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>';	
 					
 					$output['aaData'][] = $rows;
 				} 

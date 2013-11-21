@@ -78,7 +78,7 @@ class Reports extends MY_Controller {
 	public function ajax_schedule_payments(){
 		$this->load->model('schedule_payment_model', 'payments');
 		
-		$this->payments->get();
+		$this->payments->get_list();
 	}
 	
 }

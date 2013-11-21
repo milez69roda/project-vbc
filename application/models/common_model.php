@@ -83,6 +83,13 @@ class Common_Model extends CI_Model {
 		return $this->db->get('scheduled_payments')->result();
 	}
 	
+	//get membership type information
+	function getMembershipType($id){
+		
+		$row = $this->db->get_where('club_membership_type', array('mem_type_id'=>$id))->row();
+		return $row;	
+	}
+	
 	
 	//send email to the member
 	function tempMemActEmail($orderRef){

@@ -96,7 +96,7 @@
 				<ul class="dropdown-menu">
 					<li class="dropdown-header">Packages</li>
 					<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'membershipplan' )?'active':''; ?>"><a href="settings/membershipplan">Membership Plan</a></li>
-					<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'companyplan' )?'active':''; ?>"><a href="settings/companyplan">Company Plan</a></li> 
+					<!--<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'companyplan' )?'active':''; ?>"><a href="settings/companyplan">Company Plan</a></li> -->
 					<li class="divider"></li>
 					<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'promocodes' )?'active':''; ?>"><a href="settings/promocodes">Promo Codes</a></li>
 					<!--<li class="dropdown-header">Nav header</li>

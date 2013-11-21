@@ -40,31 +40,9 @@
  	</div>
 	<div class="row">
 		<div class="col-lg-4">
-		<h3>Name: <strong>Vennus Vito</strong></h3>
+		  
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-2">
-			<h3>Profile</h3>
-			<img class="img-circle" src="data:image/png;base64," data-src="holder.js/140x140" alt="Generic placeholder image">			
-			 
-		</div>
-		<div class="col-lg-4">
-			<h3>Details</h3>
-			<p><strong>Name:</strong>  	Vennus Vito</p>
-			<p><strong>Reference Number:</strong> M002944</p> 
-			<p><strong>Membership:</strong> Adults - 6 months - S$267.50 per month</p> 
-			<p><strong>Joined:</strong> 2013-09-25</p>  
-			<p><strong>Next Billing:</strong> 2013-10-25</p>  
-			<p><strong>Expiry Date:</strong> 2013-09-25</p>  
-		</div> 
-		<div class="col-lg-6">
-			<h3>Transaction</h3>
-			<p>Donec id elit non mi porta gravida at eget metus.</p>
-			<p>Donec id elit non mi porta gravida at eget metus.</p>  
-			<p>Donec id elit non mi porta gravida at eget metus.</p>  
-			<p>Donec id elit non mi porta gravida at eget metus.</p>  
-			<p>Donec id elit non mi porta gravida at eget metus.</p>  
-			<p>Donec id elit non mi porta gravida at eget metus.</p>    
-		</div> 		
+		 		
 	</div>      

@@ -104,12 +104,12 @@
 					</div>	
 					<div class="col-lg-2" style="">
 						<?php 
-							if( $row->term_type == TERM_ROLLING_MONTLY ){ echo '<p>Rolling Monthly</p>'; }
-							if( $row->term_type == TERM_EXTEND_6 ){ echo '<p>Extend 6 months</p>'; }
-							if( $row->term_type == TERM_EXTEND_12 ){ echo '<p>Extend 12 months</p>'; }
+							if( $row->term_type == TERM_ROLLING_MONTLY ){ echo '<p style="color:blue">Rolling Monthly</p>'; }
+							if( $row->term_type == TERM_EXTEND_6 ){ echo '<p style="color:blue">Extend 6 months</p>'; }
+							if( $row->term_type == TERM_EXTEND_12 ){ echo '<p style="color:blue">Extend 12 months</p>'; }
 						?>
 						
-						<h2 style="padding-top: 0px; margin-top: 0px;"><?php echo $status; ?></h2>
+						<h3 style="padding-top: 0px; margin-top: 0px;"><?php echo $status; ?></h3>
 					</div>
 				</div>
 				<br style="clear:both" />
@@ -128,6 +128,17 @@
 						<form  role="form" name="form_details" method="post" onsubmit="return membershiptransaction.updateInfo(this);">
 							<input type="hidden" name="token" value="<?php echo $token; ?>" />
 							<div class="col-lg-9">
+							
+								<div>
+								<?php 
+									if( isset($alerts) ){
+										foreach($alerts as $alert){
+											echo $alert; 
+										}
+									}	
+								?>
+								</div>
+								
 								<table class="table">
 									<tr>
 										<td style="width: 165px"><strong>Name</strong></td>
@@ -149,18 +160,25 @@
 										<td><?php echo $row->mem_name; ?></td>
 									</tr> 									
 									<tr>
-										<td><strong>Next Billing</strong></td>
-										<td><?php echo date('d/m/Y',strtotime($due_date)); ?></td>
+										<td><strong>Due Date</strong></td>
+										<?php $suffix = '';
+											$active_day = (int)date('d',strtotime($active_date));
+											if($active_day == 1) $active_day = $active_day.'st';
+											elseif($active_day == 2 OR $active_day == 22) $active_day = $active_day.'nd';
+											else $active_day = $active_day.'th';
+										?>
+										<td>Every <?php echo $active_day; ?> of the month</td>
 									</tr>									
 									<tr>
 										<td><strong>Expiry Date</strong></td>
 										<td><?php echo date('d/m/Y',strtotime($exp_date)); ?></td>
 									</tr>									
 									<tr>
-										<td><strong>Addr:(Unit/Blk #, Street)</strong></td>
+										<td><strong>Addr:(Unit#/St./Bldg.)</strong></td>
 										<td>
-											<input type="text" name="unit" value="<?php echo $row->unit; ?>" placeholder="Unit/Blk #" class="col-lg-4"/> 
-											<input type="text" name="street1" value="<?php echo $row->street1; ?>" placeholder="Street" class="col-lg-6"/>
+											<input type="text" name="unit" value="<?php echo $row->unit; ?>" placeholder="Unit/Blk #" class="col-lg-3"/> 
+											<input type="text" name="street1" value="<?php echo $row->street1; ?>" placeholder="Street" class="col-lg-4"/>
+											<input type="text" name="street2" value="<?php echo $row->street2; ?>" placeholder="Building" class="col-lg-4"/>
 										</td>
 									</tr> 								
 									<tr>
@@ -182,7 +200,7 @@
 									</tr>	 
 									
 									<tr  class="tr_hide_show" style="display:none"> 
-										<td colspan="2"><strong>Emergency contact's address</strong></td>
+										<td colspan="2" style="background-color:#ccc"><strong>Emergency contact's address</strong></td>
 									</tr>	 
 									<tr class="tr_hide_show" style="display:none">
 										<td><strong>Addr(Unit#/St/Blg):</strong></td>
@@ -206,7 +224,7 @@
 									</tr>
 
 									<tr  class="tr_hide_show" style="display:none">
-										<td colspan="2"><strong>Medical History</strong></td>
+										<td colspan="2" style="background-color:#ccc"><strong>Medical History</strong></td>
 									</tr>  
 									<tr class="tr_hide_show" style="display:none">
 										<td><strong>Relevant medical details or current condition:</strong></td>
@@ -230,14 +248,14 @@
 									
 								</table> 
 							</div>
-							<div class="col-lg-3" >
+							<div class="col-lg-3" > 
 								<h4>Payment History</h4>
-								<div style="height: 380px; overflow:auto">
+								<div style="overflow:auto">
 								<?php 
-									foreach($schedulepayements as $s){ 
-										if($s->status == 'Accepted') echo  '<span class="label label-success">'.$s->Tran_date.' '.$s->status.'</span>';
-										else if($s->status == 'Rejected') echo '<span class="label label-warning">'.$s->Tran_date.' '.$s->status.'</span>';
-										else if($s->status == 'Suspend') echo '<span class="label label-default">'.$s->Tran_date.' '.$s->status.'</span>';
+									foreach($schedulepayements_results as $s){ 
+										if($s->status == 'Accepted') echo  '<span class="label label-success">'.date('d/m/Y',strtotime($s->Tran_date)).' '.$s->status.'</span>';
+										else if($s->status == 'Rejected') echo '<span class="label label-warning">'.date('d/m/Y',strtotime($s->Tran_date)).' '.$s->status.'</span>';
+										else if($s->status == 'Suspend') echo '<span class="label label-default">'.date('d/m/Y',strtotime($s->Tran_date)).' '.$s->status.'</span>';
 										else{}
 									}
 								?>
@@ -249,25 +267,53 @@
 					</div>
 				   
 					<div class="tab-pane" id="terms">
-						<form  role="form" name="form_terms" method="post" onsubmit="">
+						<form  role="form" name="form_terms" method="post" onsubmit="return membershiptransaction.saveterms(this);" class="form-horizontal">
 							<input type="hidden" name="token" value="<?php echo $token; ?>" />
 							<input type="hidden" name="token1" value="<?php echo $row->tran_id; ?>" />
+							<input type="hidden" name="expire_date" value="<?php echo $exp_date; ?>" />
 							<br />	
 							<button type="button" class="btn btn-primary btn-xs" id="term-button-add">New</button>
 							<div id="term_div" style="display:none; padding: 15px;"> 
-								<fieldset>
-									<legend>New Term</legend>
-									<strong>Term Type</strong>
-									<select name="terms" class="input-sm">
-										<option value="<?php echo TERM_CURRENT; ?>"> Active </option>
-										<option value="<?php echo TERM_ROLLING_MONTLY; ?>">Rolling Montly</option>
-										<option value="<?php echo TERM_EXPIRED; ?>">Expired</option>
-										<option value="<?php echo TERM_SUSPENSION; ?>">Suspension</option>
-										<option value="<?php echo TERM_TERMINATION; ?>">Termination</option>
-									</select> 
-									<button type="submit" class="btn btn-primary btn-sm">Save</button>
-									<button type="button" class="btn btn-warning btn-sm" id="term-button-cancel">Cancel</button>
-								</fieldset>
+							
+								<div class="form-group">
+									<label for="terms" class="col-sm-2 control-label">Term</label>
+									<div class="col-sm-10">
+									 
+										<select name="terms" class="input-sm"> 
+											<?php 
+												//$active_collection_term = array(TERM_ACTIVE, TERM_ROLLING_MONTLY, TERM_EXTEND_6, TERM_EXTEND_12 ); //collection of active term indicator
+												
+												if( !in_array($row->term_type, $this->terms_active) ){
+													$option = '<option value="'.TERM_ACTIVE.'"> Activate / Reactivate </option>';
+												}else{
+													$option = '<option value="'.TERM_ROLLING_MONTLY.'">Rolling Montly </option>';
+													if( $membership_type_month == 6 ){ $option .= '<option value="'.TERM_EXTEND_6.'">Extend 6 Months</option>'; }
+													if( $membership_type_month == 12 ){ $option .= '<option value="'.TERM_EXTEND_12.'">Extend 12 Months</option>'; }
+													$option .= '<option value="'.TERM_EXPIRED.'">Expired</option>'; 
+													$option .= '<option value="'.TERM_SUSPENSION.'">Suspension</option>'; 
+													$option .= '<option value="'.TERM_TERMINATION.'">Termination</option>'; 
+													$option .= '<option value="'.TERM_DELETED.'">Delete</option>'; 
+												}
+												echo $option;
+											?> 
+										</select> 
+									</div>
+								</div>				
+							
+								<div class="form-group">
+									<label for="reason" class="col-sm-2 control-label">Reason</label>
+									<div class="col-lg-6">
+										<input type="text" class="form-control" id="reason" name="reason" placeholder="Reason" maxlength="200"> 
+									</div>
+								</div>	 
+								
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10"> 
+										<button type="submit" class="btn btn-primary btn-sm">Submit</button>
+										<button type="button" class="btn btn-warning btn-sm" id="term-button-cancel">Cancel</button>
+									</div>
+								</div>							
+							 
 							</div>
 							<div>
 								<table class="table">
@@ -276,21 +322,13 @@
 										<td><strong>Term Description</strong></td>
 										<td><strong>Action By</strong></td>
 									</tr>
+									<?php foreach( $terms_results as $row ): ?>
 									<tr>
-										<td>2010-02-24 05:12:19</td>
-										<td>Rolling Monthly</td>
-										<td>Milo</td>
+										<td><?php echo $row->date_created; ?></td>
+										<td><?php echo $this->terms_desc[$row->term_type]; ?></td>
+										<td><?php echo $row->added_by; ?></td>
 									</tr>
-									<tr>
-										<td>2010-02-24 05:12:19</td>
-										<td>Suspension</td>
-										<td>Milo</td>
-									</tr>
-									<tr>
-										<td>2010-02-24 05:12:19</td>
-										<td>Termination</td>
-										<td>Milo</td>
-									</tr>
+									<?php endforeach; ?>
 								</table>
 							</div>
 						</form>	
@@ -299,44 +337,47 @@
 					
 					<div class="tab-pane" id="freebies">
 					
-						<form  role="form" name="form_freebies" method="post" onsubmit="">
-							<input type="hidden" name="mem_id" value="<?php echo $token; ?>" />
-							<input type="hidden" name="tran_id" value="<?php echo $row->tran_id; ?>" />
+						<form  role="form" name="form_freebies" method="post" onsubmit="return membershiptransaction.savefreebies(this);" class="form-horizontal">
+							<input type="hidden" name="token" value="<?php echo $token; ?>" />
+							<input type="hidden" name="token1" value="<?php echo $row->tran_id; ?>" />
 							<br />
 							<button type="button" class="btn btn-primary btn-xs" id="freebies-button-add">New</button>
 							<div id="freebies_div" style="display:none; padding: 15px;">
+								  
+								<div class="form-group">
+									<label for="reson" class="col-sm-2 control-label">Description</label>
+									<div class="col-lg-6">
+										<input type="text" class="form-control" id="freebiesdesc" name="freebiesdesc" placeholder="" maxlength="200"> 
+									</div>
+								</div>	
+								 
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10"> 
+										<button type="submit" class="btn btn-primary btn-sm">Submit</button>
+										<button type="button" class="btn btn-warning btn-sm" id="freebies-button-cancel">Cancel</button>
+									</div>
+								</div>									
 								
-								<fieldset>
-									<legend>New Item</legend>
-									<strong>Description: </strong>
-									<input type="text" name="freebiesdesc" value="" style="width:250px"/> 
-									<button type="submit" class="btn btn-primary btn-sm">Save</button>
-									<button type="button" class="btn btn-warning btn-sm" id="freebies-button-cancel">Cancel</button>
-								</fieldset>
 							</div>
 							
 							<div>
-								<table class="table">
-									<tr>
-										<td><strong>Date/Time</strong></td>
-										<td><strong>Description</strong></td>
-										<td><strong>Action By</strong></td>
-									</tr>
-									<tr>
-										<td>2010-02-24 05:12:19</td>
-										<td>This is a test description</td>
-										<td>Milo</td>
-									</tr>
-									<tr>
-										<td>2010-02-24 05:12:19</td>
-										<td>This is a test description</td>
-										<td>Milo</td>
-									</tr>
-									<tr>
-										<td>2010-02-24 05:12:19</td>
-										<td>This is a test description</td>
-										<td>Milo</td>
-									</tr>
+								<table class="table" id="freebies_table">
+									<thead>	
+										<tr>
+											<td><strong>Date/Time</strong></td>
+											<td><strong>Description</strong></td>
+											<td><strong>Action By</strong></td>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach( $freebies_results as $row ): ?>
+										<tr>
+											<td><?php echo $row->date_created; ?></td>
+											<td><?php echo $row->f_desc; ?></td>
+											<td><?php echo $row->added_by; ?></td>
+										</tr>
+										<?php endforeach; ?>
+									</tbody>
 								</table>
 							</div>
 						</form>						

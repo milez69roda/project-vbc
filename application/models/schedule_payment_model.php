@@ -5,8 +5,24 @@ class Schedule_payment_model extends CI_Model {
 	function __construct(){
 		parent::__construct(); 
 	}  
-
-   function get(){ 
+	
+	function get($where, $limit=''){
+		
+		if( !empty($where) ) {
+			if( !is_array($where) ) $this->db->where($where, null, false);
+			else $this->db->where($where);
+		}
+		
+		if( $limit != '' ){
+			$this->db->limit($limit);
+		}
+		
+		$this->db->order_by('date_created', 'desc');
+		return $this->db->get('scheduled_payments')->result();
+		
+	}
+	
+	function get_list(){ 
 	   
 		$aColumns = array('id','Master_Sch_Id', 'Detail_Sch_Id', 'Merchant_Ref', 'Order_Date', 'Tran_Date', 'Amount', 'Payment_Ref', 'status', 'date_created' );
 		

@@ -1,105 +1,4 @@
 <script type="text/javascript">
-	var processing = false;
-	var membershiptransaction = {
-		
-		details: function(id){
-			
-			var title = 'Membership Details';
-			var tpl = $('<div class="modal fade"></div>').load('membership/ajax_membership_details/?_t='+(new Date).getTime(), {token:id, title:title});	
-							
-			$(tpl).modal({ backdrop: 'static', keyboard: true }).on('hidden.bs.modal', function () {
-					//if( redirect != '' ) window.location = redirect;
-					//tpl = null;
-					$('.modal').remove();
-			});			
-		}, 		
-		
-		activate: function(ref){
-			
-			if( !processing ){
-			
-				if( confirm('Do you want to Activate?') ){	
-					processing = true; 
-					$.post('membership/ajax_membership_transaction_sucess',{Ref:ref}, function(json){
-						processing = false;
-						if(json.status){ 
-							alert(json.msg);
-							window.location = json.url;
-						}else{
-							alert(json.msg);
-						}
-					}, 'json'); 
-				}
-			}else{
-				alert('Please wait, there is still transaction being process.');
-			}
-		},
-		
-		delete: function(delid){
-			if( !processing ){ 
-				if( confirm('Do you want to delete?') ){
-					processing = true;
-					$.post('membership/ajax_membership_transaction_delete',{delid:delid}, function(json){
-						processing = false;
-						if(json.status){							
-							alert(json.msg);
-							window.location = json.url;
-						}else{
-							alert(json.msg);
-						}
-					}, 'json');
-				}
-			}else{
-				alert('Please wait, there is still transaction being process.');
-			}
-		},
-		
-		updateInfo: function(form){
-
-			if( !processing ){ 
-				data = $(form).serialize()	
-				processing = true;
-				$.post('membership/ajax_membership_update_details',data, function(json){
-					processing = false;
-					if(json.status){							
-						alert(json.msg);
-						//window.location = json.url; 
-						$('#label-top-fname').html(json.fullname);
-						oTable.fnDraw();
-					}else{
-						alert(json.msg);
-					}
-				}, 'json');
-				 
-			}else{
-				alert('Please wait, there is still transaction being process.');
-			}
-			
-			return false;
-		},
-
-		savefreebies: function(form){
-
-			if( !processing ){ 
-				processing = true;
-				data = $(form).serialize();
-				$.post('membership/ajax_membership_freebies_save',data, function(json){
-					processing = false;
-					if(json.status){							
-						alert(json.msg);  
-						oTable.fnDraw();
-					}else{
-						alert(json.msg);
-					}
-				}, 'json'); 	
-			
-			}else{
-				alert('Please wait, there is still transaction being process.');
-			}
-	
-			return false;
-		}
-	}
 
 $(document).ready( function () {
  
@@ -117,7 +16,8 @@ $(document).ready( function () {
 			"iDisplayLength": 25,
 			"aaSorting": [[ 1, 'desc' ]],
 			"aoColumnDefs":[
-				{ 'bSortable': false, 'aTargets': [ 0, 9 ]}
+				{ 'bSortable': false, 'aTargets': [ 0, 10 ]},
+				{ 'bVisible': false, 'aTargets': [ 1 ]}
 			],
 			"fnServerParams": function( aoData ){
 				aoData.push( { "name": "sel_sort_view", "value": $("#sel_sort_view").val() } );   
@@ -126,7 +26,10 @@ $(document).ready( function () {
 
 	$("#sel_sort_view").change(function(){ 
 		oTable.fnDraw();
+		$('div.dataTables_filter input').focus();
 	});	  
+	
+	$('div.dataTables_filter input').focus();
 });
 
 </script>
@@ -149,7 +52,7 @@ $(document).ready( function () {
 						<option value="3">by Expired</option> 
 						<option value="4">by Suspension</option> 
 						<option value="6">by Termination</option> 
-						<option value="5">by Current Members</option>
+						<option value="5" selected>by Current Members</option>
 					</select>
 				</div> 
 			  </div>
@@ -162,16 +65,17 @@ $(document).ready( function () {
 		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list">
 			<thead>
 			<tr>
-			<td>#</td>
-			<td><strong>Ref</strong></td>
-			<td width="200px"><strong>Name</strong></td>
-			<td width="100px"><strong>Membership</strong></td>
-			<td><strong>Amount</strong></td>
-			<td><strong>Phone</strong></td>
-			<td><strong>Email</strong></td>
-			<td><strong>Signup</strong></td>
-			<td><strong>Expiry</strong></td>
-			<td><strong>ACT</strong></td>
+				<td>#</td>
+				<td><strong>Date Updated</strong></td>
+				<td><strong>Ref</strong></td>
+				<td width="200px"><strong>Name</strong></td>
+				<td width="100px"><strong>Membership</strong></td>
+				<td><strong>Amount</strong></td>
+				<td><strong>Phone</strong></td>
+				<td><strong>Email</strong></td>
+				<td><strong>Signup</strong></td>
+				<td><strong>Expiry</strong></td>
+				<td><strong>ACT</strong></td>
 			</tr>
 			
 		</table>	
