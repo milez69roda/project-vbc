@@ -76,7 +76,7 @@
 					<li class="<?php echo ($segment1 == 'reports' AND $segment2 == 'schedulepayments' )?'active':''; ?>"><a href="reports/schedulepayments">Schedule Payments</a></li>
 					<li class="<?php echo ($segment1 == 'reports' AND $segment2 == 'uploadschedulepayments' )?'active':''; ?>"><a href="reports/uploadschedulepayments">Upload</a></li>
 					<li class="divider"></li>
-					<li><a href="#">Sign Ups</a></li> 
+					<li><a href="reports/signups">Sign Ups</a></li> 
 					<li><a href="#">Terminated</a></li> 
 					<li><a href="#">Suspended</a></li> 
 					<li><a href="#">Current</a></li> 
@@ -99,6 +99,9 @@
 					<!--<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'companyplan' )?'active':''; ?>"><a href="settings/companyplan">Company Plan</a></li> -->
 					<li class="divider"></li>
 					<li class="<?php echo ($segment1 == 'settings' AND $segment2 == 'promocodes' )?'active':''; ?>"><a href="settings/promocodes">Promo Codes</a></li>
+					<li class="divider"></li>
+					<li class="<?php echo ($segment1 == 'accounts' AND $segment2 == 'account' )?'active':''; ?>"><a href="accounts/manage">Manage Account</a></li>
+					<li class="<?php echo ($segment1 == 'accounts' AND $segment2 == 'changepassword' )?'active':''; ?>"><a href="accounts/manage">Change Password</a></li>
 					<!--<li class="dropdown-header">Nav header</li>
 					<li><a href="#">Separated link</a></li>
 					<li><a href="#">One more separated link</a></li> -->

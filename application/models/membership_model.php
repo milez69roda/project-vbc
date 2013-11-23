@@ -10,7 +10,7 @@ class Membership_Model extends CI_Model {
    
 		$sel_sort_view = trim($this->input->get('sel_sort_view'));
 	   
-		$aColumns = array('tran_id', 'pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
+		$aColumns = array('tran_id', 'update_date', 'pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
 		
 		/* Indexed column (used for fast and accurate table cardinality) */
 		$sIndexColumn = "club_transaction.tran_id";
@@ -205,9 +205,9 @@ class Membership_Model extends CI_Model {
 					if( $row->term_type == TERM_EXPIRED ){
 						$rows['DT_RowClass'] = "TRANSAC_TYPE_expire";
 					}elseif( $row->term_type == TERM_SUSPENSION) {
-						$rows['DT_RowClass'] = "TRANSAC_TYPE_online_suspended";
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_suspended";
 					}elseif( $row->term_type == TERM_TERMINATION) {
-						$rows['DT_RowClass'] = "TRANSAC_TYPE_online_terminated";
+						$rows['DT_RowClass'] = "TRANSAC_TYPE_terminated";
 					}else{}	
 					
 				}else{
@@ -234,6 +234,7 @@ class Membership_Model extends CI_Model {
 				$rows[] = $row->pay_ref; 
 				$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 				$rows[] = substr( $row->mem_name, 0,12); 
+				//$rows[] = '<span style="font-size:10px">'.str_replace('per month', '',$row->mem_name).'</span>';  
 				$rows[] = 'SGD <strong>'.$row->pay_amt.'</strong>'; 
 				$rows[] = $row->ai_hp; 
 				$rows[] = $row->ai_email; 
@@ -273,7 +274,7 @@ class Membership_Model extends CI_Model {
    
 		$sel_sort_view = trim($this->input->get('sel_sort_view')); 
   
-		$aColumns = array('tran_id', 'payment_mode', 'ai_fname', 'ai_email', 'mem_name', 'ec_phone', 'pay_amt', 'club_transaction.create_date' );
+		$aColumns = array('tran_id', 'payment_mode', 'pay_ref', 'ai_fname', 'ai_email', 'mem_name', 'ec_phone', 'pay_amt', 'club_transaction.create_date' );
 		
 		/* Indexed column (used for fast and accurate table cardinality) */
 		$sIndexColumn = "club_transaction.tran_id";
@@ -427,14 +428,18 @@ class Membership_Model extends CI_Model {
 	   
 			$rows[] = $iDisplayStart++; 	 	
 			$rows[] = $row->payment_mode1; 
+			$rows[] = $row->pay_ref; 
 			$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 			$rows[] = $row->ai_email;  
-			$rows[] = substr($row->mem_name, 0,12);  
+			$rows[] = str_replace('per month', '',$row->mem_name);  
 			$rows[] = $row->ec_phone;  
-			$rows[] = 'S$'.$row->pay_amt;   
+			$rows[] = 'SGD '.$row->pay_amt;   
 			$rows[] = ($row->create_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->create_date));  
-			$rows[] = '<a onclick="temporary.activate(\''.$row->pay_ref.'\')" href="javascript:void(0)">Activate</a>|
+			/* $rows[] = '<a onclick="temporary.activate(\''.$row->pay_ref.'\')" href="javascript:void(0)">Activate</a>|
 					<a href="'.$link_edit.'">Edit</a>|
+					<a href="javascript:void(0)" onclick="temporary.delete('.$row->tran_id.')">Delete</a>'; */
+			
+			$rows[] = '<a onclick="temporary.activate(\''.$row->pay_ref.'\')" href="javascript:void(0)">Activate</a>| 
 					<a href="javascript:void(0)" onclick="temporary.delete('.$row->tran_id.')">Delete</a>';
 
 			$output['aaData'][] = $rows; 

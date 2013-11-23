@@ -75,7 +75,7 @@ $(document).ready( function () {
 				<td><strong>Email</strong></td>
 				<td><strong>Signup</strong></td>
 				<td><strong>Expiry</strong></td>
-				<td><strong>ACT</strong></td>
+				<td><strong>Action</strong></td>
 			</tr>
 			
 		</table>	

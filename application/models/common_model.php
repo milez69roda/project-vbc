@@ -73,15 +73,7 @@ class Common_Model extends CI_Model {
 		$result = $this->db->query($sql);
 		$row = $result->row_array();
 		return	$row['company_name'];
-	}
-
-	function getSchedulePayment_by_ref($ref){
-		
-		$this->db->select(" Tran_date, status ");
-		$this->db->where('Merchant_Ref', $ref);
-		
-		return $this->db->get('scheduled_payments')->result();
-	}
+	} 
 	
 	//get membership type information
 	function getMembershipType($id){

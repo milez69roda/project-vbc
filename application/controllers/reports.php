@@ -53,7 +53,7 @@ class Reports extends MY_Controller {
 					$set['uploaded_by'] 	= $this->user_name; 
 					
 					$this->db->insert('scheduled_payments', $set);
-					
+					//an auto update of term status in case payments are failed
 				}
 				
 			}else{
@@ -81,6 +81,14 @@ class Reports extends MY_Controller {
 		$this->payments->get_list();
 	}
 	
+	
+	public function signups(){
+	
+		$this->load->view('header'); 
+		$this->load->view('reports/signup'); 
+		$this->load->view('footer');	
+	
+	}
 }
 
 /* End of file membership.php */

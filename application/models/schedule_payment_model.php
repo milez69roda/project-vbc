@@ -6,6 +6,20 @@ class Schedule_payment_model extends CI_Model {
 		parent::__construct(); 
 	}  
 	
+	function add($set){
+		
+		return $this->db->insert('scheduled_payments', $set);
+		
+	}
+
+	/* function getSchedulePayment_by_ref($ref){
+		
+		$this->db->select(" Tran_date, status ");
+		$this->db->where('Merchant_Ref', $ref);
+		
+		return $this->db->get('scheduled_payments')->result();
+	} */	
+	
 	function get($where, $limit=''){
 		
 		if( !empty($where) ) {

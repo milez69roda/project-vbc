@@ -88,11 +88,12 @@
 			<tr>
 			<td>#</td>
 			<td width="40"><strong>Mode</strong></td>
+			<td><strong>Ref</strong></td>
 			<td><strong>Name</strong></td>
 			<td><strong>Email</strong></td>
 			<td><strong>Membership</strong></td>
 			<td><strong>Phone</strong></td>
-			<td><strong>$</strong></td>
+			<td><strong>Amount</strong></td>
 			<td><strong>Signup</strong></td> 
 			<td><strong>ACTION</strong></td>
 			</tr> 

@@ -55,7 +55,7 @@ class Membership extends MY_Controller {
 			$exp_date = date("Y-m-d", mktime(0, 0, 0, $month+$row->month, $day, $year));
 		}	
 
-		$sql = "UPDATE `club_transaction` SET `pay_status` ='3', due_date='".$due_date."', exp_date='".$exp_date."'  WHERE `pay_ref`='".$ref."' LIMIT 1";
+		$sql = "UPDATE `club_transaction` SET `pay_status` ='3', due_date='".$due_date."', exp_date='".$exp_date."', update_date=now()  WHERE `pay_ref`='".$ref."' LIMIT 1";
 		if( $this->db->query($sql) ){
 			//send email notification
 			$this->common_model->tempMemActEmail($ref); 
@@ -192,7 +192,7 @@ class Membership extends MY_Controller {
 		}	
 		  
 		$data['membership_type_month'] 		= @$this->common_model->getMembershipType($row->mem_type)->month; 
-		$data['schedulepayements_results'] 	= @$this->common_model->getSchedulePayment_by_ref($row->pay_ref);
+		$data['schedulepayements_results'] 	= @$this->schedule_payment_model->get(array('Merchant_Ref' => $row->pay_ref));
 		$data['terms_results'] 				= $this->terms_model->get(array('tran_id'=>$row->tran_id));
 		$data['freebies_results'] 			= $this->freebies_model->get(array('tran_id'=>$row->tran_id));
 		$data['countries'] 					= $this->common_model->getCountryDropdown();
@@ -453,6 +453,44 @@ class Membership extends MY_Controller {
 		$json['data'] = $set;
 		
 		echo json_encode($json);
+	}
+	
+	public function ajax_membership_otherpayment_save(){ 
+		
+		$this->load->model('Schedule_payment_model', 'schedule_payment_model');
+		
+		$json = array('status'=>false, 'url'=>'', 'msg'=>'Submit Failed');
+		
+		$mem_id			= $this->input->post('token');
+		$tran_id 		= $this->input->post('token1'); 
+		$pay_ref 		= $this->input->post('pay_ref');		
+		$amount 		= $this->input->post('other_amount');		
+		$duedate 		= explode('/',$this->input->post('other_duedate'));		
+		$duedate 		= date('Y-m-d', strtotime($duedate[2].'-'.$duedate[1].'-'.$duedate[0]));		
+		$desc 			= $this->input->post('other_desc');		
+		
+		$set['Order_Date'] 			= $duedate; 
+		$set['Tran_Date'] 			= $duedate;
+		$set['Currency'] 			= 'SGD';
+		$set['Amount'] 				= $amount;
+		$set['Merchant_Ref'] 		= $pay_ref;
+		$set['status'] 				= 'Accepted';
+		$set['transaction_type'] 	= 1;
+		$set['reason'] 				= $desc;
+		$set['uploaded_by'] 		= $this->user_name; 
+		
+		if( $this->schedule_payment_model->add($set) ){
+			$json['status'] = true;
+			$json['msg'] = 'Update Successfully.'; 
+			
+			//there must be update of the status if upload is automatic update the status
+		}
+		$set['date'] 			= date('Y-m-d H:i:s');
+		$set['Order_Date'] 		= date('d/m/Y',strtotime($duedate)); //overide date format
+		$json['data'] = $set;
+		
+		echo json_encode($json);		
+		
 	}
 	
 	/*company transactions*/

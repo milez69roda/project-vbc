@@ -1,11 +1,11 @@
 var processing = false;
-
+var tpl;
 var membershiptransaction = {
 	
 	details: function(id){
 		
 		var title = 'Membership Details';
-		var tpl = $('<div class="modal fade"></div>').load('membership/ajax_membership_details/?_t='+(new Date).getTime(), {token:id, title:title});	
+		tpl = $('<div class="modal fade"></div>').load('membership/ajax_membership_details/?_t='+(new Date).getTime(), {token:id, title:title});	
 						
 		$(tpl).modal({ backdrop: 'static', keyboard: true }).on('hidden.bs.modal', function () {
 				//if( redirect != '' ) window.location = redirect;
@@ -93,13 +93,16 @@ var membershiptransaction = {
 							tr += '<td>'+json.data.date+'</td>';
 							tr += '<td>'+json.data.f_desc+'</td>';
 							tr += '<td>'+json.data.added_by+'</td>';
-						$("#freebies_table tbody tr:first").after(tr);	
+						$("#freebies_table tbody>tr:first").after(tr);	
 
 						$("#freebiesdesc").val('');	
-						$('#freebies-button-cancel').on('click',function(){
+						
+						$('#freebies-button-add').show();
+						$("#freebies_div").hide();								
+						/* $('#freebies-button-cancel').on('click',function(){
 							$('#freebies-button-add').show();
 							$("#freebies_div").hide();		
-						});								
+						});	 */							
 						
 						oTable.fnDraw();
 					}else{
@@ -142,5 +145,51 @@ var membershiptransaction = {
 		}
 
 		return false;
-	}
+	},
+
+	saveotherpayment: function(form){
+
+		if( !processing ){ 
+		
+			if( confirm('Do you want to Submit?') ){
+				processing = true;
+				data = $(form).serialize();
+				$.post('membership/ajax_membership_otherpayment_save',data, function(json){
+					processing = false;
+					if(json.status){							
+						alert(json.msg);  
+						var tr = '<tr>';
+							tr += '<td>'+json.data.date+'</td>';
+							tr += '<td>'+json.data.Order_Date+'</td>';
+							tr += '<td>'+json.data.Amount+'</td>';
+							tr += '<td>'+json.data.reason+'</td>';
+							tr += '<td>'+json.data.uploaded_by+'</td>';
+						$("#otherpayment_table tbody>tr:first").after(tr);	
+						oTable.fnDraw();
+					}else{
+						alert(json.msg);
+					}
+				}, 'json'); 	
+			}
+		}else{
+			alert('Please wait, there is still transaction being process.');
+		}
+
+		return false;
+	} 
 }
+
+
+
+$(document).keyup(function(e) { 
+	//console.log(e.keyCode);
+	if (e.keyCode == 27) { 
+		$('.modal').remove(); 
+		$('.modal-backdrop').remove(); 
+		//tpl = null;
+	} 
+	
+	if (e.keyCode == 113) { 
+		window.location = 'membership';
+	}
+});

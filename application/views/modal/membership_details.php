@@ -119,6 +119,7 @@
 				  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
 				  <li><a href="#terms" data-toggle="tab">Terms</a></li>
 				  <li><a href="#freebies" data-toggle="tab">Freebies/Misc</a></li>
+				  <li><a href="#otherpayment" data-toggle="tab">Manual/Cash Payment</a></li>
 				  <li><a href="#others" data-toggle="tab">Others</a></li>
 				</ul>
 
@@ -250,12 +251,13 @@
 							</div>
 							<div class="col-lg-3" > 
 								<h4>Payment History</h4>
-								<div style="overflow:auto">
+								<div style="height:300px; overflow:auto">
 								<?php 
 									foreach($schedulepayements_results as $s){ 
-										if($s->status == 'Accepted') echo  '<span class="label label-success">'.date('d/m/Y',strtotime($s->Tran_date)).' '.$s->status.'</span>';
-										else if($s->status == 'Rejected') echo '<span class="label label-warning">'.date('d/m/Y',strtotime($s->Tran_date)).' '.$s->status.'</span>';
-										else if($s->status == 'Suspend') echo '<span class="label label-default">'.date('d/m/Y',strtotime($s->Tran_date)).' '.$s->status.'</span>';
+										$type1 = ($s->transaction_type)?'[M]':'';
+										if($s->status == 'Accepted') echo  '<span class="label label-success">'.date('d/m/Y',strtotime($s->Tran_Date)).' '.$s->status.' '.$type1.'</span><br/>';
+										else if($s->status == 'Rejected') echo '<span class="label label-warning">'.date('d/m/Y',strtotime($s->Tran_Date)).' '.$s->status.'</span><br/>';
+										else if($s->status == 'Suspend') echo '<span class="label label-default">'.date('d/m/Y',strtotime($s->Tran_Date)).' '.$s->status.'</span><br/>';
 										else{}
 									}
 								?>
@@ -319,14 +321,16 @@
 								<table class="table">
 									<tr>
 										<td><strong>Date/Time</strong></td>
-										<td><strong>Term Description</strong></td>
+										<td><strong>Description</strong></td>
+										<td><strong>Reason</strong></td>
 										<td><strong>Action By</strong></td>
 									</tr>
-									<?php foreach( $terms_results as $row ): ?>
+									<?php foreach( $terms_results as $term ): ?>
 									<tr>
-										<td><?php echo $row->date_created; ?></td>
-										<td><?php echo $this->terms_desc[$row->term_type]; ?></td>
-										<td><?php echo $row->added_by; ?></td>
+										<td><?php echo $term->date_created; ?></td>
+										<td><?php echo $this->terms_desc[$term->term_type]; ?></td>
+										<td><?php echo $term->added_by; ?></td>
+										<td><?php echo $term->term_reason; ?></td>
 									</tr>
 									<?php endforeach; ?>
 								</table>
@@ -370,11 +374,16 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php foreach( $freebies_results as $row ): ?>
 										<tr>
-											<td><?php echo $row->date_created; ?></td>
-											<td><?php echo $row->f_desc; ?></td>
-											<td><?php echo $row->added_by; ?></td>
+											<td></td>
+											<td></td>
+											<td></td> 
+										</tr>									
+										<?php foreach( $freebies_results as $freebies ): ?>
+										<tr>
+											<td><?php echo $freebies->date_created; ?></td>
+											<td><?php echo $freebies->f_desc; ?></td>
+											<td><?php echo $freebies->added_by; ?></td>
 										</tr>
 										<?php endforeach; ?>
 									</tbody>
@@ -383,6 +392,78 @@
 						</form>						
 					
 					</div> 
+					
+					<div class="tab-pane" id="otherpayment">
+						<p style="color:red">The purpose of this tab is to update the failed transaction on schedule payment.</p>
+						<p style="color:red">Need to verify with willi how does the cash payment works</p>
+						<form  role="form" name="form_otherpayment" method="post" onsubmit="return membershiptransaction.saveotherpayment(this);" class="form-horizontal">
+							<input type="hidden" name="token" value="<?php echo $token; ?>" />
+							<input type="hidden" name="token1" value="<?php echo $row->tran_id; ?>" />
+							<input type="hidden" name="pay_ref" value="<?php echo $row->pay_ref; ?>" /> 
+							
+								<div class="form-group">
+									<label for="reson" class="col-sm-3 control-label">Amount</label>
+									<div class="col-lg-3">
+										<input type="text" class="form-control" id="other_amount" name="other_amount" value="<?php echo $row->pay_amt; ?>" readonly> 
+									</div>
+								</div>	
+								<div class="form-group">
+									<label for="reson" class="col-sm-3 control-label">Due date(d/m/y)</label>
+									<div class="col-lg-3">
+										<input type="text" class="form-control" id="other_duedate" name="other_duedate" value="<?php echo date('d',strtotime($active_date)).date('/m/Y'); ?>"> 
+									</div>
+								</div>	
+								<div class="form-group">
+									<label for="reson" class="col-sm-3 control-label">Description/Reason</label>
+									<div class="col-lg-6">
+										<input type="text" class="form-control" id="other_desc" name="other_desc" maxlength="200" > 
+									</div>
+								</div>	 
+								 
+								<div class="form-group">
+									<label for="reson" class="col-sm-3 control-label">&nbsp;</label>
+									<div class="col-lg-6">
+										<button type="submit" class="btn btn-primary btn-sm">Submit Payment</button>
+										<!--<button type="button" class="btn btn-warning btn-sm" id="otherpayment-button-cancel">Cancel</button>-->
+									</div>
+								</div>			
+
+								<div>
+									<table class="table" id="otherpayment_table">
+										<thead>	
+											<tr>
+												<td><strong>Date/Time</strong></td>
+												<td><strong>Due date</strong></td>
+												<td><strong>Amount</strong></td>
+												<td><strong>Desc/Reason</strong></td>
+												<td><strong>Action By</strong></td>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+											</tr>
+										<?php foreach( $schedulepayements_results as $otherpay ):
+												if( $otherpay->transaction_type == 1  ):
+											?>
+											<tr>
+												<td><?php echo $otherpay->date_created; ?></td>
+												<td><?php echo date('d/m/Y',strtotime($otherpay->Tran_Date)); ?></td>
+												<td><?php echo $otherpay->Amount; ?></td>
+												<td><?php echo $otherpay->reason; ?></td>
+												<td><?php echo $otherpay->uploaded_by; ?></td>
+											</tr>
+										<?php endif;
+											endforeach; 
+										?>
+										</tbody>
+									</table>
+								</div>								
+						</form>
+					</div>
 					
 					<div class="tab-pane" id="others">
 						SEND EMAIL TO MEMBER<br/>
