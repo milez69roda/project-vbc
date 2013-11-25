@@ -120,6 +120,7 @@
 				  <li><a href="#terms" data-toggle="tab">Terms</a></li>
 				  <li><a href="#freebies" data-toggle="tab">Freebies/Misc</a></li>
 				  <li><a href="#otherpayment" data-toggle="tab">Manual/Cash Payment</a></li>
+				  <li><a href="#notes" data-toggle="tab">Notes</a></li>
 				  <li><a href="#others" data-toggle="tab">Others</a></li>
 				</ul>
 
@@ -465,6 +466,11 @@
 						</form>
 					</div>
 					
+					<div class="tab-pane" id="notes">
+						 
+						 Notes here						
+					</div>
+					
 					<div class="tab-pane" id="others">
 						SEND EMAIL TO MEMBER<br/>
 						SEND EMAIL TO ADMIN<br/>
@@ -496,6 +502,8 @@
 							</table>
 						</div>						
 					</div>
+					
+					
 				</div>
 			<?php //else: ?>
 				<!--<div class="jumbotron" style="text-align:center">

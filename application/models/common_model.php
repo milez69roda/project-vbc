@@ -82,6 +82,41 @@ class Common_Model extends CI_Model {
 		return $row;	
 	}
 	
+	function getAllWeekRange_byYear($year){
+		//$year = date('Y');
+		$week_date_range = array();
+ 
+		$date = new DateTime;
+		$date->setISODate($year, 53);
+		$total_week = ($date->format("W") === "53" ? 53 : 52);  
+		$startdate = '';
+		for( $i = 1; $i <= $total_week; $i++ ){ 
+			
+			if( $i == 1 ){  
+				$enddate = date('Y-m-d',strtotime("January {$year} first saturday"));
+
+				$week_date_range[$i][0] = $year.'-01-01';
+				$week_date_range[$i][1] = $enddate;			
+				 
+				$startdate = date('Y-m-d',strtotime("{$year}-01-01 last sunday")); 
+			}elseif( $i == $total_week ) {
+				$startdate = date('Y-m-d',strtotime(" last sunday of December {$year}"));
+				
+				$week_date_range[$i][0] = $startdate;
+				$week_date_range[$i][1] = $year.'-12-31';				 
+			}else{   
+				$startdate = date('Y-m-d',strtotime($startdate.' + 1 week'));   
+				$enddate = date('Y-m-d',strtotime($startdate.' + 6 days'));    
+				
+				$week_date_range[$i][0] = $startdate;
+				$week_date_range[$i][1] = $enddate;	 
+			}
+
+		} 
+		
+		return $week_date_range;	
+	}
+	
 	
 	//send email to the member
 	function tempMemActEmail($orderRef){
