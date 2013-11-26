@@ -1,6 +1,5 @@
 <script>
-	$(document).ready( function () {
-		//$('#myTab a:first').tab('show')	;
+	$(document).ready( function () { 
 		
 		$('#term-button-add').click(function(){
 			$(this).hide();
@@ -22,6 +21,16 @@
 			$("#freebies_div").hide();		
 		});
 		
+		$('#otherpayment-button-add').click(function(){
+			$(this).hide();
+			$("#otherpayment_div").show();
+		}); 
+		
+		$('#otherpayment-button-cancel').click(function(){
+			$('#otherpayment-button-add').show();
+			$("#otherpayment_div").hide();		
+		});
+		
 		$("#btn_show_more").click(function(){
 			$('.tr_hide_show').show();
 			$(this).hide();
@@ -31,14 +40,18 @@
 			$(".tr_hide_show").hide();
 			$("#btn_show_more").show();
 			
-		});
+		}); 
+
+		$(".modal").draggable({
+			handle: ".modal-header"
+		});		
+
 	});
 </script>
 
 <!-- Modal -->
-<div class="modal-dialog" style="width: 900px">
-	<div class="modal-content"> 
-			
+<div class="modal-dialog" style="width: 900px" id="myModal">
+	<div class="modal-content">  
 			<div class="modal-header" style="padding: 4px; background-color:#428BCA; color: #fff">
 			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >&times;</button>
 			  <h4 class="modal-title"><?php echo $title; ?></h4>
@@ -53,6 +66,7 @@
 					if( $row->term_type == TERM_EXPIRED ){ $status = '<strong style="color:red;font-weight:bold">EXPIRED</strong>';   }
 					elseif( $row->term_type == TERM_SUSPENSION ){ $status = '<strong style="color:red;font-weight:bold">SUSPENDED</strong>';  }
 					elseif( $row->term_type == TERM_TERMINATION ){ $status = '<strong style="color:red;font-weight:bold">TERMINATED</strong>';  } 
+					elseif( $row->term_type == TERM_DELETED ){ $status = '<strong style="color:red;font-weight:bold">DELETED</strong>';  } 
 					else{}
 				}
 			
@@ -142,6 +156,10 @@
 								</div>
 								
 								<table class="table">
+									<tr>
+										<td><strong>NRIC/FIN no.</strong></td>
+										<td><input type="text" name="ai_nric" value="<?php echo $row->ai_nric; ?>" class="col-lg-8" /></td>
+									</tr>		
 									<tr>
 										<td style="width: 165px"><strong>Name</strong></td>
 										<td>
@@ -330,8 +348,8 @@
 									<tr>
 										<td><?php echo $term->date_created; ?></td>
 										<td><?php echo $this->terms_desc[$term->term_type]; ?></td>
-										<td><?php echo $term->added_by; ?></td>
 										<td><?php echo $term->term_reason; ?></td>
+										<td><?php echo $term->added_by; ?></td>
 									</tr>
 									<?php endforeach; ?>
 								</table>
@@ -395,15 +413,17 @@
 					</div> 
 					
 					<div class="tab-pane" id="otherpayment">
-						<p style="color:red">The purpose of this tab is to update the failed transaction on schedule payment.</p>
-						<p style="color:red">Need to verify with willi how does the cash payment works</p>
+						<!--<p style="color:red">The purpose of this tab is to update the failed transaction on schedule payment.</p>
+						<p style="color:red">Need to verify with willi how does the cash payment works</p>-->
 						<form  role="form" name="form_otherpayment" method="post" onsubmit="return membershiptransaction.saveotherpayment(this);" class="form-horizontal">
 							<input type="hidden" name="token" value="<?php echo $token; ?>" />
 							<input type="hidden" name="token1" value="<?php echo $row->tran_id; ?>" />
 							<input type="hidden" name="pay_ref" value="<?php echo $row->pay_ref; ?>" /> 
-							
+							<br />
+							<button type="button" class="btn btn-primary btn-xs" id="otherpayment-button-add">Add Payment</button>
+							<div id="otherpayment_div" style="display:none; padding: 15px;">
 								<div class="form-group">
-									<label for="reson" class="col-sm-3 control-label">Amount</label>
+									<label for="reson" class="col-sm-3 control-label">Amount: (SGD)</label>
 									<div class="col-lg-3">
 										<input type="text" class="form-control" id="other_amount" name="other_amount" value="<?php echo $row->pay_amt; ?>" readonly> 
 									</div>
@@ -412,6 +432,19 @@
 									<label for="reson" class="col-sm-3 control-label">Due date(d/m/y)</label>
 									<div class="col-lg-3">
 										<input type="text" class="form-control" id="other_duedate" name="other_duedate" value="<?php echo date('d',strtotime($active_date)).date('/m/Y'); ?>"> 
+									</div>
+								</div>	
+								<div class="form-group">
+									<label for="reson" class="col-sm-3 control-label">Mode of Payment</label>
+									<div class="col-lg-3">
+									<select class="form-control input-sm" name="other_payment_type">
+										<option value="<?php echo PAYMENT_TYPE_CASH; ?>">Cash</option>
+										<option value="<?php echo PAYMENT_TYPE_MAILORDER; ?>">Mail Order</option>
+										<option value="<?php echo PAYMENT_TYPE_NETS; ?>">Nets</option>
+										<option value="<?php echo PAYMENT_TYPE_VISA; ?>">Visa</option>
+										<option value="<?php echo PAYMENT_TYPE_MASTERCARD; ?>">Mastercard</option>
+										<option value="<?php echo PAYMENT_TYPE_CHEQUE; ?>">Cheque</option>
+									</select>
 									</div>
 								</div>	
 								<div class="form-group">
@@ -425,44 +458,46 @@
 									<label for="reson" class="col-sm-3 control-label">&nbsp;</label>
 									<div class="col-lg-6">
 										<button type="submit" class="btn btn-primary btn-sm">Submit Payment</button>
-										<!--<button type="button" class="btn btn-warning btn-sm" id="otherpayment-button-cancel">Cancel</button>-->
+										<button type="button" class="btn btn-warning btn-sm" id="otherpayment-button-cancel">Cancel</button>
 									</div>
 								</div>			
-
-								<div>
-									<table class="table" id="otherpayment_table">
-										<thead>	
-											<tr>
-												<td><strong>Date/Time</strong></td>
-												<td><strong>Due date</strong></td>
-												<td><strong>Amount</strong></td>
-												<td><strong>Desc/Reason</strong></td>
-												<td><strong>Action By</strong></td>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-											</tr>
-										<?php foreach( $schedulepayements_results as $otherpay ):
-												if( $otherpay->transaction_type == 1  ):
-											?>
-											<tr>
-												<td><?php echo $otherpay->date_created; ?></td>
-												<td><?php echo date('d/m/Y',strtotime($otherpay->Tran_Date)); ?></td>
-												<td><?php echo $otherpay->Amount; ?></td>
-												<td><?php echo $otherpay->reason; ?></td>
-												<td><?php echo $otherpay->uploaded_by; ?></td>
-											</tr>
-										<?php endif;
-											endforeach; 
+							</div>
+							
+							<div>
+								<table class="table" id="otherpayment_table">
+									<thead>	
+										<tr>
+											<td><strong>Date/Time</strong></td>
+											<td><strong>Due date</strong></td>
+											<td><strong>Amount</strong></td>
+											<td><strong>Desc/Reason</strong></td>
+											<td><strong>Action By</strong></td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+									<?php foreach( $schedulepayements_results as $otherpay ):
+											if( $otherpay->transaction_type == 1  ):
 										?>
-										</tbody>
-									</table>
-								</div>								
+										<tr>
+											<td><?php echo $otherpay->date_created; ?></td>
+											<td><?php echo date('d/m/Y',strtotime($otherpay->Tran_Date)); ?></td>
+											<td><?php echo $otherpay->Amount; ?></td>
+											<td><?php echo $otherpay->reason; ?></td>
+											<td><?php echo $otherpay->uploaded_by; ?></td>
+										</tr>
+									<?php endif;
+										endforeach; 
+									?>
+									</tbody>
+								</table>
+							</div>								
 						</form>
 					</div>
 					

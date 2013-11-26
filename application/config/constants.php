@@ -63,5 +63,15 @@ define('PAYMENT_MODE_CASH', 	2); //payment by cash
 define('PAYMENT_CC_MONTLY',		0); //Payment Monthly
 define('PAYMENT_CC_FULL',		1); //Payment full
 
+//used in the shedule payment table
+define('PAYMENT_TYPE_CC',			0); //Credit card
+define('PAYMENT_TYPE_CASH',			1); //cash
+define('PAYMENT_TYPE_MAILORDER',	2); //mail oder
+define('PAYMENT_TYPE_NETS',			3); //nets
+define('PAYMENT_TYPE_VISA',			4); //visa
+define('PAYMENT_TYPE_MASTERCARD',	5); //mastercard
+define('PAYMENT_TYPE_CHEQUE',		6); //cheque
+ 
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

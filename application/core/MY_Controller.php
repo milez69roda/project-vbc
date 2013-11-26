@@ -27,7 +27,7 @@ class MY_Controller extends CI_Controller {
 			TERM_ROLLING_MONTLY => 'Rolling Montly',
 			TERM_DELETED 		=> 'Deleted',
 			TERM_EXTEND_6 		=> 'Extend 6 Months',
-			TERM_EXTEND_12 		=> 'Extend 12 Months', 
+			TERM_EXTEND_12 		=> 'Extend 12 Months' 
 		);		
 
 		$this->terms_active = array(TERM_ACTIVE, TERM_ROLLING_MONTLY, TERM_EXTEND_6, TERM_EXTEND_12 ); //collection of active term indicator		

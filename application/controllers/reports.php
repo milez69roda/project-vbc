@@ -82,10 +82,10 @@ class Reports extends MY_Controller {
 	}
 	
 	
-	public function signups(){
+	public function membership(){
 	
 		$this->load->view('header'); 
-		$this->load->view('reports/signup'); 
+		$this->load->view('reports/membership_reports'); 
 		$this->load->view('footer');	
 	
 	}

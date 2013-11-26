@@ -151,7 +151,7 @@ var membershiptransaction = {
 
 		if( !processing ){ 
 		
-			if( confirm('Do you want to Submit?') ){
+			if( confirm('Do you want to submit payment?') ){
 				processing = true;
 				data = $(form).serialize();
 				$.post('membership/ajax_membership_otherpayment_save',data, function(json){
@@ -165,7 +165,13 @@ var membershiptransaction = {
 							tr += '<td>'+json.data.reason+'</td>';
 							tr += '<td>'+json.data.uploaded_by+'</td>';
 						$("#otherpayment_table tbody>tr:first").after(tr);	
+						
+						$('#otherpayment-button-add').show();
+						$("#otherpayment_div").hide();							
+						$("#other_desc").val('');							
+						
 						oTable.fnDraw();
+						
 					}else{
 						alert(json.msg);
 					}
@@ -192,4 +198,9 @@ $(document).keyup(function(e) {
 	if (e.keyCode == 113) { 
 		window.location = 'membership';
 	}
+});
+
+
+$(document).ready( function () {
+
 });

@@ -10,7 +10,7 @@ class Membership_Model extends CI_Model {
    
 		$sel_sort_view = trim($this->input->get('sel_sort_view'));
 	   
-		$aColumns = array('tran_id', 'club_transaction.update_date', 'pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
+		$aColumns = array('tran_id', 'club_transaction.update_date', 'ai_nric', 'pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
 		
 		/* Indexed column (used for fast and accurate table cardinality) */
 		$sIndexColumn = "club_transaction.tran_id";
@@ -135,6 +135,7 @@ class Membership_Model extends CI_Model {
 					ai_fname,
 					ai_lname, 
 					mem_name, 
+					ai_nric,
 					pay_amt, 
 					ai_hp, 
 					ai_email, 
@@ -231,6 +232,7 @@ class Membership_Model extends CI_Model {
 			 
 				$rows[] = $iDisplayStart++; 	 	
 				$rows[] = $row->update_date; 
+				$rows[] = $row->ai_nric; 
 				$rows[] = $row->pay_ref; 
 				$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 				$rows[] = substr( $row->mem_name, 0,12); 
@@ -252,6 +254,7 @@ class Membership_Model extends CI_Model {
 					
 					$rows[] = $iDisplayStart++; 	 	
 					$rows[] = $row->update_date; 
+					$rows[] = $row->ai_nric; 
 					$rows[] = $row->pay_ref; 
 					$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 					$rows[] = substr( $row->mem_name, 0,12); 

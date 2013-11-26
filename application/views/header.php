@@ -14,7 +14,9 @@
 
 	<link rel="stylesheet" type="text/css" href="assets/css/DT_bootstrap.css"> 
 	
-    <!-- Custom styles for this template -->
+    <link href="assets/css/datepicker.css" rel="stylesheet">
+    
+	<!-- Custom styles for this template -->
     <link href="assets/css/custom.css" rel="stylesheet">
 	
 	
@@ -76,12 +78,12 @@
 					<li class="<?php echo ($segment1 == 'reports' AND $segment2 == 'schedulepayments' )?'active':''; ?>"><a href="reports/schedulepayments">Schedule Payments</a></li>
 					<li class="<?php echo ($segment1 == 'reports' AND $segment2 == 'uploadschedulepayments' )?'active':''; ?>"><a href="reports/uploadschedulepayments">Upload</a></li>
 					<li class="divider"></li>
-					<li><a href="reports/signups">Sign Ups</a></li> 
-					<li><a href="#">Terminated</a></li> 
+					<li><a href="reports/membership">Membership</a></li> 
+					<!--<li><a href="#">Terminated</a></li> 
 					<li><a href="#">Suspended</a></li> 
 					<li><a href="#">Current</a></li> 
 					<li><a href="#">CC</a></li> 
-					<li><a href="#">Cash</a></li>  
+					<li><a href="#">Cash</a></li> --> 
 					<li class="divider"></li>
 					<li><a href="#">Terms</a></li>  
 					<li><a href="#">Freebies</a></li>  

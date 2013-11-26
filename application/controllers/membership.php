@@ -43,9 +43,9 @@ class Membership extends MY_Controller {
 			WHERE pay_ref='".$ref."' and pay_status ='0' LIMIT 1";
 		$row = $this->db->query($sql)->row();
 		
-		$month = date("m");
-		$day = date("d");
-		$year = date("Y");		
+		$month 	= date("m");
+		$day 	= date("d");
+		$year 	= date("Y");		
 		
 		if($row->payment_mode==1){
 			$due_date = date("Y-m-d", mktime(0, 0, 0, $month+1, $day, $year));
@@ -57,9 +57,20 @@ class Membership extends MY_Controller {
 
 		$sql = "UPDATE `club_transaction` SET `pay_status` ='3', due_date='".$due_date."', exp_date='".$exp_date."', update_date=now()  WHERE `pay_ref`='".$ref."' LIMIT 1";
 		if( $this->db->query($sql) ){
+	
+			$set['Merchant_Ref'] 	=  
+			$set['Currency'] 		= 
+			$set['Amount'] 			= 
+			$set['Order_Date'] 		= 
+			$set['Tran_Date'] 		= 
+			$set['status'] 			= 
+			$set['uploaded_by'] 	= 
+			$set['transaction_type']= 	
+			
+			
 			//send email notification
 			$this->common_model->tempMemActEmail($ref); 
-			$msg = "Successfully Activated";
+			$msg = "Successfully Activated"; 
 		}
 		
 		echo $msg;
@@ -118,7 +129,7 @@ class Membership extends MY_Controller {
 		//$mem_id = $this->common_model->deccrypData($token);
 		$mem_id = $token;
 		
-		$sql = "SELECT club_transaction.*, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, street2, unit, 
+		$sql = "SELECT club_transaction.*, ai_nric, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, street2, unit, 
 					emg_unit, emg_street1, emg_street2, emg_country, emg_postalcode,
 					mh_curr_condi, mh_medicine
 				FROM club_transaction 
@@ -133,16 +144,6 @@ class Membership extends MY_Controller {
 		$row 								= $this->db->query($sql)->row();
 		$data['row'] 						= $row;
 		
-		//$data['alerts']
-		
-		//check if payment is done on cc
-		/* $data['alerts'][] = array(
-								$row->pay_status =>PAY_STATUS_3,
-								$row->payment_mode =>PAYMENT_MODE_CC,
-								$row->full_payment =>PAYMENT_CC_MONTLY,
-								'term_type' =>$row->term_type
-							);
-		 */
 		
 		if( $row->pay_status == PAY_STATUS_3 AND $row->payment_mode == PAYMENT_MODE_CC AND $row->full_payment == PAYMENT_CC_MONTLY AND in_array($row->term_type, $this->terms_active) ){
 			
@@ -151,8 +152,7 @@ class Membership extends MY_Controller {
 			$now = strtotime(date('Y-m-d'));
 
 			$timeDiff = $exp_date-$now; 
-			$numberDays = $timeDiff/86400;  // 86400 seconds in one day 
-			
+			$numberDays = $timeDiff/86400;  // 86400 seconds in one day  
 			$numberDays = intval($numberDays);	// and you might want to convert to integer		
 			
 			if( $numberDays < 36 ){
@@ -189,7 +189,28 @@ class Membership extends MY_Controller {
 				}
 
 			}
-		}	
+		}elseif( $row->pay_status == PAY_STATUS_3 AND $row->payment_mode == PAYMENT_MODE_CASH AND in_array($row->term_type, $this->terms_active) ){
+		
+			//check for date expirate and alert
+			$exp_date = strtotime($row->exp_date);
+			$now = strtotime(date('Y-m-d'));
+
+			$timeDiff = $exp_date-$now; 
+			$numberDays = $timeDiff/86400;  // 86400 seconds in one day  
+			$numberDays = intval($numberDays);	// and you might want to convert to integer		
+			
+			if( $numberDays < 36 ){
+				
+				if( $numberDays < 0 ){
+					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Expired date was already past more than a month(s)</div>'; 
+				}else{
+					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">'.$numberDays.' days before membership expired</div>'; 
+				}
+			}
+		
+		}else{
+
+		}		
 		  
 		$data['membership_type_month'] 		= @$this->common_model->getMembershipType($row->mem_type)->month; 
 		$data['schedulepayements_results'] 	= @$this->schedule_payment_model->get(array('Merchant_Ref' => $row->pay_ref));
@@ -277,14 +298,15 @@ class Membership extends MY_Controller {
 		//$mem_id = $this->common_model->deccrypData($token);
 		$mem_id = $token;
 		
-		$set['ai_fname'] 	= $this->input->post('firstname');
-		$set['ai_lname'] 	= $this->input->post('lastname');
-		$set['ai_email'] 	= $this->input->post('email');
-		$set['unit'] 		= $this->input->post('unit');
-		$set['street1'] 	= $this->input->post('street1');
-		$set['country'] 	= $this->input->post('country');
-		$set['postalcode'] 	= $this->input->post('postalcode');
-		$set['ai_hp'] 		= $this->input->post('phone');
+		$set['ai_nric'] 		= $this->input->post('ai_nric');
+		$set['ai_fname'] 		= $this->input->post('firstname');
+		$set['ai_lname'] 		= $this->input->post('lastname');
+		$set['ai_email'] 		= $this->input->post('email');
+		$set['unit'] 			= $this->input->post('unit');
+		$set['street1'] 		= $this->input->post('street1');
+		$set['country'] 		= $this->input->post('country');
+		$set['postalcode'] 		= $this->input->post('postalcode');
+		$set['ai_hp'] 			= $this->input->post('phone');
 		
 		$set['emg_unit'] 		= $this->input->post('emg_unit');
 		$set['emg_street1'] 	= $this->input->post('emg_street1');
@@ -465,6 +487,7 @@ class Membership extends MY_Controller {
 		$tran_id 		= $this->input->post('token1'); 
 		$pay_ref 		= $this->input->post('pay_ref');		
 		$amount 		= $this->input->post('other_amount');		
+		$paytment_type 	= $this->input->post('other_payment_type');		
 		$duedate 		= explode('/',$this->input->post('other_duedate'));		
 		$duedate 		= date('Y-m-d', strtotime($duedate[2].'-'.$duedate[1].'-'.$duedate[0]));		
 		$desc 			= $this->input->post('other_desc');		
@@ -475,7 +498,7 @@ class Membership extends MY_Controller {
 		$set['Amount'] 				= $amount;
 		$set['Merchant_Ref'] 		= $pay_ref;
 		$set['status'] 				= 'Accepted';
-		$set['transaction_type'] 	= 1;
+		$set['transaction_type'] 	= $paytment_type;
 		$set['reason'] 				= $desc;
 		$set['uploaded_by'] 		= $this->user_name; 
 		

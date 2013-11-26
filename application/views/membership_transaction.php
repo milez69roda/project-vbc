@@ -16,8 +16,9 @@ $(document).ready( function () {
 			"iDisplayLength": 25,
 			"aaSorting": [[ 1, 'desc' ]],
 			"aoColumnDefs":[
-				{ 'bSortable': false, 'aTargets': [ 0, 10 ]},
-				{ 'bVisible': false, 'aTargets': [ 1 ]}
+				{ 'bSortable': false, 'aTargets': [ 0, 11 ]},
+				{ 'bVisible': false, 'aTargets': [ 1 ]},
+				{ 'bVisible': false, 'aTargets': [ 2 ]}
 			],
 			"fnServerParams": function( aoData ){
 				aoData.push( { "name": "sel_sort_view", "value": $("#sel_sort_view").val() } );   
@@ -67,6 +68,7 @@ $(document).ready( function () {
 			<tr>
 				<td>#</td>
 				<td><strong>Date Updated</strong></td>
+				<td><strong>NRIC/FIN no.</strong></td>
 				<td><strong>Ref</strong></td>
 				<td width="200px"><strong>Name</strong></td>
 				<td width="100px"><strong>Membership</strong></td>

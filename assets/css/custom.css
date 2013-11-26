@@ -33,3 +33,7 @@ tr.TRANSAC_TYPE_terminated  td{background-color:#ccc  !important;}
 	margin-left: 0px;
 	margin-right: 0px;
 }
+
+.modal-header{
+	cursor: pointer;
+}
