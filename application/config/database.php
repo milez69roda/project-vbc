@@ -50,8 +50,8 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
-$db['default']['password'] = '';
-$db['default']['database'] = 'vandaboxing_db';
+$db['default']['password'] = 'wd@2013';
+$db['default']['database'] = 'testing1';
 /* $db['default']['hostname'] = 'sql310.byethost8.com';
 $db['default']['username'] = 'b8_13661247';
 $db['default']['password'] = 'itsmilo';

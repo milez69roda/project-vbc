@@ -4,89 +4,111 @@
 		
 		 
 		
-	}
+	} 
+	$(document).ready( function () { 
 
-$(document).ready( function () {
-  
-	var startDate = $('#startDate').datepicker({
-		onRender: function(date) {
-			//return date.valueOf() < now.valueOf() ? 'disabled' : '';
-		}
-	}).on('changeDate', function(ev) {
-		if (ev.date.valueOf() > startDate.date.valueOf()) {
-			var newDate = new Date(ev.date)
-			newDate.setDate(newDate.getDate() + 1);
-			startDate.setValue(newDate);
-		}
-		startDate.hide();
-		$('#endDate')[0].focus();
-		 
-	}).data('datepicker');
+		$('#reportrange').daterangepicker({
+		      ranges: {
+		         'Today': [moment(), moment()],
+		         'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+		         'Last 7 Days': [moment().subtract('days', 6), moment()],
+		         'Last 30 Days': [moment().subtract('days', 29), moment()],
+		         'This Month': [moment().startOf('month'), moment().endOf('month')],
+		         'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+		      },
+		      startDate: moment().subtract('days', 29),
+		      endDate: moment()
+		    },
+		    function(start, end) {
+		        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+		       	$(".filterribbon input[name='startdate']").val(start.format('YYYY-MM-DD'));
+		        $(".filterribbon input[name='enddate']").val(end.format('YYYY-MM-DD'));
+		        //$(".filterribbon button[type=submit]").click();	        
 
+		        console.log(start.format('YYYY-MM-DD')+' - '+start.format('YYYY-MM-DD'))
+		    }
+		);
 
-	var endDate = $('#endDate').datepicker({
-			onRender: function(date) {
-				return date.valueOf() <= startDate.date.valueOf() ? 'disabled' : '';
-			}
-		}).on('changeDate', function(ev) {
-			endDate.hide();
-		}).data('datepicker');		
+	});
 
-})
 </script>
+ 
+	<div class="row" style="background-color: #fff; padding: 5px 3px">
+		<!--<div class="pull-right filterribbon" style=" width: 680px; background-color: #333; box-shadow: 0 1px 3px #888888; color: #fff; height: 45x; text-shadow: 0 0 0 #000000; padding: 6px 14px 6px 15px; " >-->
+		
+		<div class="pull-left">
+			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> Membership</h4>  
+	 	</div>
+		<div class="pull-right filterribbon" style=" width: 680px;" >
+			<form name="searchForm" method="post" action="" >
+				<input id="startdate" class="datepicker input-small" type="hidden" value="2013-10-29" name="startdate">
+				<input id="enddate" class="datepicker input-small" type="hidden" value="2013-11-27" name="enddate">
+				<input id="week" class="input-mini" type="hidden" value="0" name="week">
+				<input id="year" type="hidden" value="0" name="year">	
+				
+				
+				<div class="pull-right"  >	
+					&nbsp;		  
+					<button type="submit" class="btn btn-primary btn-sm">Generate Report</button>
+				</div>
 
+				<div id="reportrange" class="pull-right">
+				    <i class="glyphicon glyphicon-calendar"></i>
+				    <span><?php echo date("F j, Y", strtotime('-30 day')); ?> - <?php echo date("F j, Y"); ?></span> <b class="caret"></b>
+				</div>
+
+			    
+			    <div class="col-lg-3 pull-right" style="margin:0px; padding:0 3px">
+					<select class="form-control" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;" >
+						<option value="0">Sign-ups</option>
+						<option value="1">Terminated</option>
+						<option value="2">Suspended</option>
+						<option value="3">Current</option>
+						<option value="4">Cash Payment</option>
+						<option value="5">Credit Card</option>
+					</select>
+			    </div>		 
+
+				<div class="pull-right" style="font-size: 12px"><span class="glyphicon glyphicon-list" style="padding-top: 8px"></span> Filters: &nbsp;	</div>
+			     	
+			</form>
+		</div>
+	</div> 
 	<div class="row">
-		<h4>Report > Signups</h4> <hr />   
- 	</div>
 	
-	<div class="row">
-	
-	<form class="form-horizontal" role="form">
-	
-	
-		<div class="form-group">
-			<label for="inputEmail3" class="col-sm-2 control-label">Type</label>
-			<div class="col-sm-3">
-				<select class="form-control input-sm">
-					<option>Sign-ups</option>
-					<option>Terminated</option>
-					<option>Suspended</option>
-					<option>Current</option>
-					<option>Cash Payment</option>
-					<option>Credit Card</option>
-				</select>
-			</div>
-		</div>
-	
-		<!--<div class="form-group">
-			<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
-			<div class="col-sm-3">
-				<select class="form-control input-sm">
-					<option>Daily</option>
-					<option>Weekly</option>
-					<option>Monthly</option>
-					<option>Semi-Annual</option>
-					<option>Annual</option> 
-				</select>
-			</div>
-		</div>-->
+		<!--<form class="form-horizontal" role="form">
 		
-		<div class="form-group">
-			<label for="inputEmail3" class="col-sm-2 control-label">Date Range</label>
-			<div class="col-sm-2">
-				<input type="text" name="startDate" id="startDate" value="" placeholder="" class="form-control"/>
-			</div> 			
-			<div class="col-sm-2">
-				<input type="text" name="endDate" id="endDate" value="" placeholder="" class="form-control"/>
-			</div> 						
-		</div>
 		
-		<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-10">
-		  <button type="submit" class="btn btn-default">Generate Report</button>
-		</div>
-		</div>
-	</form>
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label">Type</label>
+				<div class="col-sm-3">
+					<select class="form-control input-sm">
+						<option>Sign-ups</option>
+						<option>Terminated</option>
+						<option>Suspended</option>
+						<option>Current</option>
+						<option>Cash Payment</option>
+						<option>Credit Card</option>
+					</select>
+				</div>
+			</div> 
+			
+			<div class="form-group">
+				<label for="inputEmail3" class="col-sm-2 control-label">Date Range</label>
+				<div class="col-sm-2">
+					<input type="text" name="startDate" id="startDate" value="" placeholder="" class="form-control"/>
+				</div> 			
+				<div class="col-sm-2">
+					<input type="text" name="endDate" id="endDate" value="" placeholder="" class="form-control"/>
+				</div> 						
+			</div>
+			
+			<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+			  <button type="submit" class="btn btn-default">Generate Report</button>
+			</div>
+			</div>
+		</form>-->
 	
 	 
 		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list">
