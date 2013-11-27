@@ -1,32 +1,34 @@
 <script type="text/javascript">
 	
-	var reports = {
+	var generatereports = {
 		
-		 
-		
+			membership: function( form ){
+
+		  }
 	} 
+
 	$(document).ready( function () { 
 
 		$('#reportrange').daterangepicker({
-		      ranges: {
-		         'Today': [moment(), moment()],
-		         'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
-		         'Last 7 Days': [moment().subtract('days', 6), moment()],
-		         'Last 30 Days': [moment().subtract('days', 29), moment()],
-		         'This Month': [moment().startOf('month'), moment().endOf('month')],
-		         'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
-		      },
-		      startDate: moment().subtract('days', 29),
-		      endDate: moment()
-		    },
-		    function(start, end) {
-		        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-		       	$(".filterribbon input[name='startdate']").val(start.format('YYYY-MM-DD'));
-		        $(".filterribbon input[name='enddate']").val(end.format('YYYY-MM-DD'));
-		        //$(".filterribbon button[type=submit]").click();	        
+				ranges: {
+					'Today': [moment(), moment()],
+					'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+					'Last 7 Days': [moment().subtract('days', 6), moment()],
+					'Last 30 Days': [moment().subtract('days', 29), moment()],
+					'This Month': [moment().startOf('month'), moment().endOf('month')],
+					'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+				},
+				startDate: moment().subtract('days', 29),
+				endDate: moment()
+			},
+			function(start, end) {
+				$('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+				$(".filterribbon input[name='startdate']").val(start.format('YYYY-MM-DD'));
+				$(".filterribbon input[name='enddate']").val(end.format('YYYY-MM-DD'));
+				//$(".filterribbon button[type=submit]").click();	        
 
-		        console.log(start.format('YYYY-MM-DD')+' - '+start.format('YYYY-MM-DD'))
-		    }
+				console.log(start.format('YYYY-MM-DD')+' - '+start.format('YYYY-MM-DD'))
+			}
 		);
 
 	});
@@ -75,55 +77,32 @@
 		</div>
 	</div> 
 	<div class="row">
-	
-		<!--<form class="form-horizontal" role="form">
-		
-		
-			<div class="form-group">
-				<label for="inputEmail3" class="col-sm-2 control-label">Type</label>
-				<div class="col-sm-3">
-					<select class="form-control input-sm">
-						<option>Sign-ups</option>
-						<option>Terminated</option>
-						<option>Suspended</option>
-						<option>Current</option>
-						<option>Cash Payment</option>
-						<option>Credit Card</option>
-					</select>
-				</div>
-			</div> 
-			
-			<div class="form-group">
-				<label for="inputEmail3" class="col-sm-2 control-label">Date Range</label>
-				<div class="col-sm-2">
-					<input type="text" name="startDate" id="startDate" value="" placeholder="" class="form-control"/>
-				</div> 			
-				<div class="col-sm-2">
-					<input type="text" name="endDate" id="endDate" value="" placeholder="" class="form-control"/>
-				</div> 						
-			</div>
-			
-			<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
-			  <button type="submit" class="btn btn-default">Generate Report</button>
-			</div>
-			</div>
-		</form>-->
-	
-	 
+	  
 		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list">
 			<thead>
-			<tr>
-				<td>#</td>
-				<!--<td><strong>Date Updated</strong></td>-->
-				<td><strong>Ref</strong></td>
-				<td width="200px"><strong>Name</strong></td>
-				<td width="100px"><strong>Membership</strong></td>
-				<td><strong>Amount</strong></td>
-				<td><strong>Phone</strong></td>
-				<td><strong>Email</strong></td>
-				<td><strong>Signup</strong></td> 
-			</tr>
+				<tr>
+					<td>#</td> 
+					<td><strong>Ref</strong></td>
+					<td width="200px"><strong>Name</strong></td>
+					<td width="100px"><strong>Membership</strong></td>
+					<td><strong>Amount</strong></td>
+					<td><strong>Phone</strong></td>
+					<td><strong>Email</strong></td>
+					<td><strong>Signup</strong></td> 
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>	
+			</tbody>	
 			
 		</table>
 		 
