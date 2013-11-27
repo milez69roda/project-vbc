@@ -79,16 +79,67 @@ class Reports extends MY_Controller {
 		$this->load->model('schedule_payment_model', 'payments');
 		
 		$this->payments->get_list();
-	}
-	
+	} 
 	
 	public function membership(){
-	
+		
+		$this->load->model('Reports_model', 'report');
+		
+		$startDate 	= $this->input->get('startdate');
+		$endDate 	= $this->input->get('enddate');
+		$reportType = $this->input->get('report_type');
+		$data = array();
+		
+		if($reportType == 0){
+			$data['title'] = 'Signup';
+			$data['records'] = $this->report->signups($startDate, $endDate);
+		} 
+		
+		if($reportType == 1){
+			$data['title'] = 'Termination';
+			$data['records'] = $this->report->termination($startDate, $endDate);
+		} 
+		
+		if($reportType == 2){
+			$data['title'] = 'Suspension';
+			$data['records'] = $this->report->suspension($startDate, $endDate);
+		} 
+		
+		if($reportType == 3){
+			$data['title'] = 'Current';
+			$data['records'] = $this->report->current($startDate, $endDate);
+		} 
+		
+		if($reportType == 4){
+			$data['title'] = 'Cash Payment';
+			$data['records'] = $this->report->current($startDate, $endDate);
+		} 
+		
+		if($reportType == 5){
+			$data['title'] = 'Credit Card';
+			$data['records'] = $this->report->creditcard($startDate, $endDate);
+		} 
+		
 		$this->load->view('header'); 
-		$this->load->view('reports/membership_reports'); 
-		$this->load->view('footer');	
-	
+		$this->load->view('reports/membership_reports', $data); 
+		$this->load->view('footer');	 
 	}
+	
+	public function terms(){
+		
+		$this->load->model('Reports_model', 'report'); 
+		$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+		$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		$reportType = $this->input->get('report_type');
+		$data = array();
+		
+		$data['title'] = 'Terms';
+		$data['records'] = $this->report->terms($startDate, $endDate, $reportType);		
+		//echo $this->db->last_query();
+		$this->load->view('header'); 
+		$this->load->view('reports/terms_reports', $data); 
+		$this->load->view('footer');			
+	}		
 }
 
 /* End of file membership.php */

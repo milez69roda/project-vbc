@@ -18,7 +18,8 @@
 					'This Month': [moment().startOf('month'), moment().endOf('month')],
 					'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
 				},
-				startDate: moment().subtract('days', 29),
+				//startDate: moment().subtract('days', 29),
+				startDate: moment(),
 				endDate: moment()
 			},
 			function(start, end) {
@@ -55,13 +56,13 @@
 		<!--<div class="pull-right filterribbon" style=" width: 680px; background-color: #333; box-shadow: 0 1px 3px #888888; color: #fff; height: 45x; text-shadow: 0 0 0 #000000; padding: 6px 14px 6px 15px; " >-->
 		
 		<div class="pull-left">
-			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> Membership <span class="glyphicon glyphicon-chevron-right" style="color:#333"><?php echo $title ?></h4>  
+			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <?php echo $title ?></h4>  
 	 	</div>
 		
 		<div class="pull-right filterribbon" style=" width: 680px;" >
-			<form name="searchForm" method="get" action="reports/membership/" >
-				<input id="startdate" class="datepicker input-small" type="hidden" value="2013-10-29" name="startdate">
-				<input id="enddate" class="datepicker input-small" type="hidden" value="2013-11-27" name="enddate">
+			<form name="searchForm" method="get" action="reports/terms/" >
+				<input id="startdate" class="datepicker input-small" type="hidden" value="<?php @$_REQUEST['startdate']; ?>" name="startdate">
+				<input id="enddate" class="datepicker input-small" type="hidden" value="<?php @$_REQUEST['enddate']; ?>" name="enddate">
 				<!--<input id="week" class="input-mini" type="hidden" value="0" name="week">
 				<input id="year" type="hidden" value="0" name="year">-->	
 				
@@ -79,12 +80,15 @@
 			    
 			    <div class="col-lg-3 pull-right" style="margin:0px; padding:0 3px">
 					<select name="report_type" class="form-control" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;" >
-						<option value="0" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 0)?'selected':'' ?>>Sign-ups</option>
-						<option value="1" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 1)?'selected':'' ?>>Terminated</option>
-						<option value="2" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 2)?'selected':'' ?>>Suspended</option>
-						<option value="3" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 3)?'selected':'' ?>>Current</option>
-						<option value="4" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 4)?'selected':'' ?>>Cash Payment</option>
-						<option value="5" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 5)?'selected':'' ?>>Credit Card</option>
+						<option value="" >--select--</option>
+						<option value="<?php echo TERM_ACTIVE; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_ACTIVE)?'selected':'' ?>>Activated/Reactivate</option>
+						<option value="<?php echo TERM_EXPIRED; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_EXPIRED)?'selected':'' ?>>Expired</option>
+						<option value="<?php echo TERM_SUSPENSION; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_SUSPENSION)?'selected':'' ?>>Suspended</option>
+						<option value="<?php echo TERM_TERMINATION; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_TERMINATION)?'selected':'' ?>>Terminated</option>
+						<option value="<?php echo TERM_ROLLING_MONTLY; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_ROLLING_MONTLY)?'selected':'' ?>>Rolling Monthtly</option>
+						<option value="<?php echo TERM_EXTEND_6; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_EXTEND_6)?'selected':'' ?>>Extend 6 Months</option>
+						<option value="<?php echo TERM_EXTEND_12; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_EXTEND_12)?'selected':'' ?>>Extend 12 Months</option>
+						<option value="<?php echo TERM_DELETED; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_DELETED)?'selected':'' ?>>Deleted</option>
 					</select>
 			    </div>		 
 
@@ -93,10 +97,7 @@
 			</form>
 		</div>
 	</div> 
-	
-	<div class="row" style="color:red">For <strong>Current, Cash Payment and Credit Card</strong> no date range filter, just hit the generate report and it will display all the current members that are active.</div>
-	<div class="row" style="color:red">To be discuss with willi</div>
-	
+	 
 	<div class="row">
 	  
 		<?php if( isset($records['results']) ): ?>

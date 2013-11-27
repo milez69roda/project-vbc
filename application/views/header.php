@@ -78,18 +78,12 @@
 					<li class="<?php echo ($segment1 == 'reports' AND $segment2 == 'schedulepayments' )?'active':''; ?>"><a href="reports/schedulepayments">Schedule Payments</a></li>
 					<li class="<?php echo ($segment1 == 'reports' AND $segment2 == 'uploadschedulepayments' )?'active':''; ?>"><a href="reports/uploadschedulepayments">Upload</a></li>
 					<li class="divider"></li>
-					<li><a href="reports/membership">Membership</a></li> 
-					<!--<li><a href="#">Terminated</a></li> 
-					<li><a href="#">Suspended</a></li> 
-					<li><a href="#">Current</a></li> 
-					<li><a href="#">CC</a></li> 
-					<li><a href="#">Cash</a></li> --> 
+					<li><a href="reports/membership">Membership</a></li> 					
 					<li class="divider"></li>
-					<li><a href="#">Terms</a></li>  
+					<li><a href="reports/terms">Terms</a></li>  
 					<li><a href="#">Freebies</a></li>  
-					<!--<li class="dropdown-header">Nav header</li>
-					<li><a href="#">Separated link</a></li>
-					<li><a href="#">One more separated link</a></li> -->
+					<li class="divider"></li>
+					<li><a href="#">Invoice</a></li>   
 				</ul>
             </li>            
 			

@@ -430,6 +430,14 @@ class Membership extends MY_Controller {
 			$set1['deleted']		= 1; 
 			$set1['deleted_reason']	= $reason; 
 			$set1['deleted_user']	= $this->user_name; 
+		}	
+		
+		if( $term == TERM_TERMINATION ){ //terminated
+			$set1['terminated_date'] = date('Y-m-d');  
+		}	
+		
+		if( $term == TERM_SUSPENSION ){ //terminated
+			$set1['suspension_date'] = date('Y-m-d');  
 		}		
 		
 		$set2['mem_id'] 		= $mem_id;
