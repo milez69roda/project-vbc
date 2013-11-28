@@ -9,7 +9,7 @@ class Reports_Model extends CI_Model {
     public function signups($startdate, $enddate){ 
 		
 		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.create_date", false);
-		$this->db->where("club_transaction.create_date BETWEEN '$startdate' AND '$enddate'");
+		$this->db->where("DATE_FORMAT(club_transaction.create_date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction.create_date', 'asc');
 		$results = $this->db->get('club_transaction')->result();
@@ -30,7 +30,7 @@ class Reports_Model extends CI_Model {
     public function termination($startdate, $enddate){ 
 		
 		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.termination_date", false);
-		$this->db->where("term_type = ".TERM_TERMINATION." AND club_transaction.termination_date BETWEEN '$startdate' AND '$enddate'");
+		$this->db->where("term_type = ".TERM_TERMINATION." AND DATE_FORMAT(club_transaction.termination_date,'%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction.termination_date', 'asc');
 		$results = $this->db->get('club_transaction')->result();
@@ -52,7 +52,7 @@ class Reports_Model extends CI_Model {
     public function suspension($startdate, $enddate){ 
 		
 		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email, club_transaction_terms.date_created, term_reason ", false);
-		$this->db->where("club_transaction_terms.term_type = ".TERM_SUSPENSION." AND club_transaction_terms.date_created BETWEEN '$startdate' AND '$enddate'");
+		$this->db->where("club_transaction_terms.term_type = ".TERM_SUSPENSION." AND DATE_FORMAT(club_transaction_terms.date_created, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
 		$this->db->join('club_transaction', 'club_transaction.tran_id = club_transaction_terms.tran_id', 'LEFT OUTER');
 		$this->db->join('club_membership', 'club_membership.mem_id= club_transaction_terms.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction_terms.date_created', 'asc');
@@ -156,7 +156,7 @@ class Reports_Model extends CI_Model {
 			$this->db->where("club_transaction_terms.term_type", $type);
 		}
 		if($startdate != '' ){
-			$this->db->where("club_transaction_terms.date_created BETWEEN '$startdate' AND '$enddate'");
+			$this->db->where("DATE_FORMAT(club_transaction_terms.date_created, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
 		}
 		  
 		$this->db->join('club_transaction', 'club_transaction.tran_id = club_transaction_terms.tran_id', 'LEFT OUTER');
@@ -182,7 +182,7 @@ class Reports_Model extends CI_Model {
 		$this->db->join('club_membership', 'club_membership.mem_id= club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction_freebies.date_created', 'asc');
 
-		$this->db->where("club_transaction_freebies.date_created BETWEEN '$startdate' AND '$enddate'");
+		$this->db->where("DATE_FORMAT(club_transaction_freebies.date_created, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
 
 		$results = $this->db->get('club_transaction_freebies')->result();
 		$result['header'] = array( 
