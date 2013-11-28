@@ -97,7 +97,7 @@
 	<div class="row">
 	  
 		<?php if( isset($records['results']) ): ?>
-		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list">
+		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list" style="font-size: 90%">
 			<thead>
 				<tr>
 					<td>#</td>
@@ -120,3 +120,4 @@
 		</table>
 		<?php endif; ?> 
 	</div> 
+	<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>

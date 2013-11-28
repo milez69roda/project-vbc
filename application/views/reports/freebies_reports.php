@@ -30,23 +30,7 @@
 		$(".daterangepicker li.active").each(function(){
 			$(this).removeClass('active'); 
 		});		
-		
-		/* $('#transaction_list').dataTable({ 
-				"sDom": "<'row'<'pull-right'f><'pull-left'l>r<'clearfix'>>t<'row'<'pull-left'i><'pull-right'p><'clearfix'>>",
-				"sPaginationType": "bootstrap", 
-				"bProcessing": true, 
-				"bPaginate": true,		 
-				"oLanguage": {
-					"sLengthMenu": "Show _MENU_ Rows",
-					"sSearch": "Search: "
-				},						
-				"iDisplayLength": 25,
-				"aaSorting": [[ 8, 'desc' ]],
-				"aoColumnDefs":[
-					//{ 'bSortable': false, 'aTargets': [ 0, 11 ]}					 
-				] 						
-		});  */		
-
+		  
 	});
 
 </script>
@@ -82,7 +66,7 @@
 	<div class="row">
 	  
 		<?php if( isset($records['results']) ): ?>
-		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list">
+		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list" style="font-size: 90%">
 			<thead>
 				<tr>
 					<td>#</td>
@@ -105,3 +89,4 @@
 		</table>
 		<?php endif; ?> 
 	</div> 
+	<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>

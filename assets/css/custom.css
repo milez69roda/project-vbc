@@ -54,3 +54,15 @@ tr.TRANSAC_TYPE_terminated  td{background-color:#ccc  !important;}
     color: #0088CC !important;
 }*/
  
+#go_up { 
+    cursor: pointer;
+    display: none;
+    bottom: 10px;
+    height: 60px;
+    position: fixed;
+    right: 10px;
+    width: 60px; 
+    z-index: 100;
+    font-size: 40px;
+    color: #428BCA; 
+} 

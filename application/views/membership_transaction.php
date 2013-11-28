@@ -63,7 +63,7 @@ $(document).ready( function () {
 	
 	<div class="row">
 	 
-		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list">
+		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list" style="font-size: 95%">
 			<thead>
 			<tr>
 				<td>#</td>
