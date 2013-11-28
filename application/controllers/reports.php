@@ -10,11 +10,9 @@ class Reports extends MY_Controller {
 	
 		/* $this->load->view('header'); 
 		$this->load->view('membership_transaction'); 
-		$this->load->view('footer'); */	
-	
+		$this->load->view('footer'); */	 
 	}
-	
-	
+	 
 	/**
 	*
 	*	SCHEDULE PAYMENTS
@@ -112,7 +110,7 @@ class Reports extends MY_Controller {
 		
 		if($reportType == 4){
 			$data['title'] = 'Cash Payment';
-			$data['records'] = $this->report->current($startDate, $endDate);
+			$data['records'] = $this->report->cashpayment($startDate, $endDate);
 		} 
 		
 		if($reportType == 5){
@@ -138,6 +136,34 @@ class Reports extends MY_Controller {
 		//echo $this->db->last_query();
 		$this->load->view('header'); 
 		$this->load->view('reports/terms_reports', $data); 
+		$this->load->view('footer');			
+	}
+	
+	public function freebies(){
+		
+		$this->load->model('Reports_model', 'report'); 
+		$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+		$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		$reportType = $this->input->get('report_type');
+		$data = array();
+		
+		$data['title'] = 'Freebies';
+		$data['records'] = $this->report->freebies($startDate, $endDate, $reportType);		
+		//echo $this->db->last_query();
+		$this->load->view('header'); 
+		$this->load->view('reports/freebies_reports', $data); 
+		$this->load->view('footer');			
+	}
+	
+	public function invoice(){
+		 
+		$data = array();
+		
+		$data['title'] = 'Invoice';
+		//$data['records'] = $this->report->freebies($startDate, $endDate, $reportType);		
+		//echo $this->db->last_query();
+		$this->load->view('header'); 
+		$this->load->view('reports/invoice_reports', $data); 
 		$this->load->view('footer');			
 	}		
 }

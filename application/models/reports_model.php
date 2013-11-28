@@ -135,7 +135,7 @@ class Reports_Model extends CI_Model {
 		return $result;
 	}	
 	
-	
+	//DATE_FORMAT(club_transaction_terms.date_created, '%d/%m/%Y %h:%i:%s %p') as date_created, 
     public function terms($startdate, $enddate, $type){ 
 		
 		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name,
@@ -148,8 +148,9 @@ class Reports_Model extends CI_Model {
 								WHEN ".TERM_EXTEND_6." THEN 'Extend 6 Months'
 								WHEN ".TERM_EXTEND_12." THEN 'Extend 12 Months'
 								WHEN ".TERM_DELETED." THEN 'Deleted'
-							END AS terms,		
-							club_transaction_terms.date_created, term_reason, added_by ", false);
+							END AS terms, 			
+							club_transaction_terms.date_created, 
+							term_reason, added_by ", false);
 		//$this->db->where("club_transaction_terms.date_created BETWEEN '$startdate' AND '$enddate'");
 		if($type != '' ){
 			$this->db->where("club_transaction_terms.term_type", $type);
@@ -159,13 +160,13 @@ class Reports_Model extends CI_Model {
 		}
 		  
 		$this->db->join('club_transaction', 'club_transaction.tran_id = club_transaction_terms.tran_id', 'LEFT OUTER');
-		$this->db->join('club_membership', 'club_membership.mem_id= club_transaction_terms.mem_id', 'LEFT OUTER');
+		$this->db->join('club_membership', 'club_membership.mem_id= club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction_terms.date_created', 'asc');
 		$results = $this->db->get('club_transaction_terms')->result();
 		$result['header'] = array( 
 								'pay_ref'=>'Ref', 
 								'full_name'=>'Name', 
-								'terms'=>'Term Type', 
+								'terms'=>'Term Type',  
 								'date_created'=>'Date', 
 								'term_reason'=>'Reason',
 								'added_by'=>'Added by');
@@ -173,7 +174,28 @@ class Reports_Model extends CI_Model {
 		
 		return $result;
 	}	
-	
+
+	public function freebies($startdate, $enddate, $type){ 
+
+		$this->db->select("pay_ref, CONCAT(ai_fname, ' ', ai_lname) AS full_name, f_desc, club_transaction_freebies.date_created, added_by", false);
+		$this->db->join('club_transaction', 'club_transaction.tran_id = club_transaction_freebies.tran_id', 'LEFT OUTER');
+		$this->db->join('club_membership', 'club_membership.mem_id= club_transaction.mem_id', 'LEFT OUTER');
+		$this->db->order_by('club_transaction_freebies.date_created', 'asc');
+
+		$this->db->where("club_transaction_freebies.date_created BETWEEN '$startdate' AND '$enddate'");
+
+		$results = $this->db->get('club_transaction_freebies')->result();
+		$result['header'] = array( 
+								'pay_ref'=>'Ref', 
+								'full_name'=>'Name', 
+								'f_desc'=>'Freebies/Others', 
+								'date_created'=>'Date',  
+								'added_by'=>'Added by');
+		$result['results'] = $results;
+		//echo $this->db->last_query();
+		return $result;		
+	}	
+ 
 }
 
 /* End of file reports_model.php */

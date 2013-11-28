@@ -53,7 +53,7 @@ $(document).ready( function () {
 						<option value="3">by Expired</option> 
 						<option value="4">by Suspension</option> 
 						<option value="6">by Termination</option> 
-						<option value="5" selected>by Current Members</option>
+						<option value="5">by Current Members</option>
 					</select>
 				</div> 
 			  </div>

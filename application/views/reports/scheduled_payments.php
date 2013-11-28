@@ -38,7 +38,7 @@ $(document).ready( function () {
 </script>
 
 	<div class="row">
-		<h4>Reports > Scheduled Payments  [<a href="reports/uploadschedulepayments">Upload</a>]</h4> <hr />   
+		<h4>Reports <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> Scheduled Payments  [<a href="reports/uploadschedulepayments">Upload</a>]</h4> <hr />   
  	</div>
 	
 	<div class="row">

@@ -433,7 +433,7 @@ class Membership extends MY_Controller {
 		}	
 		
 		if( $term == TERM_TERMINATION ){ //terminated
-			$set1['terminated_date'] = date('Y-m-d');  
+			$set1['termination_date'] = date('Y-m-d');  
 		}	
 		
 		if( $term == TERM_SUSPENSION ){ //terminated

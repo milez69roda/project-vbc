@@ -81,9 +81,9 @@
 					<li><a href="reports/membership">Membership</a></li> 					
 					<li class="divider"></li>
 					<li><a href="reports/terms">Terms</a></li>  
-					<li><a href="#">Freebies</a></li>  
+					<li><a href="reports/freebies">Freebies</a></li>  
 					<li class="divider"></li>
-					<li><a href="#">Invoice</a></li>   
+					<li><a href="reports/invoice">Invoice</a></li>   
 				</ul>
             </li>            
 			

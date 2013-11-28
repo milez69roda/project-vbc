@@ -48,4 +48,9 @@ tr.TRANSAC_TYPE_terminated  td{background-color:#ccc  !important;}
     width: 300px;
 }
 
+/*.daterangepicker li.active{
+    background: none repeat scroll 0 0 #F5F5F5 !important;
+    border: 1px solid #F5F5F5 !important;
+    color: #0088CC !important;
+}*/
  

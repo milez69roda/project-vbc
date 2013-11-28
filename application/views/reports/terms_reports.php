@@ -1,12 +1,6 @@
 <script type="text/javascript">
 	
-	var generatereports = {
-		
-			membership: function( form ){
-
-		  }
-	} 
-
+	  
 	$(document).ready( function () { 
 
 		$('#reportrange').daterangepicker({
@@ -18,19 +12,23 @@
 					'This Month': [moment().startOf('month'), moment().endOf('month')],
 					'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
 				},
-				//startDate: moment().subtract('days', 29),
-				startDate: moment(),
+				startDate: moment().subtract('days', 29),
+				//startDate: moment(),
 				endDate: moment()
 			},
 			function(start, end) {
 				$('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
 				$(".filterribbon input[name='startdate']").val(start.format('YYYY-MM-DD'));
 				$(".filterribbon input[name='enddate']").val(end.format('YYYY-MM-DD'));
-				//$(".filterribbon button[type=submit]").click();	        
+				$(".filterribbon button[type=submit]").click();	        
 
 				console.log(start.format('YYYY-MM-DD')+' - '+start.format('YYYY-MM-DD'))
 			}
 		);
+
+		$(".daterangepicker li.active").each(function(){
+			$(this).removeClass('active'); 
+		});		
 		
 		/* $('#transaction_list').dataTable({ 
 				"sDom": "<'row'<'pull-right'f><'pull-left'l>r<'clearfix'>>t<'row'<'pull-left'i><'pull-right'p><'clearfix'>>",
@@ -56,16 +54,13 @@
 		<!--<div class="pull-right filterribbon" style=" width: 680px; background-color: #333; box-shadow: 0 1px 3px #888888; color: #fff; height: 45x; text-shadow: 0 0 0 #000000; padding: 6px 14px 6px 15px; " >-->
 		
 		<div class="pull-left">
-			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <?php echo $title ?></h4>  
+			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"> <a href="reports/terms"></span> <?php echo $title ?></a> </h4>  
 	 	</div>
 		
 		<div class="pull-right filterribbon" style=" width: 680px;" >
 			<form name="searchForm" method="get" action="reports/terms/" >
-				<input id="startdate" class="datepicker input-small" type="hidden" value="<?php @$_REQUEST['startdate']; ?>" name="startdate">
-				<input id="enddate" class="datepicker input-small" type="hidden" value="<?php @$_REQUEST['enddate']; ?>" name="enddate">
-				<!--<input id="week" class="input-mini" type="hidden" value="0" name="week">
-				<input id="year" type="hidden" value="0" name="year">-->	
-				
+				<input id="startdate" class="datepicker input-small" type="hidden" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("F j, Y", strtotime('-30 day')); ?>" name="startdate">
+				<input id="enddate" class="datepicker input-small" type="hidden" value="<?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("Y-m-d", strtotime($_GET['enddate'])):date("Y-m-d"); ?>" name="enddate"> 				
 				
 				<div class="pull-right"  >	
 					&nbsp;		  
@@ -74,13 +69,14 @@
 
 				<div id="reportrange" class="pull-right">
 				    <i class="glyphicon glyphicon-calendar"></i>
-				    <span><?php echo date("F j, Y", strtotime('-30 day')); ?> - <?php echo date("F j, Y"); ?></span> <b class="caret"></b>
+				    <!--<span><?php echo date("F j, Y", strtotime('-30 day')); ?> - <?php echo date("F j, Y"); ?></span> <b class="caret"></b>-->
+				    <span><?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("F j, Y", strtotime($_GET['startdate'])):date("F j, Y", strtotime('-30 day')); ?> - <?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("F j, Y", strtotime($_GET['enddate'])):date("F j, Y"); ?></span> <b class="caret"></b>
 				</div>
 
 			    
 			    <div class="col-lg-3 pull-right" style="margin:0px; padding:0 3px">
 					<select name="report_type" class="form-control" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;" >
-						<option value="" >--select--</option>
+						<option value="" >--All--</option>
 						<option value="<?php echo TERM_ACTIVE; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_ACTIVE)?'selected':'' ?>>Activated/Reactivate</option>
 						<option value="<?php echo TERM_EXPIRED; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_EXPIRED)?'selected':'' ?>>Expired</option>
 						<option value="<?php echo TERM_SUSPENSION; ?>" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == TERM_SUSPENSION)?'selected':'' ?>>Suspended</option>
