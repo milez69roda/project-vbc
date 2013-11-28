@@ -186,6 +186,15 @@ var membershiptransaction = {
 }
 
 
+var generatereports = {
+
+	export: function(){
+		form = $("#searchForm");
+		$.post('export/download', form.serialize(), function(result){
+			window.location = result;
+		}); 
+	}
+} 
 
 $(document).keyup(function(e) { 
 	//console.log(e.keyCode);

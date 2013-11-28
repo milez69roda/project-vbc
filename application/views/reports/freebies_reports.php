@@ -43,7 +43,9 @@
 	 	</div>
 		
 		<div class="pull-right filterribbon" style=" width: 680px;" >
-			<form name="searchForm" method="get" action="reports/freebies/" >
+		
+			<form id="searchForm" name="searchForm" method="get" action="reports/freebies/" >
+				<input type="hidden" name="report_page" value="freebies" />
 				<input id="startdate" class="datepicker input-small" type="hidden" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("F j, Y", strtotime('-30 day')); ?>" name="startdate">
 				<input id="enddate" class="datepicker input-small" type="hidden" value="<?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("Y-m-d", strtotime($_GET['enddate'])):date("Y-m-d"); ?>" name="enddate"> 				
 				
@@ -62,7 +64,8 @@
 			</form>
 		</div>
 	</div> 
-	 
+	
+	<a href="javascript:void(0)" onclick="generatereports.export()"><span class="glyphicon glyphicon-save" style="color:#333; font-size:15px"></span>Export</a>	
 	<div class="row">
 	  
 		<?php if( isset($records['results']) ): ?>

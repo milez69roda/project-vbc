@@ -1,12 +1,5 @@
 <script type="text/javascript">
-	
-	var generatereports = {
-		
-			membership: function( form ){
-
-		  }
-	} 
-
+	 
 	$(document).ready( function () { 
 
 		$('#reportrange').daterangepicker({
@@ -59,11 +52,12 @@
 		<!--<div class="pull-right filterribbon" style=" width: 680px; background-color: #333; box-shadow: 0 1px 3px #888888; color: #fff; height: 45x; text-shadow: 0 0 0 #000000; padding: 6px 14px 6px 15px; " >-->
 		
 		<div class="pull-left">
-			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <a href="reports/membership">Membership</a> <span class="glyphicon glyphicon-chevron-right" style="color:#333"><?php echo $title ?></h4>  
+			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <a href="reports/membership">Membership</a> <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <?php echo $title ?></h4>  
 	 	</div>
 		
 		<div class="pull-right filterribbon" style=" width: 680px;" >
-			<form name="searchForm" method="get" action="reports/membership/" >
+			<form id="searchForm" name="searchForm" method="get" action="reports/membership/" >
+				<input type="hidden" name="report_page" value="membership" />
 				<input id="startdate" class="datepicker input-small" type="hidden" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("Y-m-d", strtotime('-30 day')); ?>" name="startdate">
 				<input id="enddate" class="datepicker input-small" type="hidden" value="<?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("Y-m-d", strtotime($_GET['enddate'])):date("Y-m-d"); ?>" name="enddate"> 
 				
@@ -99,6 +93,7 @@
 	<div class="row" style="color:red">For <strong>Current, Cash Payment and Credit Card</strong> no date range filter, just hit the generate report and it will display all the current members that are active.</div>
 	<div class="row" style="color:red">To be discuss with willi</div>
 	
+	<a href="javascript:void(0)" onclick="generatereports.export()"><span class="glyphicon glyphicon-save" style="color:#333; font-size:15px"></span>Export</a>
 	<div class="row">
 	  
 		<?php if( isset($records['results']) ): ?>
