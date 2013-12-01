@@ -378,14 +378,17 @@ CREATE TABLE `gear_admin_login` (
   `user_name` varchar(100) NOT NULL DEFAULT '',
   `user_password` varchar(100) NOT NULL DEFAULT '',
   `status_flag` enum('0','1') NOT NULL DEFAULT '1',
-  `access_type` smallint(6) DEFAULT '0',
+  `access_type` smallint(6) DEFAULT '0' COMMENT '0 regular 1 admin',
   `fullname` varchar(100) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `date_created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `added_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`admin_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `gear_admin_login` */
 
-insert  into `gear_admin_login`(`admin_id`,`user_name`,`user_password`,`status_flag`,`access_type`,`fullname`) values (1,'vanda','31f9ff8fa2e532d71592bf6ef26606fb','1',NULL,NULL),(2,'vanda1','827ccb0eea8a706c4c34a16891f84e7b','1',NULL,NULL);
+insert  into `gear_admin_login`(`admin_id`,`user_name`,`user_password`,`status_flag`,`access_type`,`fullname`,`email`,`date_created`,`added_by`) values (1,'vanda','31f9ff8fa2e532d71592bf6ef26606fb','1',1,NULL,NULL,NULL,NULL),(2,'vanda1','827ccb0eea8a706c4c34a16891f84e7b','1',0,NULL,NULL,NULL,NULL),(3,'milo','827ccb0eea8a706c4c34a16891f84e7b','1',1,'Milo Roda','carmelo_roda@yahoo.com',NULL,NULL);
 
 /*Table structure for table `gear_buying` */
 
@@ -635,7 +638,7 @@ CREATE TABLE `sessions` (
 
 /*Data for the table `sessions` */
 
-insert  into `sessions`(`session_id`,`ip_address`,`user_agent`,`last_activity`,`user_data`) values ('0c159e14d32fc6a94c7aa460e0b30519','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0',1385558892,'a:4:{s:9:\"user_data\";s:0:\"\";s:9:\"logged_in\";b:1;s:10:\"vbc_userid\";s:1:\"2\";s:12:\"vbc_username\";s:6:\"vanda1\";}');
+insert  into `sessions`(`session_id`,`ip_address`,`user_agent`,`last_activity`,`user_data`) values ('fca73316b3298c80fbb96a0951c4613c','::1','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0',1385828701,'');
 
 /*Table structure for table `staffs` */
 
