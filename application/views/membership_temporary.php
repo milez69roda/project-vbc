@@ -100,4 +100,4 @@
 		</table>	
 
 	</div> 
-	<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>
+	<!--<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>-->

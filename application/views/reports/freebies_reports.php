@@ -23,7 +23,7 @@
 				$(".filterribbon input[name='enddate']").val(end.format('YYYY-MM-DD'));
 				$(".filterribbon button[type=submit]").click();	        
 
-				console.log(start.format('YYYY-MM-DD')+' - '+start.format('YYYY-MM-DD'))
+				//console.log(start.format('YYYY-MM-DD')+' - '+start.format('YYYY-MM-DD'))
 			}
 		);
 
@@ -92,4 +92,4 @@
 		</table>
 		<?php endif; ?> 
 	</div> 
-	<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>
+	<!--<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>-->

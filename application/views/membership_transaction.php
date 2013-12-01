@@ -65,22 +65,23 @@ $(document).ready( function () {
 	 
 		<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="transaction_list" style="font-size: 95%">
 			<thead>
-			<tr>
-				<td>#</td>
-				<td><strong>Date Updated</strong></td>
-				<td><strong>NRIC/FIN no.</strong></td>
-				<td><strong>Ref</strong></td>
-				<td width="200px"><strong>Name</strong></td>
-				<td width="100px"><strong>Membership</strong></td>
-				<td><strong>Amount</strong></td>
-				<td><strong>Phone</strong></td>
-				<td><strong>Email</strong></td>
-				<td><strong>Signup</strong></td>
-				<td><strong>Expiry</strong></td>
-				<td><strong>Action</strong></td>
-			</tr>
+				<tr>
+					<td>#</td>
+					<td><strong>Date Updated</strong></td>
+					<td><strong>NRIC/FIN no.</strong></td>
+					<td><strong>Ref</strong></td>
+					<td width="200px"><strong>Name</strong></td>
+					<td width="100px"><strong>Membership</strong></td>
+					<td><strong>Amount</strong></td>
+					<td><strong>Phone</strong></td>
+					<td><strong>Email</strong></td>
+					<td><strong>Signup</strong></td>
+					<td><strong>Expiry</strong></td>
+					<td><strong>Action</strong></td>
+				</tr>
+			</thead>	
 			
 		</table>	
 		 
 	</div> 
-	<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>
+	<!--<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>-->

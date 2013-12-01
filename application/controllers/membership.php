@@ -213,7 +213,7 @@ class Membership extends MY_Controller {
 		}		
 		  
 		$data['membership_type_month'] 		= @$this->common_model->getMembershipType($row->mem_type)->month; 
-		$data['schedulepayements_results'] 	= @$this->schedule_payment_model->get(array('Merchant_Ref' => $row->pay_ref));
+		$data['schedulepayements_results'] 	= @$this->schedule_payment_model->get(array('Merchant_Ref' => $row->pay_ref), 10);
 		$data['terms_results'] 				= $this->terms_model->get(array('tran_id'=>$row->tran_id));
 		$data['freebies_results'] 			= $this->freebies_model->get(array('tran_id'=>$row->tran_id));
 		$data['countries'] 					= $this->common_model->getCountryDropdown();

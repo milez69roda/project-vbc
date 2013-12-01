@@ -12,7 +12,7 @@
 		 
 		</div>
 	</div>-->
-	
+	<div id="go_up" style=""><span class="glyphicon glyphicon-arrow-up"></span></div>
     <div id="footer">
       <div class="container"> 
 		<!--<p class="credit">Page Load in {elapsed_time}s</a></p>-->
@@ -44,18 +44,7 @@
 	
 	<script>
 	
-		$(document).ready(function(){
 		
-	 
-			$(document).bind('keydown', 'right', function() {
-				oTable.fnPageChange('next');
-			});
-
-			$(document).bind('keydown', 'left', function() {
-				oTable.fnPageChange('previous');
-			});
-		 	
-		});
 		
 	</script>
 

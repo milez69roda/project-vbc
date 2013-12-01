@@ -9,8 +9,8 @@ class Membership_Model extends CI_Model {
     function get(){
    
 		$sel_sort_view = trim($this->input->get('sel_sort_view'));
-	   
-		$aColumns = array('tran_id', 'club_transaction.update_date', 'ai_nric', 'pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
+	   //'ai_nric', 
+		$aColumns = array('tran_id', 'club_transaction.update_date', 'pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
 		
 		/* Indexed column (used for fast and accurate table cardinality) */
 		$sIndexColumn = "club_transaction.tran_id";

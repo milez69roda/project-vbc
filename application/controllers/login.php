@@ -23,26 +23,30 @@ class Login extends CI_Controller {
 				$password = $this->input->post('InputPassword1');
 				
 				$query = $this->db->get_where('gear_admin_login', array('user_name'=>$username));
-				$flag_error = 1;
-				if( $query->num_rows > 0 ){
 				
-					$row = $query->row();
-					
+				$flag_error = 1;
+				$row = $query->row();
+				
+				if( $query->num_rows > 0 AND $row->status_flag == '1' ){
+				 	
 					if( $row->user_password == md5($password) ){ 
 						$flag_error = 0;
 						$session_data = array(
 							'logged_in' => TRUE,
 							'vbc_userid'=>$row->admin_id, 
-							'vbc_username'=>$row->user_name 
+							'vbc_username'=>$row->user_name, 
+							'vbc_uaccess'=>$row->access_type 
 						);
 						
 						$this->session->set_userdata($session_data);
 						
 						redirect(base_url().'admin');
 					}  
-				} 
-				 
-				$data['msg'] = ($flag_error)?'<div class="alert alert-danger"><p>Username or Password is Incorrect!!!</p></div>':'';
+				}elseif( $row->status_flag == '0' ){ 
+					$data['msg'] = ($flag_error)?'<div class="alert alert-danger"><p>Account is disabled</p></div>':'';
+				}else{	
+					$data['msg'] = ($flag_error)?'<div class="alert alert-danger"><p>Username or Password is Incorrect</p></div>':'';
+				}	
 				
 			}else{
 				$data['msg'] = '<div class="alert alert-danger">'.validation_errors().'</div>';

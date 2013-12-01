@@ -4,6 +4,7 @@ class MY_Controller extends CI_Controller {
 	
 	public $logged_in;
 	public $user_name;
+	public $uaccess;
 	protected $user_id;
 	public $terms_desc;
 	public $terms_active;
@@ -18,6 +19,7 @@ class MY_Controller extends CI_Controller {
 		$this->logged_in 	= $this->session->userdata('logged_in'); 
 		$this->user_id 		= $this->session->userdata('vbc_userid'); 
 		$this->user_name 	= $this->session->userdata('vbc_username');
+		$this->uaccess 	= $this->session->userdata('vbc_uaccess');
 		
 		$this->terms_desc = array(
 			TERM_ACTIVE 		=> 'Activated/Reactivated',

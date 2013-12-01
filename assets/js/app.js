@@ -98,11 +98,7 @@ var membershiptransaction = {
 						$("#freebiesdesc").val('');	
 						
 						$('#freebies-button-add').show();
-						$("#freebies_div").hide();								
-						/* $('#freebies-button-cancel').on('click',function(){
-							$('#freebies-button-add').show();
-							$("#freebies_div").hide();		
-						});	 */							
+						$("#freebies_div").hide();	 						
 						
 						oTable.fnDraw();
 					}else{
@@ -196,34 +192,42 @@ var generatereports = {
 	}
 } 
 
+
+//keystroke
 $(document).keyup(function(e) { 
-	//console.log(e.keyCode);
+	//keystroke ESC, remove modal
 	if (e.keyCode == 27) { 
 		$('.modal').remove(); 
 		$('.modal-backdrop').remove(); 
-		//tpl = null;
 	} 
 	
+	//keystroke F2, redirect
 	if (e.keyCode == 113) { 
 		window.location = 'membership';
 	}
 });
+  
 
-
-$(document).ready( function () {
-
+$(document).ready( function () { 
 
 	$(window).scroll(function(){
-	    if ($(this).scrollTop() > 190) {
-	        $('#go_up').fadeIn();
-	    } else {
-	        $('#go_up').fadeOut();
-	    }
+	    if ($(this).scrollTop() > 190) {  $('#go_up').fadeIn(); } 
+		else { $('#go_up').fadeOut(); }
 	});
 
 	$("#go_up").click(function(){
 		$("html, body").animate({ scrollTop: 0 }, 300);
 	});
+	
+	
+	//datatables arrow keyes left right 
+	$(document).bind('keydown', 'right', function() {
+		oTable.fnPageChange('next');
+	});
+
+	$(document).bind('keydown', 'left', function() {
+		oTable.fnPageChange('previous');
+	}); 	
 
 
 });
