@@ -45,7 +45,60 @@
 		$(".modal").draggable({
 			handle: ".modal-header"
 		});		
-
+	
+		var formdata = false;
+		if (window.FormData) {
+			formdata = new FormData();
+			document.getElementById("btn").style.display = "none";
+		}
+	
+		function showUploadedItem (source) { 
+				$("#profile-image").src = source; 
+				console.log(source);	
+		}  	
+		$("#upload_images").change(function(files){ 
+			
+			var i = 0, len = this.files.length, img, reader, file;
+			
+			for ( ; i < len; i++ ) {
+				file = this.files[i];
+		
+				if (!!file.type.match(/image.*/)) {
+					if ( window.FileReader ) {
+						reader = new FileReader();
+						reader.onloadend = function (e) { 
+							//showUploadedItem(e.target.result, file.fileName);
+						};
+						reader.readAsDataURL(file);
+					}
+					if (formdata) {
+						formdata.append("files[]", file);
+						formdata.append("payref", $("#profile-image").attr('data'));
+						formdata.append("id", document.form_details.token.value);
+					}
+				}	
+			}
+			  
+			if (formdata) {
+				$.ajax({
+					url: "membership/do_upload",
+					type: "POST",
+					data: formdata,
+					processData: false,
+					contentType: false,
+					dataType: 'json',
+					success: function (res) {
+						//document.getElementById("response").innerHTML = res; 
+						if(res.status){	
+							$("#profile-image").attr('src', '');
+							$("#profile-image").attr('src', res.filename);
+						}else{ 
+							alert(res.msg);
+						}
+					}
+				});
+			} 
+		});			
 	});
 </script>
 
@@ -97,7 +150,7 @@
 			
 				<div>
 					<div class="col-lg-2" style="padding-left:0px">
-						<img class="img-thumbnail" src="assets/img/profile-image.png" height="100" width="100" alt="Generic placeholder image">
+						<img id="profile-image" class="img-thumbnail" data="<?php echo $row->pay_ref ?>" src="<?php echo ($row->photo != '')?PROFILE_IMAGE_PATH.'/'.$row->photo:'assets/img/profile-image.png'; ?>" height="100" width="100" alt="Generic placeholder image">
 					</div>
 					<div class="col-lg-3" style="">
 						<h4><span id="label-top-fname"><?php echo $row->ai_fname.' '.$row->ai_lname; ?></span></h4>
@@ -140,8 +193,12 @@
 
 				<!-- Tab panes -->
 				<div class="tab-content">
-					<div class="tab-pane active" id="details">
-						<form  role="form" name="form_details" method="post" onsubmit="return membershiptransaction.updateInfo(this);">
+					<div class="tab-pane active" id="details"> 
+						<form role="form" method="post" enctype="multipart/form-data"  action="membership/do_upload">
+							<input type="file" name="file" style="width:78px" id="upload_images"/>
+							<button type="submit" id="btn">Upload Photo!</button>
+						</form>						
+						<form  role="form" name="form_details" method="post" onsubmit="return membershiptransaction.updateInfo(this);" >
 							<input type="hidden" name="token" value="<?php echo $token; ?>" />
 							<div class="col-lg-9">
 							
@@ -155,7 +212,7 @@
 								?>
 								</div>
 								
-								<table class="table">
+								<table class="table"> 
 									<tr>
 										<td><strong>NRIC/FIN no.</strong></td>
 										<td><input type="text" name="ai_nric" value="<?php echo $row->ai_nric; ?>" class="col-lg-8" /></td>

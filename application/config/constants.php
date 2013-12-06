@@ -40,6 +40,8 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('WEBSITE_HEADER',	'Project VBC Admin');
 define('WEBSITE_TITLE',		'Project VBC Admin');
 
+define('PROFILE_IMAGE_PATH','photo');
+
 
 define('TERM_ACTIVE',			'0'); //Active
 define('TERM_EXPIRED',			'1'); //Expired

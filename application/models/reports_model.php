@@ -195,6 +195,36 @@ class Reports_Model extends CI_Model {
 		//echo $this->db->last_query();
 		return $result;		
 	}	
+	
+/* 	public function expired(){
+		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.termination_date", false);
+		$this->db->where("term_type = ".TERM_TERMINATION." AND DATE_FORMAT(club_transaction.termination_date,'%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
+		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
+		$this->db->order_by('club_transaction.termination_date', 'asc');
+		$results = $this->db->get('club_transaction')->result();
+		$result['header'] = array( 
+								'pay_ref'=>'Ref', 
+								'full_name'=>'Name', 
+								'ai_nric'=>'NRIC/FIN No',
+								'mem_name'=>'Membership', 
+								'pay_amt'=>'Amount', 
+								'ai_hp'=>'Phone', 
+								'ai_email'=>'Email', 
+								'termination_date'=>'Termination Date');
+		$result['results'] = $results;
+		
+		return $result;
+	} */
+	
+	public function expired_35_days(){
+	
+		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.termination_date", false);
+		$this->db->where(" (pay_status ='3' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") ) ", null, false);
+		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
+		$this->db->order_by('club_transaction.termination_date', 'asc');
+		$results = $this->db->get('club_transaction')->result();
+		
+	}
  
 }
 

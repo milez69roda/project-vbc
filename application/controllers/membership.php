@@ -129,7 +129,7 @@ class Membership extends MY_Controller {
 		//$mem_id = $this->common_model->deccrypData($token);
 		$mem_id = $token;
 		
-		$sql = "SELECT club_transaction.*, ai_nric, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, street2, unit, 
+		$sql = "SELECT club_transaction.*, photo, ai_nric, ai_fname, ai_lname, ai_email, ai_hp, postalcode, country, street1, street2, unit, 
 					emg_unit, emg_street1, emg_street2, emg_country, emg_postalcode,
 					mh_curr_condi, mh_medicine
 				FROM club_transaction 
@@ -298,6 +298,9 @@ class Membership extends MY_Controller {
 		//$mem_id = $this->common_model->deccrypData($token);
 		$mem_id = $token;
 		
+		$this->do_upload();
+		
+		
 		$set['ai_nric'] 		= $this->input->post('ai_nric');
 		$set['ai_fname'] 		= $this->input->post('firstname');
 		$set['ai_lname'] 		= $this->input->post('lastname');
@@ -327,6 +330,28 @@ class Membership extends MY_Controller {
 		
 		echo json_encode($response);
 	}
+	
+	function do_upload() {
+		 
+		$data = array('status'=>false,'filename'=>'', 'msg'=>'Error: Image size must not more than 1.8mb');
+		foreach ($_FILES["files"]["error"] as $key => $error) {
+			if ($error == UPLOAD_ERR_OK) {
+				$ext = explode('.',$_FILES["files"]["name"][$key]); 
+				$name =  $_POST['payref'].".".$ext[1]; 
+				if( move_uploaded_file( $_FILES["files"]["tmp_name"][$key], PROFILE_IMAGE_PATH.'/'.$name) ){
+					$data['status'] = true;
+					$data['filename'] = PROFILE_IMAGE_PATH.'/'.$name;
+					$data['msg'] = 'Error on upload';
+					
+					$this->db->where('mem_id', $_POST['id']);
+					$this->db->update('club_membership', array('photo'=>$name));
+					
+				} 
+			} 
+		}
+		  
+		echo json_encode($data);
+	}	
 	
 	/*public function ajax_membership_expire(){
 		
