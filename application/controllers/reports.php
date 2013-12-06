@@ -159,13 +159,78 @@ class Reports extends MY_Controller {
 		 
 		$data = array();
 		
+		$this->load->model('Reports_model', 'report'); 
+		$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+		$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+				
 		$data['title'] = 'Invoice';
-		//$data['records'] = $this->report->freebies($startDate, $endDate, $reportType);		
+		$data['records'] = $this->report->invoice('', $startDate, $endDate);		
+		
+		//print_r($data['records']);
 		//echo $this->db->last_query();
 		$this->load->view('header'); 
 		$this->load->view('reports/invoice_reports', $data); 
 		$this->load->view('footer');			
 	}		
+	
+	public function invoicepdf(){ 
+		 
+		$data = array(); 
+		$data['title'] = 'Invoice'; 
+
+		$this->load->model('Reports_model', 'report'); 
+		$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+		$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+				  
+ 		require(APPPATH .'third_party/fpdf.php'); 
+ 		require(APPPATH .'libraries/PDF.php');
+ 		  
+		$pdf = new PDF('P','mm','Letter');
+		$pdf->AliasNbPages();
+		// Column headings
+		$data_header = array('Name', 'Ref No.', 'Date', 'Amount');
+		
+		// Data loading
+		 
+		$results = $this->report->invoice('', $startDate, $endDate);		
+		$data_content = array();
+		foreach($results as $row){
+			$data_content[] = array($row->ai_fname.' '.$row->ai_lname, $row->Merchant_Ref, $row->Order_Date, $row->Amount);
+		} 
+		$pdf->AddPage();
+		$pdf->setContents($data_header,$data_content); 
+		$pdf->Output('invoice_'.strtotime('now').'.pdf', 'D');  
+	 	
+	}		
+	
+	public function invoicepdfmember(){ 
+		 
+		$data = array(); 
+		$data['title'] = 'Invoice'; 
+		$ref = $_GET['ref'];
+		
+		$this->load->model('Reports_model', 'report');  
+				  
+ 		require(APPPATH .'third_party/fpdf.php'); 
+ 		require(APPPATH .'libraries/PDF.php');
+ 		  
+		$pdf = new PDF('P','mm','Letter');
+		$pdf->AliasNbPages();
+		// Column headings
+		$data_header = array('Name', 'Ref No.', 'Date', 'Amount');
+		
+		// Data loading
+		 
+		$results = $this->report->invoice($ref, '', '');		
+		$data_content = array();
+		foreach($results as $row){
+			$data_content[] = array($row->ai_fname.' '.$row->ai_lname, $row->Merchant_Ref, $row->Order_Date, $row->Amount);
+		} 
+		$pdf->AddPage();
+		$pdf->setContents($data_header,$data_content); 
+		$pdf->Output('invoice_'.strtotime('now').'.pdf', 'D');  
+	 	
+	}
 }
 
 /* End of file membership.php */

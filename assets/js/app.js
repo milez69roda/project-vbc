@@ -189,6 +189,14 @@ var generatereports = {
 		$.post('export/download', form.serialize(), function(result){
 			window.location = result;
 		}); 
+	},
+	
+	pdfinvoice: function(){ 
+		window.location = 'reports/invoicepdf/?startdate='+$('#startdate').val()+'&enddate='+$('#enddate').val(); 
+	},
+	
+	pdfinvoicemember: function(ref){
+		window.location = 'reports/invoicepdfmember/?ref='+ref;
 	}
 } 
 

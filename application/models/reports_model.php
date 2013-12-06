@@ -225,6 +225,27 @@ class Reports_Model extends CI_Model {
 		$results = $this->db->get('club_transaction')->result();
 		
 	}
+	
+	function invoice($ref, $startdate, $enddate){
+	 
+		$this->db->select("ai_fname, ai_lname, scheduled_payments.Merchant_Ref, Amount,  DATE_FORMAT(Order_Date, '%d/%m/%Y') as Order_Date", false);
+		
+		$this->db->where('scheduled_payments.status', 'Accepted');
+		
+		if( $ref != '' ){
+			$this->db->where('scheduled_payments.Merchant_Ref', $ref);
+		}
+		
+		if($startdate != '' ){
+			$this->db->where("DATE_FORMAT(scheduled_payments.Order_Date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'", null, false);
+		}		
+		
+		$this->db->join('club_transaction', 'club_transaction.pay_ref = scheduled_payments.Merchant_Ref', 'LEFT OUTER');
+		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
+		$results = $this->db->get('scheduled_payments')->result();	
+		
+		return $results;
+	}
  
 }
 

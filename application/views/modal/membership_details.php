@@ -187,8 +187,8 @@
 				  <li><a href="#terms" data-toggle="tab">Terms</a></li>
 				  <li><a href="#freebies" data-toggle="tab">Freebies/Misc</a></li>
 				  <li><a href="#otherpayment" data-toggle="tab">Manual/Cash Payment</a></li>
-				  <li><a href="#notes" data-toggle="tab">Notes</a></li>
-				  <li><a href="#others" data-toggle="tab">Others</a></li>
+				  <li><a href="#invoice" data-toggle="tab">Invoice</a></li>
+				  <li><a href="#email" data-toggle="tab">Email</a></li>
 				</ul>
 
 				<!-- Tab panes -->
@@ -558,12 +558,14 @@
 						</form>
 					</div>
 					
-					<div class="tab-pane" id="notes">
-						 
-						 Notes here						
+					<div class="tab-pane" id="invoice">
+						<br /><br />
+						<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.pdfinvoicemember('<?php echo $row->pay_ref?>')">Generete PDF Invoice</button>			
+						<br />
+						<br />
 					</div>
 					
-					<div class="tab-pane" id="others">
+					<div class="tab-pane" id="email">
 						SEND EMAIL TO MEMBER<br/>
 						SEND EMAIL TO ADMIN<br/>
 						SEND EMAIL <br/>

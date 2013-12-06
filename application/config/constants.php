@@ -74,6 +74,6 @@ define('PAYMENT_TYPE_VISA',			4); //visa
 define('PAYMENT_TYPE_MASTERCARD',	5); //mastercard
 define('PAYMENT_TYPE_CHEQUE',		6); //cheque
  
-
+define('FPDF_FONTPATH',APPPATH .'third_party/fpdf/font/');
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
