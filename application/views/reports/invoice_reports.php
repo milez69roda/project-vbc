@@ -79,14 +79,14 @@
 					<td><?php echo $row->ai_fname.' '.$row->ai_lname; ?></td> 	
 					<td><?php echo $row->Merchant_Ref; ?></td> 	
 					<td><?php echo $row->Order_Date; ?></td> 	
-					<td><?php echo $row->Amount; ?></td> 	
+					<td style="text-align:right"><?php echo $row->Amount; ?></td> 	
 				</tr>
 			<?php endforeach; ?>
 				<tr>  
 					<td>&nbsp;</td> 	
 					<td>&nbsp;</td> 	
 					<td style="color:red; font-weight: bold">Total</td> 	
-					<td style="color:red; font-weight: bold"><?php echo $amount; ?></td> 	
+					<td style="color:red; font-weight: bold; text-align:right"><?php echo number_format($amount, 2, '.', ','); ?></td> 	
 				</tr>			
 			</tbody>	
 			
