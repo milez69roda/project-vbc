@@ -207,6 +207,7 @@
 						</form>					
 						<form  role="form" name="form_details" method="post" onsubmit="return membershiptransaction.updateInfo(this);" >
 							<input type="hidden" name="token" value="<?php echo $token; ?>" />
+							<input type="hidden" name="token1" value="<?php echo $row->tran_id; ?>" />
 							<div class="col-sm-9">
 							
 								<div>
@@ -255,7 +256,15 @@
 									</tr>									
 									<tr>
 										<td><strong>Expiry Date</strong></td>
-										<td><?php echo date('d/m/Y',strtotime($exp_date)); ?></td>
+										<td>
+											<?php if( strtotime('now') > strtotime($exp_date) ): ?>
+											<input type="text" name="expiry_date" value="<?php echo date('d/m/Y',strtotime($exp_date)); ?>" class="col-sm-4"/> d/m/y
+											<?php else:  
+													echo date('d/m/Y',strtotime($exp_date));  
+												  endif; 
+											?>
+											
+										</td>
 									</tr>									
 									<tr>
 										<td><strong>Addr:(Unit#/St./Bldg.)</strong></td>

@@ -300,6 +300,7 @@ class Membership extends MY_Controller {
 		$response = array('status'=>false, 'msg'=>'Failed to update');
 		
 		$token = $this->input->post('token');
+		$tran_id = $this->input->post('token1');
 		//$mem_id = $this->common_model->deccrypData($token);
 		$mem_id = $token;
 		  
@@ -326,6 +327,16 @@ class Membership extends MY_Controller {
 		if( $this->db->update('club_membership', $set) ){
 			$response['status'] = true;
 			$response['msg'] = 'Successfully Updated';
+			
+			if( isset($_POST['expiry_date']) ){
+		
+				$expiry_date 		= explode('/',$this->input->post('expiry_date'));		
+				$expiry_date 		= date('Y-m-d', strtotime($expiry_date[2].'-'.$expiry_date[1].'-'.$expiry_date[0]));			
+			
+				$set1['exp_date'] = $expiry_date;
+				$this->db->where('tran_id', $tran_id);
+				$this->db->update('club_transaction', $set1);
+			}
 			
 			$response['fullname'] = $this->input->post('firstname').' '.$this->input->post('lastname');
 		}
