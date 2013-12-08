@@ -218,12 +218,13 @@ class Reports_Model extends CI_Model {
 	
 	public function expired_35_days(){
 	
-		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.termination_date", false);
+		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, pay_ref, club_transaction.mem_id, club_transaction.exp_date", false);
 		$this->db->where(" (pay_status ='3' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") ) ", null, false);
+		$this->db->where(" (exp_date - INTERVAL 35 DAY) < CURRENT_DATE ", null, false);
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
-		$this->db->order_by('club_transaction.termination_date', 'asc');
+		$this->db->order_by('club_transaction.exp_date', 'asc');
 		$results = $this->db->get('club_transaction')->result();
-		
+		return $results;
 	}
 	
 	function invoice($ref, $startdate, $enddate){

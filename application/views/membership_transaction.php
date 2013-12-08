@@ -39,12 +39,12 @@ $(document).ready( function () {
 		 
 		<h4>Complete Membership List</h4> <hr /> 
 		
-		<div class="col-lg-5"> 
+		<div class="col-sm-5"> 
 			<form class="form-horizontal" role="form">
 			 
 			  <div class="form-group">
-				<label for="sel_sort_view" class="col-lg-2 control-label" style="width: 94px !important">VIEW: </label>
-				<div class="col-lg-7">
+				<label for="sel_sort_view" class="col-sm-2 control-label" style="width: 94px !important">VIEW: </label>
+				<div class="col-sm-7">
 					<select class="form-control" name="sel_sort_view" id="sel_sort_view">
 						<option value="-1">All</option> 
 						<option value="0">by Card</option>

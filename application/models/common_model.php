@@ -286,7 +286,7 @@ class Common_Model extends CI_Model {
 
 	function membershipEmail($orderRef,$send) {
 	
-		$orderRef = base64_decode($orderRef);
+		//$orderRef = base64_decode($orderRef);
 		$sql = "SELECT *  FROM `club_transaction`, `club_membership` where `club_transaction`.`pay_ref`='".$orderRef."' and `club_transaction`.pay_status='3' and `club_transaction`.`mem_id`=`club_membership`.`mem_id`";
 		$result = $this->db->query($sql);
 		//$count = $result->size();
@@ -507,8 +507,8 @@ class Common_Model extends CI_Model {
 		#this is for admin - sending by admin panel 
 		if($send=="admin")
 		{	
-			$jeet = "jeet@stagemode.com";
-			mail($jeet, $subject, $message, $headers);
+			//$jeet = "jeet@stagemode.com";
+			//mail($jeet, $subject, $message, $headers);
 		}
 		#this is for vanda - sending by admin panel
 		if($send=="vanda") {	
@@ -544,8 +544,8 @@ class Common_Model extends CI_Model {
 		}
 
 		if($send=="conf_admin"){
-			$jeet = "jeet@stagemode.com";
-			mail($jeet, $subject, $message, $headers);
+			//$jeet = "jeet@stagemode.com";
+			//mail($jeet, $subject, $message, $headers);
 		}
 
 		#only for display
@@ -766,8 +766,8 @@ class Common_Model extends CI_Model {
 		#this is for admin - sending by admin panel 
 		if($send=="admin")
 		{	
-			$email = "jeet@vandaboxing.com";
-			mail($email, $subject, $message, $headers);
+			//$email = "jeet@vandaboxing.com";
+			//mail($email, $subject, $message, $headers);
 		}
 		#this is for vanda - sending by admin panel
 		if($send=="vanda")
@@ -809,8 +809,8 @@ class Common_Model extends CI_Model {
 
 		if($send=="conf_admin")
 		{
-			$jeet = "jeet@vandaboxing.com";
-			mail($jeet, $subject, $message, $headers);
+			//$jeet = "jeet@vandaboxing.com";
+			//mail($jeet, $subject, $message, $headers);
 		}
 
 		#only for display

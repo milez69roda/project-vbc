@@ -4,6 +4,9 @@ class Membership extends MY_Controller {
 	
 	function __construct(){
 		parent::__construct();
+		ini_set('post_max_size', '64M');
+		ini_set('upload_max_filesize', '64M');		
+		ini_set('memory_limit', '-1');		
 	} 
 	
 	public function index(){
@@ -168,15 +171,17 @@ class Membership extends MY_Controller {
 			$signup_day 			= explode('-',$row->active_date);
 			$schedule_payment_date 	= date('Y').'-'.date('m').'-'.$signup_day[2];
 
-			if( strtotime($schedule_payment_date) >= strtotime(date('Y-m-d')) ){
+			if( strtotime($schedule_payment_date) <= strtotime(date('Y-m-d')) ){
 				
 				$check_payment = $this->schedule_payment_model->get(" Merchant_Ref = '{$row->pay_ref}' AND Tran_Date BETWEEN '".date('Y-m-d',strtotime('first day of last month'))."' AND '".date('Y-m-d',strtotime('last day of last month'))."' ", 1);
+				//echo $this->db->last_query();
 				$check_payment = @$check_payment[0];	
 				if( count($check_payment) == 0 ){
-					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">No Payment has been made on '.date('d/m/Y',strtotime($schedule_payment_date)).'</div>';
+					 
+					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">No Payment has been made yet on '.date('d/m/Y',strtotime($schedule_payment_date)).' due date</div>';
 				}else{
 					if($check_payment->status != 'Accepted'){
-						$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Payment for this month was '.$check_payment->status.'</div>';
+						$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Payment for '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment->status.'</div>';
 					}
 				}
 			}else{
@@ -219,7 +224,7 @@ class Membership extends MY_Controller {
 		$data['countries'] 					= $this->common_model->getCountryDropdown();
 		$data['title'] 						= $this->input->post('title');
 		$data['token'] 						= $token;
-		
+		//echo $_SERVER['HTTP_REFERER'];
 		$this->load->view('modal/membership_details', $data); 
 	}
 	
@@ -229,7 +234,7 @@ class Membership extends MY_Controller {
 		$type = $this->input->post('type');
 		
 		$this->common_model->membershipEmail($refno, $type);
-		//sleep(3);
+		sleep(3);
 		
 		if($type=="admin") {
 			echo "Your email has been send to Admin";
@@ -297,10 +302,7 @@ class Membership extends MY_Controller {
 		$token = $this->input->post('token');
 		//$mem_id = $this->common_model->deccrypData($token);
 		$mem_id = $token;
-		
-		$this->do_upload();
-		
-		
+		  
 		$set['ai_nric'] 		= $this->input->post('ai_nric');
 		$set['ai_fname'] 		= $this->input->post('firstname');
 		$set['ai_lname'] 		= $this->input->post('lastname');
@@ -331,8 +333,8 @@ class Membership extends MY_Controller {
 		echo json_encode($response);
 	}
 	
-	function do_upload() {
-		 
+	//upload profile photo
+	function do_upload() { 
 		$data = array('status'=>false,'filename'=>'', 'msg'=>'Error: Image size must not more than 1.8mb');
 		foreach ($_FILES["files"]["error"] as $key => $error) {
 			if ($error == UPLOAD_ERR_OK) {
@@ -514,7 +516,7 @@ class Membership extends MY_Controller {
 		
 		$this->load->model('Schedule_payment_model', 'schedule_payment_model');
 		
-		$json = array('status'=>false, 'url'=>'', 'msg'=>'Submit Failed');
+		$json = array('status'=>false, 'url'=>base_url(), 'msg'=>'Submit Failed');
 		
 		$mem_id			= $this->input->post('token');
 		$tran_id 		= $this->input->post('token1'); 
@@ -539,8 +541,13 @@ class Membership extends MY_Controller {
 			$json['status'] = true;
 			$json['msg'] = 'Update Successfully.'; 
 			
+			$where = array('Tran_Date'=>$duedate, 'Merchant_Ref'=>$pay_ref, ); 
+			$set_update = array('pay_overide'=>1);
+			$this->schedule_payment_model->update_payment($where, $set_update); 
+		
 			//there must be update of the status if upload is automatic update the status
 		}
+		
 		$set['date'] 			= date('Y-m-d H:i:s');
 		$set['Order_Date'] 		= date('d/m/Y',strtotime($duedate)); //overide date format
 		$json['data'] = $set;

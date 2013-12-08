@@ -11,7 +11,22 @@ class Schedule_payment_model extends CI_Model {
 		return $this->db->insert('scheduled_payments', $set);
 		
 	}
-
+	
+	//update failed previous failed payment
+	function update_payment($where, $set){
+		$this->db->where($where);
+		$this->db->order_by('date_created', 'asc');
+		$this->db->limit(1);
+		return $this->db->update('scheduled_payments', $set);
+	}
+	
+	function check_payments_today(){
+		$this->db->select("id");
+		$this->db->where("DATE_FORMAT(date_created, '%Y-%m-%d') = CURRENT_DATE");
+		$this->db->where("transaction_type = 0");  
+		$result = $this->db->get('scheduled_payments');	
+		return $result->num_rows();	
+	}
 	/* function getSchedulePayment_by_ref($ref){
 		
 		$this->db->select(" Tran_date, status ");
@@ -35,6 +50,19 @@ class Schedule_payment_model extends CI_Model {
 		return $this->db->get('scheduled_payments')->result();
 		
 	}
+	
+	function get_failed_transaction($date){
+		
+		
+		$this->db->select("pay_ref, CONCAT(ai_fname, ' ', ai_lname) AS full_name, status, club_transaction.mem_id, Tran_Date", false);
+		$this->db->join('club_transaction', 'club_transaction.pay_ref = scheduled_payments.Merchant_Ref', 'LEFT OUTER');
+		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER'); 
+		
+		$this->db->where("status != 'Accepted'"); 
+		$this->db->where("pay_overide", 0); 
+		
+		return $this->db->get('scheduled_payments')->result();
+	} 
 	
 	function get_list(){ 
 	   
@@ -188,7 +216,7 @@ class Schedule_payment_model extends CI_Model {
 			if( $row->status == 'Accepted' ) $rows[] = '<span class="label label-success">'.$row->status.'</span>'; 
 			elseif( $row->status == 'Rejected' ) $rows[] = '<span class="label label-warning">'.$row->status.'</span>'; 
 			elseif( $row->status == 'Suspend' )	$rows[] = '<span class="label label-default">'.$row->status.'</span>'; 
-			else;
+			else $rows[] = '';
 			$rows[] = $row->date_created; 
  
 			$output['aaData'][] = $rows;

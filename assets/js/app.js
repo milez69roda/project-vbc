@@ -65,7 +65,7 @@ var membershiptransaction = {
 					alert(json.msg);
 					//window.location = json.url; 
 					$('#label-top-fname').html(json.fullname);
-					oTable.fnDraw();
+					if( typeof oTable !== 'undefined' ) oTable.fnDraw();
 				}else{
 					alert(json.msg);
 				}
@@ -166,8 +166,8 @@ var membershiptransaction = {
 						$("#otherpayment_div").hide();							
 						$("#other_desc").val('');							
 						
-						oTable.fnDraw();
-						
+						if( typeof oTable !== 'undefined' ) oTable.fnDraw();
+						else window.location = document.URL;
 					}else{
 						alert(json.msg);
 					}
@@ -178,7 +178,43 @@ var membershiptransaction = {
 		}
 
 		return false;
-	} 
+	}, 
+	
+	sendemail: function(type, ref){
+		if( !processing ){ 
+		
+			if( confirm('Do you want to send email?') ){
+				processing = true; 
+				$.post('membership/ajax_membership_mail',{type:type,refno:ref}, function(json){
+					processing = false;
+					alert(json);
+					/* if(json.status){							
+						alert(json.msg);  
+						var tr = '<tr>';
+							tr += '<td>'+json.data.date+'</td>';
+							tr += '<td>'+json.data.Order_Date+'</td>';
+							tr += '<td>'+json.data.Amount+'</td>';
+							tr += '<td>'+json.data.reason+'</td>';
+							tr += '<td>'+json.data.uploaded_by+'</td>';
+						$("#otherpayment_table tbody>tr:first").after(tr);	
+						
+						$('#otherpayment-button-add').show();
+						$("#otherpayment_div").hide();							
+						$("#other_desc").val('');							
+						
+						oTable.fnDraw();
+						
+					}else{
+						alert(json.msg);
+					} */
+				}); 	
+			}
+		}else{
+			alert('Please wait, there is still transaction being process.');
+		}
+
+		return false;	
+	}
 }
 
 
@@ -207,6 +243,7 @@ $(document).keyup(function(e) {
 	if (e.keyCode == 27) { 
 		$('.modal').remove(); 
 		$('.modal-backdrop').remove(); 
+		processing = false;
 	} 
 	
 	//keystroke F2, redirect

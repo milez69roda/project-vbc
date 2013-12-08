@@ -57,7 +57,7 @@
 				console.log(source);	
 		}  	
 		$("#upload_images").change(function(files){ 
-			
+			$("#photoprocessing").fadeIn();
 			var i = 0, len = this.files.length, img, reader, file;
 			
 			for ( ; i < len; i++ ) {
@@ -92,9 +92,14 @@
 						if(res.status){	
 							$("#profile-image").attr('src', '');
 							$("#profile-image").attr('src', res.filename);
+							//$("#profile-image").html('');
+							
+							//var pay_ref = 
+							//<img id="profile-image" class="img-thumbnail" data="<?php echo $row->pay_ref ?>" src=" " height="100" width="100" alt="Generic placeholder image">
 						}else{ 
 							alert(res.msg);
 						}
+						$("#photoprocessing").fadeOut();
 					}
 				});
 			} 
@@ -149,19 +154,19 @@
 			?>			
 			
 				<div>
-					<div class="col-lg-2" style="padding-left:0px">
+					<div class="col-sm-2" style="padding-left:0px" id="div_profile_image_container">
 						<img id="profile-image" class="img-thumbnail" data="<?php echo $row->pay_ref ?>" src="<?php echo ($row->photo != '')?PROFILE_IMAGE_PATH.'/'.$row->photo:'assets/img/profile-image.png'; ?>" height="100" width="100" alt="Generic placeholder image">
 					</div>
-					<div class="col-lg-3" style="">
+					<div class="col-sm-3" style="">
 						<h4><span id="label-top-fname"><?php echo $row->ai_fname.' '.$row->ai_lname; ?></span></h4>
 						<h4><?php echo $row->pay_ref?></h4>
 					</div>	
-					<div class="col-lg-5" style="margin-right: -30px;"> 
-						<label class="col-lg-6" style="font-size: 14px;">Signup:</label> <?php echo date('d/m/Y',strtotime($row->create_date)); ?> 
+					<div class="col-sm-5" style="margin-right: -30px;"> 
+						<label class="col-sm-6" style="font-size: 14px;">Signup:</label> <?php echo date('d/m/Y',strtotime($row->create_date)); ?> 
 						<br style="clear:both" />
-						<label class="col-lg-6" style="font-size: 14px">Payment Pref:</label><?php echo ($row->full_payment==0)?'Monthly Payment':'Full Payment'?> 
+						<label class="col-sm-6" style="font-size: 14px">Payment Pref:</label><?php echo ($row->full_payment==0)?'Monthly Payment':'Full Payment'?> 
 						<br style="clear:both" />
-						<label class="col-lg-6" style="font-size: 14px">Payment Mode:</label>
+						<label class="col-sm-6" style="font-size: 14px">Payment Mode:</label>
 						<?php 
 							if( $row->payment_mode==0 ) echo 'Credit Card';
 							elseif($row->payment_mode==1) echo '<span title="Direct Debit Standing order organised through your bank">Direct Debit</span>';
@@ -169,7 +174,7 @@
 						?>
 						<br style="clear:both" />
 					</div>	
-					<div class="col-lg-2" style="">
+					<div class="col-sm-2" style="">
 						<?php 
 							if( $row->term_type == TERM_ROLLING_MONTLY ){ echo '<p style="color:blue">Rolling Monthly</p>'; }
 							if( $row->term_type == TERM_EXTEND_6 ){ echo '<p style="color:blue">Extend 6 months</p>'; }
@@ -195,12 +200,14 @@
 				<div class="tab-content">
 					<div class="tab-pane active" id="details"> 
 						<form role="form" method="post" enctype="multipart/form-data"  action="membership/do_upload">
-							<input type="file" name="file" style="width:78px" id="upload_images"/>
-							<button type="submit" id="btn">Upload Photo!</button>
-						</form>						
+							<input type="file" name="file" style="width:78px; float:left" id="upload_images"/>
+							<span id="photoprocessing" style="display:none;float:left; color:green; font-weigth:bold">Uploading photo...</span>	
+							<button type="submit" id="btn">Upload Photo!</button> 
+							<br style="clear:both"/>
+						</form>					
 						<form  role="form" name="form_details" method="post" onsubmit="return membershiptransaction.updateInfo(this);" >
 							<input type="hidden" name="token" value="<?php echo $token; ?>" />
-							<div class="col-lg-9">
+							<div class="col-sm-9">
 							
 								<div>
 								<?php 
@@ -215,18 +222,18 @@
 								<table class="table"> 
 									<tr>
 										<td><strong>NRIC/FIN no.</strong></td>
-										<td><input type="text" name="ai_nric" value="<?php echo $row->ai_nric; ?>" class="col-lg-8" /></td>
+										<td><input type="text" name="ai_nric" value="<?php echo $row->ai_nric; ?>" class="col-sm-8" /></td>
 									</tr>		
 									<tr>
 										<td style="width: 165px"><strong>Name</strong></td>
 										<td>
-											<input type="text" name="firstname" value="<?php echo $row->ai_fname; ?>" placeholder="Firstname" class="col-lg-4"/> 
-											<input type="text" name="lastname" value="<?php echo $row->ai_lname; ?>" placeholder="Lastname" class="col-lg-4"/>
+											<input type="text" name="firstname" value="<?php echo $row->ai_fname; ?>" placeholder="Firstname" class="col-sm-4"/> 
+											<input type="text" name="lastname" value="<?php echo $row->ai_lname; ?>" placeholder="Lastname" class="col-sm-4"/>
 										</td>
 									</tr>	
 									<tr>
 										<td><strong>Email</strong></td>
-										<td><input type="text" name="email" value="<?php echo $row->ai_email; ?>" class="col-lg-8" /></td>
+										<td><input type="text" name="email" value="<?php echo $row->ai_email; ?>" class="col-sm-8" /></td>
 									</tr>									
 									<tr>
 										<td><strong>Amount</strong></td>
@@ -253,9 +260,9 @@
 									<tr>
 										<td><strong>Addr:(Unit#/St./Bldg.)</strong></td>
 										<td>
-											<input type="text" name="unit" value="<?php echo $row->unit; ?>" placeholder="Unit/Blk #" class="col-lg-3"/> 
-											<input type="text" name="street1" value="<?php echo $row->street1; ?>" placeholder="Street" class="col-lg-4"/>
-											<input type="text" name="street2" value="<?php echo $row->street2; ?>" placeholder="Building" class="col-lg-4"/>
+											<input type="text" name="unit" value="<?php echo $row->unit; ?>" placeholder="Unit/Blk #" class="col-sm-3"/> 
+											<input type="text" name="street1" value="<?php echo $row->street1; ?>" placeholder="Street" class="col-sm-4"/>
+											<input type="text" name="street2" value="<?php echo $row->street2; ?>" placeholder="Building" class="col-sm-4"/>
 										</td>
 									</tr> 								
 									<tr>
@@ -266,12 +273,12 @@
 									</tr>										
 									<tr>
 										<td><strong>Postal Code</strong></td>
-										<td><input type="text" name="postalcode" value="<?php echo $row->postalcode; ?>" class="col-lg-4"/></td>
+										<td><input type="text" name="postalcode" value="<?php echo $row->postalcode; ?>" class="col-sm-4"/></td>
 									</tr>										
 									<tr>
 										<td><strong>Phone</strong></td>
 										<td>
-											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-lg-4"/>
+											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-sm-4"/>
 											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" id="btn_show_more" class="btn btn-default btn-xs">show more</button>
 										</td>
 									</tr>	 
@@ -282,9 +289,9 @@
 									<tr class="tr_hide_show" style="display:none">
 										<td><strong>Addr(Unit#/St/Blg):</strong></td>
 										<td>
-											<input type="text" name="emg_unit" value="<?php echo $row->emg_unit; ?>" class="col-lg-3" placeholder="Unit/Blk #"/>
-											<input type="text" name="emg_street1" value="<?php echo $row->emg_street1; ?>" class="col-lg-4" placeholder="Street 1"/>
-											<input type="text" name="emg_street2" value="<?php echo $row->emg_street2; ?>" class="col-lg-4" placeholder="Building"/>
+											<input type="text" name="emg_unit" value="<?php echo $row->emg_unit; ?>" class="col-sm-3" placeholder="Unit/Blk #"/>
+											<input type="text" name="emg_street1" value="<?php echo $row->emg_street1; ?>" class="col-sm-4" placeholder="Street 1"/>
+											<input type="text" name="emg_street2" value="<?php echo $row->emg_street2; ?>" class="col-sm-4" placeholder="Building"/>
 										</td>
 									</tr> 
 									<tr class="tr_hide_show" style="display:none">
@@ -296,7 +303,7 @@
 									<tr class="tr_hide_show" style="display:none">
 										<td><strong>Postal:</strong></td>
 										<td>
-											<input type="text" name="emg_postalcode" value="<?php echo $row->emg_postalcode; ?>" class="col-lg-4"/> 
+											<input type="text" name="emg_postalcode" value="<?php echo $row->emg_postalcode; ?>" class="col-sm-4"/> 
 										</td>
 									</tr>
 
@@ -306,13 +313,13 @@
 									<tr class="tr_hide_show" style="display:none">
 										<td><strong>Relevant medical details or current condition:</strong></td>
 										<td>
-											<textarea name="mh_curr_condi" class="col-lg-10" rows="2"><?php echo $row->mh_curr_condi; ?></textarea>
+											<textarea name="mh_curr_condi" class="col-sm-10" rows="2"><?php echo $row->mh_curr_condi; ?></textarea>
 										</td>
 									</tr>
 									<tr class="tr_hide_show" style="display:none">
 										<td><strong>Medication Taken:</strong></td>
 										<td>
-											<textarea name="mh_medicine" class="col-lg-10" rows="2"><?php echo $row->mh_medicine; ?></textarea>
+											<textarea name="mh_medicine" class="col-sm-10" rows="2"><?php echo $row->mh_medicine; ?></textarea>
 											<br style="clear:both"/>
 											<button type="button" id="btn_show_less" class="btn btn-default btn-xs">show less</button>
 										</td>
@@ -325,7 +332,7 @@
 									
 								</table> 
 							</div>
-							<div class="col-lg-3" > 
+							<div class="col-sm-3" > 
 								<h4>Payment History</h4>
 								<div style="height:300px; overflow:auto">
 								<?php 
@@ -380,7 +387,7 @@
 							
 								<div class="form-group">
 									<label for="reason" class="col-sm-2 control-label">Reason</label>
-									<div class="col-lg-6">
+									<div class="col-sm-6">
 										<input type="text" class="form-control" id="reason" name="reason" placeholder="Reason" maxlength="200"> 
 									</div>
 								</div>	 
@@ -426,7 +433,7 @@
 								  
 								<div class="form-group">
 									<label for="reson" class="col-sm-2 control-label">Description</label>
-									<div class="col-lg-6">
+									<div class="col-sm-6">
 										<input type="text" class="form-control" id="freebiesdesc" name="freebiesdesc" placeholder="" maxlength="200"> 
 									</div>
 								</div>	
@@ -481,19 +488,19 @@
 							<div id="otherpayment_div" style="display:none; padding: 15px;">
 								<div class="form-group">
 									<label for="reson" class="col-sm-3 control-label">Amount: (SGD)</label>
-									<div class="col-lg-3">
+									<div class="col-sm-3">
 										<input type="text" class="form-control" id="other_amount" name="other_amount" value="<?php echo $row->pay_amt; ?>" readonly> 
 									</div>
 								</div>	
 								<div class="form-group">
 									<label for="reson" class="col-sm-3 control-label">Due date(d/m/y)</label>
-									<div class="col-lg-3">
+									<div class="col-sm-3">
 										<input type="text" class="form-control" id="other_duedate" name="other_duedate" value="<?php echo date('d',strtotime($active_date)).date('/m/Y'); ?>"> 
 									</div>
 								</div>	
 								<div class="form-group">
 									<label for="reson" class="col-sm-3 control-label">Mode of Payment</label>
-									<div class="col-lg-3">
+									<div class="col-sm-3">
 									<select class="form-control input-sm" name="other_payment_type">
 										<option value="<?php echo PAYMENT_TYPE_CASH; ?>">Cash</option>
 										<option value="<?php echo PAYMENT_TYPE_MAILORDER; ?>">Mail Order</option>
@@ -506,14 +513,14 @@
 								</div>	
 								<div class="form-group">
 									<label for="reson" class="col-sm-3 control-label">Description/Reason</label>
-									<div class="col-lg-6">
+									<div class="col-sm-6">
 										<input type="text" class="form-control" id="other_desc" name="other_desc" maxlength="200" > 
 									</div>
 								</div>	 
 								 
 								<div class="form-group">
 									<label for="reson" class="col-sm-3 control-label">&nbsp;</label>
-									<div class="col-lg-6">
+									<div class="col-sm-6">
 										<button type="submit" class="btn btn-primary btn-sm">Submit Payment</button>
 										<button type="button" class="btn btn-warning btn-sm" id="otherpayment-button-cancel">Cancel</button>
 									</div>
@@ -565,36 +572,13 @@
 						<br />
 					</div>
 					
-					<div class="tab-pane" id="email">
-						SEND EMAIL TO MEMBER<br/>
-						SEND EMAIL TO ADMIN<br/>
-						SEND EMAIL <br/>
-						SEND EMAIL<br/>
+					<div class="tab-pane" id="email"> 
 						
-						<div>
-							<table class="table">
-								<tr>
-									<td><strong>Date/Time</strong></td>
-									<td><strong>Description</strong></td>
-									<td><strong>Action By</strong></td>
-								</tr>
-								<tr>
-									<td>2010-02-24 05:12:19</td>
-									<td>EMAIL SENT TO MEMBER</td>
-									<td>Milo</td>
-								</tr>
-								<tr>
-									<td>2010-02-24 05:12:19</td>
-									<td>EMAIL SENT TO MEMBER</td>
-									<td>Milo</td>
-								</tr>
-								<tr>
-									<td>2010-02-24 05:12:19</td>
-									<td>EMAIL SENT TO MEMBER</td>
-									<td>Milo</td>
-								</tr>
-							</table>
-						</div>						
+						<br /><br />
+						<button type="button" class="btn btn-warning btn-sm" onclick="membershiptransaction.sendemail('email','<?php echo $row->pay_ref?>')">Send email to member</button>	
+						<br /><br /> 	
+						<button type="button" class="btn btn-primary btn-sm" onclick="membershiptransaction.sendemail('vanda', '<?php echo $row->pay_ref?>')">Send email to vanda</button>	
+						<br /><br /> 	
 					</div>
 					
 					

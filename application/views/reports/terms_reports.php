@@ -60,7 +60,7 @@
 		<div class="pull-right filterribbon" style=" width: 680px;" >
 			<form id="searchForm" name="searchForm" method="get" action="reports/terms/" >
 				<input type="hidden" name="report_page" value="terms" />
-				<input id="startdate" class="datepicker input-small" type="hidden" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("F j, Y", strtotime('-30 day')); ?>" name="startdate">
+				<input id="startdate" class="datepicker input-small" type="hidden" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("Y-m-d", strtotime('-30 day')); ?>" name="startdate">
 				<input id="enddate" class="datepicker input-small" type="hidden" value="<?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("Y-m-d", strtotime($_GET['enddate'])):date("Y-m-d"); ?>" name="enddate"> 				
 				
 				<div class="pull-right"  >	
