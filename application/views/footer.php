@@ -34,8 +34,9 @@
 	<script type="text/javascript" charset="utf-8" language="javascript" src="assets/js/holder.js"></script>		
 	<script type="text/javascript" charset="utf-8" language="javascript" src="assets/js/jquery.hotkeys.js"></script>		
 
-	<script type="text/javascript" src="assets/js/daterangepicker/moment.js"></script>
-	<script type="text/javascript" src="assets/js/daterangepicker/daterangepicker.js"></script>
+	<!--<script type="text/javascript" src="assets/js/daterangepicker/moment.js"></script>
+	<script type="text/javascript" src="assets/js/daterangepicker/daterangepicker.js"></script>-->
+	<script type="text/javascript" src="assets/js/bootstrap-datepicker.js"></script>
 
 	<script type="text/javascript" charset="utf-8" language="javascript" src="assets/js/app.js"></script>	
 

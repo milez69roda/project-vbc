@@ -40,7 +40,7 @@ class Membership extends MY_Controller {
 	public function ajax_membership_temporary_activate(){
 		$msg = 'Failed to Activate';
 		$ref = trim($this->input->post('ref'));
-		$sql = "SELECT pay_ref, payment_mode,mem_type, club_membership_type.month 
+		$sql = "SELECT pay_ref, payment_mode,mem_type, club_membership_type.month, pay_amt 
 			FROM club_transaction 
 			LEFT OUTER JOIN club_membership_type ON club_membership_type.mem_type_id = club_transaction.mem_type	
 			WHERE pay_ref='".$ref."' and pay_status ='0' LIMIT 1";
@@ -61,15 +61,16 @@ class Membership extends MY_Controller {
 		$sql = "UPDATE `club_transaction` SET `pay_status` ='3', due_date='".$due_date."', exp_date='".$exp_date."', update_date=now()  WHERE `pay_ref`='".$ref."' LIMIT 1";
 		if( $this->db->query($sql) ){
 	
-			$set['Merchant_Ref'] 	=  
-			$set['Currency'] 		= 
-			$set['Amount'] 			= 
-			$set['Order_Date'] 		= 
-			$set['Tran_Date'] 		= 
-			$set['status'] 			= 
-			$set['uploaded_by'] 	= 
-			$set['transaction_type']= 	
+			$set['Merchant_Ref'] 	=  $row->pay_ref;
+			$set['Currency'] 		= 'SGD';
+			$set['Amount'] 			= $row->pay_amt;
+			$set['Order_Date'] 		= date("Y-m-d");
+			$set['Tran_Date'] 		= date("Y-m-d");
+			$set['status'] 			= 'Accepted';
+			$set['uploaded_by'] 	= $this->user_name;
+			$set['transaction_type']= PAYMENT_TYPE_CASH;	
 			
+			$this->db->insert('scheduled_payments', $set);
 			
 			//send email notification
 			$this->common_model->tempMemActEmail($ref); 
@@ -161,9 +162,9 @@ class Membership extends MY_Controller {
 			if( $numberDays < 36 ){
 				
 				if( $numberDays < 0 ){
-					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Expired date was already past more than a month(s)</div>'; 
+					$data['alerts'][] = '<p>Expiry date was already past more than a month(s)</p>'; 
 				}else{
-					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">'.$numberDays.' days before membership expired</div>'; 
+					$data['alerts'][] = '<p>'.$numberDays.' days before membership expires</p>'; 
 				}
 			}
 			
@@ -178,10 +179,10 @@ class Membership extends MY_Controller {
 				$check_payment = @$check_payment[0];	
 				if( count($check_payment) == 0 ){
 					 
-					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">No Payment has been made yet on '.date('d/m/Y',strtotime($schedule_payment_date)).' due date</div>';
+					$data['alerts'][] = '<p>No Payment has been made yet on '.date('d/m/Y',strtotime($schedule_payment_date)).' due date</p>';
 				}else{
 					if($check_payment->status != 'Accepted'){
-						$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Payment for '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment->status.'</div>';
+						$data['alerts'][] = '<p>Payment for '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment->status.'</p>';
 					}
 				}
 			}else{
@@ -189,7 +190,7 @@ class Membership extends MY_Controller {
 				$check_payment = @$check_payment[0];	 
 				if( count($check_payment) > 0 ){ 
 					if( $check_payment->status != 'Accepted' ){
-						$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Last payment of '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment->status.'</div>';
+						$data['alerts'][] = '<p>Last payment of '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment->status.'</p>';
 					}
 				}
 
@@ -207,9 +208,9 @@ class Membership extends MY_Controller {
 			if( $numberDays < 36 ){
 				
 				if( $numberDays < 0 ){
-					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">Expired date was already past more than a month(s)</div>'; 
+					$data['alerts'][] = '<p>Expired date was already past more than a month(s)</p>'; 
 				}else{
-					$data['alerts'][] = '<div class="alert alert-danger" style="padding:3px 3px; margin:0; font-weigth:bold; color: red; font-size:14px">'.$numberDays.' days before membership expired</div>'; 
+					$data['alerts'][] = '<p>'.$numberDays.' days before membership expired</p>'; 
 				}
 			}
 		

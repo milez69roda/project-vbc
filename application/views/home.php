@@ -2,10 +2,8 @@
 		
 		var home = {
 			
-			_init: function(){
-				
-				$("#txtcarid").focus();
-				
+			_init: function(){ 
+				$("#txtcarid").focus(); 
 			},
 			
 			scan: function(){
@@ -17,7 +15,7 @@
 		}
 		
 		$(document).ready(function(){
-			home._init();
+			//home._init();
 		});
 		
 	</script>

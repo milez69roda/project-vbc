@@ -185,7 +185,12 @@
 					</div>
 				</div>
 				<br style="clear:both" />
-				
+				<form role="form" method="post" enctype="multipart/form-data"  action="membership/do_upload">
+					<input type="file" name="file" style="width:78px; float:left" id="upload_images"/>
+					<span id="photoprocessing" style="display:none;float:left; color:green; font-weigth:bold">Uploading photo...</span>	
+					<button type="submit" id="btn">Upload Photo!</button> 
+					<br style="clear:both"/>
+				</form>						
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" id="myTab">
 				  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
@@ -199,37 +204,34 @@
 				<!-- Tab panes -->
 				<div class="tab-content">
 					<div class="tab-pane active" id="details"> 
-						<form role="form" method="post" enctype="multipart/form-data"  action="membership/do_upload">
-							<input type="file" name="file" style="width:78px; float:left" id="upload_images"/>
-							<span id="photoprocessing" style="display:none;float:left; color:green; font-weigth:bold">Uploading photo...</span>	
-							<button type="submit" id="btn">Upload Photo!</button> 
-							<br style="clear:both"/>
-						</form>					
+			
 						<form  role="form" name="form_details" method="post" onsubmit="return membershiptransaction.updateInfo(this);" >
 							<input type="hidden" name="token" value="<?php echo $token; ?>" />
 							<input type="hidden" name="token1" value="<?php echo $row->tran_id; ?>" />
 							<div class="col-sm-9">
 							
-								<div>
-								<?php 
-									if( isset($alerts) ){
+								
+							<?php  if( isset($alerts) ){
+										$xalert = '';
 										foreach($alerts as $alert){
-											echo $alert; 
+											$xalert .= $alert; 
 										}
-									}	
-								?>
-								</div>
+								 	
+										echo '<div class="alert alert-danger" style="text-align:right; margin-left:170px; margin-bottom: 0; padding:3px 3px; font-weigth:bold; color: red; font-size:14px">'.$xalert.'</div>';
+									} 
+							?>
+								
 								
 								<table class="table"> 
 									<tr>
 										<td><strong>NRIC/FIN no.</strong></td>
-										<td><input type="text" name="ai_nric" value="<?php echo $row->ai_nric; ?>" class="col-sm-8" /></td>
+										<td><input type="text" name="ai_nric" value="<?php echo $row->ai_nric; ?>" maxlength="10" class="col-sm-3" /></td>
 									</tr>		
 									<tr>
 										<td style="width: 165px"><strong>Name</strong></td>
 										<td>
-											<input type="text" name="firstname" value="<?php echo $row->ai_fname; ?>" placeholder="Firstname" class="col-sm-4"/> 
-											<input type="text" name="lastname" value="<?php echo $row->ai_lname; ?>" placeholder="Lastname" class="col-sm-4"/>
+											<input type="text" name="firstname" value="<?php echo $row->ai_fname; ?>" placeholder="Firstname" class="col-sm-6"/> 
+											<input type="text" name="lastname" value="<?php echo $row->ai_lname; ?>" placeholder="Lastname" class="col-sm-5"/>
 										</td>
 									</tr>	
 									<tr>
@@ -238,9 +240,9 @@
 									</tr>									
 									<tr>
 										<td><strong>Amount</strong></td>
-										<td>SGD <?php echo $row->pay_amt.' '.(($row->ct_promo_name != '')?'<span class="label label-success">'.$row->ct_promo_name.'</span':''); ?></td>
+										<td>SGD <?php echo number_format($row->pay_amt, 2, '.', ',').' '.(($row->ct_promo_name != '')?'<span class="label label-success">'.$row->ct_promo_name.'</span':''); ?></td>
 									</tr>									
-									<tr>
+									<tr> 
 										<td><strong>Membership</strong></td>
 										<td><?php echo $row->mem_name; ?></td>
 									</tr> 									
@@ -256,22 +258,21 @@
 									</tr>									
 									<tr>
 										<td><strong>Expiry Date</strong></td>
-										<td>
-											<?php if( strtotime('now') > strtotime($exp_date) ): ?>
-											<input type="text" name="expiry_date" value="<?php echo date('d/m/Y',strtotime($exp_date)); ?>" class="col-sm-4"/> d/m/y
-											<?php else:  
-													echo date('d/m/Y',strtotime($exp_date));  
-												  endif; 
-											?>
+										<td><?php echo date('d/m/Y',strtotime($exp_date)); ?>
 											
 										</td>
 									</tr>									
 									<tr>
-										<td><strong>Addr:(Unit#/St./Bldg.)</strong></td>
+										<td><strong>Address: (Unit#/St.)</strong></td>
 										<td>
-											<input type="text" name="unit" value="<?php echo $row->unit; ?>" placeholder="Unit/Blk #" class="col-sm-3"/> 
-											<input type="text" name="street1" value="<?php echo $row->street1; ?>" placeholder="Street" class="col-sm-4"/>
-											<input type="text" name="street2" value="<?php echo $row->street2; ?>" placeholder="Building" class="col-sm-4"/>
+											<input type="text" name="unit" value="<?php echo $row->unit; ?>" placeholder="Unit/Blk #" class="col-sm-5"/> 
+											<input type="text" name="street1" value="<?php echo $row->street1; ?>" placeholder="Street" class="col-sm-6"/> 
+										</td>
+									</tr> 										
+									<tr>
+										<td><strong>Address: (Building)</strong></td>
+										<td> 
+											<input type="text" name="street2" value="<?php echo $row->street2; ?>" placeholder="Building" class="col-sm-6"/>
 										</td>
 									</tr> 								
 									<tr>
@@ -288,7 +289,7 @@
 										<td><strong>Phone</strong></td>
 										<td>
 											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-sm-4"/>
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" id="btn_show_more" class="btn btn-default btn-xs">show more</button>
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><button type="button" id="btn_show_more" class="btn btn-default btn-xs" title="Show More"><span class="glyphicon glyphicon-arrow-down" style="font-size:15px"></button>
 										</td>
 									</tr>	 
 									
@@ -296,11 +297,16 @@
 										<td colspan="2" style="background-color:#ccc"><strong>Emergency contact's address</strong></td>
 									</tr>	 
 									<tr class="tr_hide_show" style="display:none">
-										<td><strong>Addr(Unit#/St/Blg):</strong></td>
+										<td><strong>Address (Unit#/St.)</strong></td>
 										<td>
-											<input type="text" name="emg_unit" value="<?php echo $row->emg_unit; ?>" class="col-sm-3" placeholder="Unit/Blk #"/>
-											<input type="text" name="emg_street1" value="<?php echo $row->emg_street1; ?>" class="col-sm-4" placeholder="Street 1"/>
-											<input type="text" name="emg_street2" value="<?php echo $row->emg_street2; ?>" class="col-sm-4" placeholder="Building"/>
+											<input type="text" name="emg_unit" value="<?php echo $row->emg_unit; ?>" class="col-sm-5" placeholder="Unit/Blk #"/>
+											<input type="text" name="emg_street1" value="<?php echo $row->emg_street1; ?>" class="col-sm-6" placeholder="Street 1"/> 
+										</td>
+									</tr>	 
+									<tr class="tr_hide_show" style="display:none">
+										<td><strong>Address ( Building):</strong></td>
+										<td> 
+											<input type="text" name="emg_street2" value="<?php echo $row->emg_street2; ?>" class="col-sm-6" placeholder="Building"/>
 										</td>
 									</tr> 
 									<tr class="tr_hide_show" style="display:none">
@@ -330,13 +336,13 @@
 										<td>
 											<textarea name="mh_medicine" class="col-sm-10" rows="2"><?php echo $row->mh_medicine; ?></textarea>
 											<br style="clear:both"/>
-											<button type="button" id="btn_show_less" class="btn btn-default btn-xs">show less</button>
+											<button type="button" id="btn_show_less" class="btn btn-default btn-xs" title="Show Less" style="margin-left: 140px"><span class="glyphicon glyphicon-arrow-up" style="font-size:15px"></button>
 										</td>
 									</tr>
 									
 									<tr>
 										<td></td>
-										<td><button type="submit" class="btn btn-primary">Save</button></td>
+										<td align="right"><button type="submit" class="btn btn-primary">Save</button></td>
 									</tr>									
 									
 								</table> 
@@ -512,6 +518,7 @@
 									<div class="col-sm-3">
 									<select class="form-control input-sm" name="other_payment_type">
 										<option value="<?php echo PAYMENT_TYPE_CASH; ?>">Cash</option>
+										<option value="<?php echo PAYMENT_TYPE_CC; ?>">Credit Card</option>
 										<option value="<?php echo PAYMENT_TYPE_MAILORDER; ?>">Mail Order</option>
 										<option value="<?php echo PAYMENT_TYPE_NETS; ?>">Nets</option>
 										<option value="<?php echo PAYMENT_TYPE_VISA; ?>">Visa</option>
@@ -576,6 +583,13 @@
 					
 					<div class="tab-pane" id="invoice">
 						<br /><br />
+						<div class="col-sm-3" style="margin:0px; padding:0 3px">
+						<select id="report_type_status_payment" class="form-control col-sm-3" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;" >
+							<option value="0">All Payments</option>
+							<option value="1">Success Payments</option>
+							<option value="2">Failed Payments</option> 
+						</select>	
+						</div>	
 						<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.pdfinvoicemember('<?php echo $row->pay_ref?>')">Generete PDF Invoice</button>			
 						<br />
 						<br />

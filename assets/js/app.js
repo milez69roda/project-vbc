@@ -232,7 +232,8 @@ var generatereports = {
 	},
 	
 	pdfinvoicemember: function(ref){
-		window.location = 'reports/invoicepdfmember/?ref='+ref;
+		var type = $("#report_type_status_payment").val();
+		window.location = 'reports/invoicepdfmember/?ref='+ref+'&report_type='+type;
 	}
 } 
 

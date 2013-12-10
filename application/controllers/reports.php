@@ -162,9 +162,10 @@ class Reports extends MY_Controller {
 		$this->load->model('Reports_model', 'report'); 
 		$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
 		$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		$type	 	= (isset($_GET['report_type']))?$this->input->get('report_type'):0;
 				
 		$data['title'] = 'Invoice';
-		$data['records'] = $this->report->invoice('', $startDate, $endDate);		
+		$data['records'] = $this->report->invoice('', $startDate, $endDate, $type);		
 		
 		//print_r($data['records']);
 		//echo $this->db->last_query();
@@ -181,6 +182,7 @@ class Reports extends MY_Controller {
 		$this->load->model('Reports_model', 'report'); 
 		$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
 		$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		$type	 	= (isset($_GET['report_type']))?$this->input->get('report_type'):0;
 				  
  		require(APPPATH .'third_party/fpdf.php'); 
  		require(APPPATH .'libraries/PDF.php');
@@ -188,14 +190,15 @@ class Reports extends MY_Controller {
 		$pdf = new PDF('P','mm','Letter');
 		$pdf->AliasNbPages();
 		// Column headings
-		$data_header = array('Name', 'Ref No.', 'Date', 'Amount');
+		$data_header = array('Name', 'Ref No.', 'Date', 'Failed', 'Success');
 		
 		// Data loading
 		 
-		$results = $this->report->invoice('', $startDate, $endDate);		
+		$results = $this->report->invoice('', $startDate, $endDate, $type);	
+	
 		$data_content = array();
 		foreach($results as $row){
-			$data_content[] = array($row->ai_fname.' '.$row->ai_lname, $row->Merchant_Ref, $row->Order_Date, $row->Amount);
+			$data_content[] = array($row->ai_fname.' '.$row->ai_lname, $row->Merchant_Ref, $row->Order_Date, $row->failed, $row->success, );
 		} 
 		$pdf->AddPage();
 		$pdf->setContents($data_header,$data_content); 
@@ -208,6 +211,7 @@ class Reports extends MY_Controller {
 		$data = array(); 
 		$data['title'] = 'Invoice'; 
 		$ref = $_GET['ref'];
+		$type = $_GET['report_type'];
 		
 		$this->load->model('Reports_model', 'report');  
 				  
@@ -217,14 +221,14 @@ class Reports extends MY_Controller {
 		$pdf = new PDF('P','mm','Letter');
 		$pdf->AliasNbPages();
 		// Column headings
-		$data_header = array('Name', 'Ref No.', 'Date', 'Amount');
+		$data_header = array('Name', 'Ref No.', 'Date', 'Failed', 'Success');
 		
 		// Data loading
 		 
-		$results = $this->report->invoice($ref, '', '');		
+		$results = $this->report->invoice($ref, '', '',$type);		
 		$data_content = array();
 		foreach($results as $row){
-			$data_content[] = array($row->ai_fname.' '.$row->ai_lname, $row->Merchant_Ref, $row->Order_Date, $row->Amount);
+			$data_content[] = array($row->ai_fname.' '.$row->ai_lname, $row->Merchant_Ref, $row->Order_Date, $row->failed, $row->success);
 		} 
 		$pdf->AddPage();
 		$pdf->setContents($data_header,$data_content); 

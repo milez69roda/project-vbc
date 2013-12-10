@@ -237,7 +237,7 @@ class Membership_Model extends CI_Model {
 				$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 				$rows[] = substr( $row->mem_name, 0,12); 
 				//$rows[] = '<span style="font-size:10px">'.str_replace('per month', '',$row->mem_name).'</span>';  
-				$rows[] = 'SGD <strong>'.$row->pay_amt.'</strong>'; 
+				$rows[] = 'SGD <strong>'.number_format($row->pay_amt, 2, '.', ',').'</strong>'; 
 				$rows[] = $row->ai_hp; 
 				$rows[] = $row->ai_email; 
 				$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
@@ -258,7 +258,7 @@ class Membership_Model extends CI_Model {
 					$rows[] = $row->pay_ref; 
 					$rows[] = $row->ai_fname.' '.$row->ai_lname; 
 					$rows[] = substr( $row->mem_name, 0,12); 
-					$rows[] = 'SGD <strong>'.$row->pay_amt.'</strong>'; 
+					$rows[] = 'SGD <strong>'.number_format($row->pay_amt, 2, '.', ',').'</strong>'; 
 					$rows[] = $row->ai_hp; 
 					$rows[] = $row->ai_email; 
 					$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
@@ -436,7 +436,7 @@ class Membership_Model extends CI_Model {
 			$rows[] = $row->ai_email;  
 			$rows[] = str_replace('per month', '',$row->mem_name);  
 			$rows[] = $row->ec_phone;  
-			$rows[] = 'SGD '.$row->pay_amt;   
+			$rows[] = 'SGD '.number_format($row->pay_amt, 2, '.', ',');   
 			$rows[] = ($row->create_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->create_date));  
 			/* $rows[] = '<a onclick="temporary.activate(\''.$row->pay_ref.'\')" href="javascript:void(0)">Activate</a>|
 					<a href="'.$link_edit.'">Edit</a>|

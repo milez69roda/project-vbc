@@ -14,7 +14,8 @@
 
 	<link rel="stylesheet" type="text/css" href="assets/css/DT_bootstrap.css"> 
 	
-    <link rel="stylesheet" type="text/css" href="assets/css/daterangepicker/daterangepicker-bs3.css" />
+    <!--<link rel="stylesheet" type="text/css" href="assets/css/daterangepicker/daterangepicker-bs3.css" />-->
+    <link rel="stylesheet" type="text/css" href="assets/css/datepicker.css" />
     
 	<!-- Custom styles for this template -->
     <link href="assets/css/custom.css" rel="stylesheet">

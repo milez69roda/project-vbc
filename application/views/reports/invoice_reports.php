@@ -2,7 +2,7 @@
  
 	$(document).ready( function () { 
 
-		$('#reportrange').daterangepicker({
+/* 		$('#reportrange').daterangepicker({
 				ranges: {
 					'Today': [moment(), moment()],
 					'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
@@ -27,7 +27,18 @@
 
 		$(".daterangepicker li.active").each(function(){
 			$(this).removeClass('active'); 
-		});		 
+		});	 */	 
+		
+		$("#startdate").datepicker({ 'autoclose': true, 'format': 'yyyy-mm-dd' })
+		.on('changeDate', function(ev){
+			$(this).datepicker('hide');
+		});
+		
+		
+		$("#enddate").datepicker({ 'autoclose': true, 'format': 'yyyy-mm-dd' })
+		.on('changeDate', function(ev){
+			$(this).datepicker('hide');
+		});		
 
 	});
 
@@ -40,22 +51,29 @@
 			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <a href="reports/invoice"><?php echo $title ?></a> </h4>  
 	 	</div>
 		
-		<div class="pull-right filterribbon" style=" width: 680px;" >
+		<div class="pull-right filterribbon" style=" width: 850px;" >
 			<form name="searchForm" method="get" action="reports/invoice/" >
-				<input id="startdate" class="datepicker input-small" type="hidden" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("Y-m-d"); ?>" name="startdate">
-				<input id="enddate" class="datepicker input-small" type="hidden" value="<?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("Y-m-d", strtotime($_GET['enddate'])):date("Y-m-d"); ?>" name="enddate"> 				
-				
+ 
 				<div class="pull-right"  >	
 					&nbsp;		  
 					<button type="submit" class="btn btn-primary btn-sm">Generate Invoice</button>
 					<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.pdfinvoice()">Generete PDF Invoice</button>
 				</div>
 
-				<div id="reportrange" class="pull-right">
-				    <i class="glyphicon glyphicon-calendar"></i> 
-				    <!--<span><?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("F j, Y", strtotime($_GET['startdate'])):date("F j, Y", strtotime('-30 day')); ?> - <?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("F j, Y", strtotime($_GET['enddate'])):date("F j, Y"); ?></span> <b class="caret"></b>-->
-				    <span><?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("F j, Y", strtotime($_GET['startdate'])):date("F j, Y"); ?> - <?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("F j, Y", strtotime($_GET['enddate'])):date("F j, Y"); ?></span> <b class="caret"></b>
-				</div> 
+				<div class="pull-right" style="padding-left: 20px"> 
+					<label>From: </label><input id="startdate" class="datepicker input-small " style="width:100px; padding: 6px 12px;" type="text" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("Y-m-d"); ?>" name="startdate">
+					<label>To:</label> <input id="enddate" class="datepicker input-small" style="width:100px; padding: 6px 12px;"  type="text" value="<?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("Y-m-d", strtotime($_GET['enddate'])):date("Y-m-d"); ?>" name="enddate"> 						
+				</div>  
+				
+			    <div class="col-sm-3 pull-right" style="margin:0px; padding:0 3px">
+					<select name="report_type" class="form-control" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;" >
+						<option value="0" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 0)?'selected':'' ?>>All Payments</option>
+						<option value="1" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 1)?'selected':'' ?>>Success Payments</option>
+						<option value="2" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 2)?'selected':'' ?>>Failed Payments</option> 
+					</select>
+					
+			    </div>						
+				
 				<div class="pull-right" style="font-size: 12px"><span class="glyphicon glyphicon-list" style="padding-top: 8px"></span> Filters: &nbsp;	</div>
 			     	
 			</form>
@@ -69,24 +87,41 @@
 				<tr> 
 					<td><strong>Name</strong></td>  
 					<td><strong>Ref No.</strong></td>  
-					<td><strong>Date</strong></td>  
-					<td><strong>Amount</strong></td>  
+					<td><strong>Date</strong></td>     
+					<td align="center"><strong>Failed (Amt)</strong></td>  
+					<td align="center"><strong>Success (Amt)</strong></td>  
 				</tr>
 			</thead>
 			<tbody>
-			<?php $amount = 0;foreach( $records as $row): $amount += $row->Amount; ?>
+			<?php 
+				$amount_sucess = 0;
+				$amount_failed = 0;
+				foreach( $records as $row): 
+					
+					if( $row->status=="Accepted" ) $amount_sucess += $row->success; 
+					else $amount_failed += $row->failed; 
+			?>
 				<tr>  
 					<td><?php echo $row->ai_fname.' '.$row->ai_lname; ?></td> 	
 					<td><?php echo $row->Merchant_Ref; ?></td> 	
 					<td><?php echo $row->Order_Date; ?></td> 	
-					<td style="text-align:right"><?php echo $row->Amount; ?></td> 	
+					<td style="text-align:right"><?php echo $row->failed; ?></td>  
+					<td style="text-align:right"><?php echo $row->success; ?></td> 	
 				</tr>
 			<?php endforeach; ?>
 				<tr>  
 					<td>&nbsp;</td> 	
 					<td>&nbsp;</td> 	
-					<td style="color:red; font-weight: bold">Total</td> 	
-					<td style="color:red; font-weight: bold; text-align:right"><?php echo number_format($amount, 2, '.', ','); ?></td> 	
+					<td style="color:red; font-weight: bold">Total Failed Payment</td> 	
+					<td style="color:red; font-weight: bold; text-align:right"><?php echo number_format($amount_failed, 2, '.', ','); ?></td> 	
+					<td>&nbsp;</td> 	
+				</tr>
+				<tr>  
+					<td>&nbsp;</td> 	
+					<td>&nbsp;</td> 	
+					<td style="color:green; font-weight: bold">Total Success Payment</td> 	
+					<td>&nbsp;</td> 	
+					<td style="color:green; font-weight: bold; text-align:right"><?php echo number_format($amount_sucess, 2, '.', ','); ?></td> 	
 				</tr>			
 			</tbody>	
 			

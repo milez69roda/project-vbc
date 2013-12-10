@@ -60,29 +60,38 @@ class PDF extends FPDF {
         $this->SetFont('Arial','',12);
         // Column widths
 		
-        $w = array(105, 25, 25, 35);
+        $w = array(90, 25, 25, 25, 25);
         // Header
         for($i=0;$i<count($header);$i++)
             $this->Cell($w[$i],7,$header[$i],'BLRT',0,'C');
         $this->Ln();
         // Data
-        $total = 0;
+        $total_failed = 0;
+        $total_success = 0;
         foreach($data as $row)
         {
-            $ammount = $row[3];   
+            $failed = $row[3];   
+            $success = $row[4];   
             $this->Cell($w[0],6,$row[0],'L');
             $this->Cell($w[1],6,$row[1],'L'); 
             $this->Cell($w[2],6,$row[2],'L'); 
-            $this->Cell($w[3],6,$ammount,'LR',0,'R');
+            $this->Cell($w[3],6,@number_format($failed,2, '.', ','),'LR',0,'R');
+            $this->Cell($w[4],6,@number_format($success,2, '.', ','),'LR',0,'R');
             $this->Ln();
 
-            $total += $ammount;
+            $total_failed += $failed;
+            $total_success += $success; 
         } 
         //$this->Ln();
         // Closing line
-        $this->Cell(150,7,'TOTAL','T', 0, 'L');
+        $this->Cell(140,7,'TOTAL FAILED','T', 0, 'R');
         //$this->Cell(40,7,number_format($total),'T', 0, 'R');
-        $this->Cell(40,7,number_format($total,2, '.', ','),'T', 0, 'R');
+        $this->Cell(25,7,number_format($total_failed,2, '.', ','),'T', 0, 'R');
+		 $this->Cell(25,7,'','T', 0, 'R');
+		$this->Ln();
+        $this->Cell(140,7,'TOTAL SUCCESS',0, 0, 'R');
+        //$this->Cell(40,7,number_format($total),'T', 0, 'R');
+        $this->Cell(50,7,number_format($total_success,2, '.', ','),0, 0, 'R');
     }
       
 }  

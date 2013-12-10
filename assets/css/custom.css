@@ -7,6 +7,11 @@ body {
    padding-top: 30px;
 }
 
+form input , form textarea{
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
 
 /* Set the fixed height of the footer here */
 #footer {

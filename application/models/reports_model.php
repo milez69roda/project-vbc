@@ -76,6 +76,7 @@ class Reports_Model extends CI_Model {
 		
 		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.active_date", false);
 		$this->db->where(" (pay_status ='3' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") ) ", null, false);
+		$this->db->where("DATE_FORMAT(club_transaction.create_date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'", null, false);
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction.active_date', 'asc');
 		$results = $this->db->get('club_transaction')->result();
@@ -97,6 +98,7 @@ class Reports_Model extends CI_Model {
 		
 		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.active_date", false);
 		$this->db->where("(payment_mode = '2' AND pay_status = '3' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") ) ", null, false);
+		$this->db->where("DATE_FORMAT(club_transaction.create_date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'", null, false);
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction.active_date', 'asc');
 		$results = $this->db->get('club_transaction')->result();
@@ -118,6 +120,7 @@ class Reports_Model extends CI_Model {
 		
 		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.active_date", false);
 		$this->db->where("(payment_mode = '0' AND pay_status = '3' AND term_type NOT IN(".TERM_EXPIRED.", ".TERM_SUSPENSION.", ".TERM_TERMINATION.", ".TERM_DELETED.") ) ", null, false);
+		$this->db->where("DATE_FORMAT(club_transaction.create_date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'", null, false);
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction.active_date', 'asc');
 		$results = $this->db->get('club_transaction')->result();
@@ -227,11 +230,16 @@ class Reports_Model extends CI_Model {
 		return $results;
 	}
 	
-	function invoice($ref, $startdate, $enddate){
+	function invoice($ref, $startdate, $enddate, $status = 0){
 	 
-		$this->db->select("ai_fname, ai_lname, scheduled_payments.Merchant_Ref, Amount,  DATE_FORMAT(Order_Date, '%d/%m/%Y') as Order_Date", false);
+		$this->db->select("ai_fname, ai_lname, scheduled_payments.Merchant_Ref, Amount,  status, IF(STATUS = 'Accepted', Amount, '' ) AS 'success', IF(STATUS != 'Accepted', Amount, '' )AS 'failed', DATE_FORMAT(Order_Date, '%d/%m/%Y') as Order_Date", false);
 		
-		$this->db->where('scheduled_payments.status', 'Accepted');
+		//$this->db->where('scheduled_payments.status', 'Accepted');
+		
+		if( $status > 0 ){
+			if( $status == 1) $this->db->where('scheduled_payments.status', 'Accepted');
+			else $this->db->where("scheduled_payments.status != 'Accepted'", null, false);
+		}
 		
 		if( $ref != '' ){
 			$this->db->where('scheduled_payments.Merchant_Ref', $ref);
