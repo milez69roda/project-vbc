@@ -22,10 +22,12 @@ class Mailer extends PHPMailer {
 			$mail->MsgHTML($message); 
 			
 			foreach($attachments as $attach){
-				$mail->AddAttachment($attach);   
+				$mail->AddAttachment('./files/'.$attach, $attach);   
+				//$string = file_get_contents(base_url().'files/'.$attach); 
+				//$mail->AddStringAttachment($string, "terms.pdf", $encoding = 'base64', $type = 'application/pdf');  
+				//echo 'File'.file_exists('../files/'.$attach);				
 			}
-			$mail->Send();
-		  
+			$mail->Send(); 
 			echo "Message Sent OK</p>\n";
 		}catch (phpmailerException $e) {
 			echo $e->errorMessage(); //Pretty error messages from PHPMailer
