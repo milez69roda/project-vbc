@@ -231,13 +231,16 @@ class Membership extends MY_Controller {
 	
 	public function ajax_membership_mail(){
 		
+		$this->load->library('Mailer', 'mailer');
+		
 		$refno = $this->input->post('refno');
 		$type = $this->input->post('type');
 		
-		$this->common_model->membershipEmail($refno, $type);
-		sleep(3);
+		$result = $this->common_model->sendMemberEmail($refno, $type);
+		//print_r($result);
+		$this->mailer->sendMail($result['to']['name'], $result['to']['email'], $result['subject'], $result['message'], $result['attachements']);
 		
-		if($type=="admin") {
+		/* if($type=="admin") {
 			echo "Your email has been send to Admin";
 		}
 
@@ -255,7 +258,7 @@ class Membership extends MY_Controller {
 		
 		if($type=="conf_admin") {
 			echo "Your email has been send to Admin";
-		} 
+		} */ 
 	}
 	
 	/*public function ajax_membership_update(){

@@ -240,7 +240,7 @@
 									</tr>									
 									<tr>
 										<td><strong>Amount</strong></td>
-										<td>SGD <?php echo number_format($row->pay_amt, 2, '.', ',').' '.(($row->ct_promo_name != '')?'<span class="label label-success">'.$row->ct_promo_name.'</span':''); ?></td>
+										<td>SGD <?php echo number_format($row->pay_amt, 2, '.', ',').' '.((trim($row->ct_promo_name) != '')?'<span class="label label-success">'.$row->ct_promo_name.'</span':''); ?></td>
 									</tr>									
 									<tr> 
 										<td><strong>Membership</strong></td>
