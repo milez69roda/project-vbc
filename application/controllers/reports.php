@@ -175,7 +175,7 @@ class Reports extends MY_Controller {
 	}		
 	
 	public function invoicepdf(){ 
-		 
+		   
 		$data = array(); 
 		$data['title'] = 'Invoice'; 
 
