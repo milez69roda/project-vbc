@@ -222,7 +222,7 @@ class Membership extends MY_Controller {
 		$data['schedulepayements_results'] 	= @$this->schedule_payment_model->get(array('Merchant_Ref' => $row->pay_ref), 10);
 		$data['terms_results'] 				= $this->terms_model->get(array('tran_id'=>$row->tran_id));
 		$data['freebies_results'] 			= $this->freebies_model->get(array('tran_id'=>$row->tran_id));
-		$data['countries'] 					= $this->common_model->getCountryDropdown();
+		$data['countries'] 					= $this->common_model->getCountryDropdown(); 
 		$data['title'] 						= $this->input->post('title');
 		$data['token'] 						= $token;
 		//echo $_SERVER['HTTP_REFERER'];

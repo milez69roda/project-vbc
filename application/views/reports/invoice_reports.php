@@ -47,23 +47,30 @@
 	<div class="row" style="background-color: #fff; padding: 5px 3px">
 		<!--<div class="pull-right filterribbon" style=" width: 680px; background-color: #333; box-shadow: 0 1px 3px #888888; color: #fff; height: 45x; text-shadow: 0 0 0 #000000; padding: 6px 14px 6px 15px; " >-->
 		
-		<div class="pull-left">
-			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <a href="reports/invoice"><?php echo $title ?></a> </h4>  
+		<div class="">
+			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> 
+				<a href="reports/invoice"><?php echo $title ?></a> 
+				<?php echo (isset($_GET['ref']) AND $_GET['ref'] != '')?'<span class="glyphicon glyphicon-chevron-right" style="color:#333"></span>'.$_GET['ref']:''; ?>
+			</h4>  
 	 	</div>
 		
-		<div class="pull-right filterribbon" style=" width: 850px;" >
-			<form name="searchForm" method="get" action="reports/invoice/" >
- 
-				<div class="pull-right"  >	
+		<div class="filterribbon" style="" >
+			<form name="searchForm" id="searchForminvoice" method="get" action="reports/invoice/" >
+				<input type="hidden" name="ref" value="<?php echo @$_GET['ref'] ?>" />
+ 				<div class="pull-right" >	 
 					&nbsp;		  
 					<button type="submit" class="btn btn-primary btn-sm">Generate Invoice</button>
 					<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.pdfinvoice()">Generete PDF Invoice</button>
 				</div>
-
+	
 				<div class="pull-right" style="padding-left: 20px"> 
 					<label>From: </label><input id="startdate" class="datepicker input-small " style="width:100px; padding: 6px 12px;" type="text" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("Y-m-d"); ?>" name="startdate">
 					<label>To:</label> <input id="enddate" class="datepicker input-small" style="width:100px; padding: 6px 12px;"  type="text" value="<?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("Y-m-d", strtotime($_GET['enddate'])):date("Y-m-d"); ?>" name="enddate"> 						
 				</div>  
+				
+				<div class="pull-right" style="padding-top: 5px">
+					&nbsp;<label>No Date: </label>&nbsp;<input type="checkbox" <?php echo  (isset($_GET['bypass']))?'checked':''; ?> value="1" name="bypass" /> 
+				</div>
 				
 			    <div class="col-sm-3 pull-right" style="margin:0px; padding:0 3px">
 					<select name="report_type" class="form-control" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;" >
@@ -103,7 +110,7 @@
 			?>
 				<tr>  
 					<td><?php echo $row->ai_fname.' '.$row->ai_lname; ?></td> 	
-					<td><?php echo $row->Merchant_Ref; ?></td> 	
+					<td><a href="reports/invoice/?bypass=1&ref=<?php echo $row->Merchant_Ref; ?>" ><?php echo $row->Merchant_Ref; ?></a></td> 	
 					<td><?php echo $row->Order_Date; ?></td> 	
 					<td style="text-align:right"><?php echo $row->failed; ?></td>  
 					<td style="text-align:right"><?php echo $row->success; ?></td> 	

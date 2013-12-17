@@ -103,8 +103,31 @@
 					}
 				});
 			} 
-		});			
+		});
+		
+		$("#profile-image").click(function(){
+			var tpl = '<div class="modal fade">'
+					+'<div class="modal-dialog">'
+						+'<div class="modal-content">'
+							+'<div class="modal-header">'
+							+'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+							+'<h4 class="modal-title">Profile Photo</h4>'
+							+'</div>'
+							+'<div class="modal-body">'
+								+'<img src="'+this.src+'" height="" width=""  style="width:100%; height: 100%"/>' 
+							+'</div>' 
+						+'</div>'
+					  +'</div>'
+					+'</div>';
+					 
+			$(tpl).modal();
+			//console.log(this.src)
+		});
+ 
+		
 	});
+		 
+	
 </script>
 
 <!-- Modal -->
@@ -155,7 +178,7 @@
 			
 				<div>
 					<div class="col-sm-2" style="padding-left:0px" id="div_profile_image_container">
-						<img id="profile-image" class="img-thumbnail" data="<?php echo $row->pay_ref ?>" src="<?php echo ($row->photo != '')?PROFILE_IMAGE_PATH.'/'.$row->photo:'assets/img/profile-image.png'; ?>" height="100" width="100" alt="Generic placeholder image">
+						<img id="profile-image" class="img-thumbnail"  data="<?php echo $row->pay_ref ?>" src="<?php echo ($row->photo != '')?PROFILE_IMAGE_PATH.'/'.$row->photo:'assets/img/profile-image.png'; ?>" height="100" width="100" alt="Generic placeholder image">
 					</div>
 					<div class="col-sm-3" style="">
 						<h4><span id="label-top-fname"><?php echo $row->ai_fname.' '.$row->ai_lname; ?></span></h4>
@@ -583,14 +606,15 @@
 					
 					<div class="tab-pane" id="invoice">
 						<br /><br />
-						<div class="col-sm-3" style="margin:0px; padding:0 3px">
+						<!--<div class="col-sm-3" style="margin:0px; padding:0 3px">
 						<select id="report_type_status_payment" class="form-control col-sm-3" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;" >
 							<option value="0">All Payments</option>
 							<option value="1">Success Payments</option>
 							<option value="2">Failed Payments</option> 
 						</select>	
-						</div>	
-						<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.pdfinvoicemember('<?php echo $row->pay_ref?>')">Generete PDF Invoice</button>			
+						</div>-->	
+						<!--<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.pdfinvoicemember('<?php echo $row->pay_ref?>')">Generete PDF Invoice</button>-->			
+						<a class="btn btn-warning btn-sm" href="reports/invoice/?bypass=1&ref=<?php echo $row->pay_ref?>">Generete Invoice</a>
 						<br />
 						<br />
 					</div>

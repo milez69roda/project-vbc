@@ -82,6 +82,11 @@ class Common_Model extends CI_Model {
 		return $row;	
 	}
 	
+	function getMembershipTypeList(){
+		$result = $this->db->get_where('club_membership_type', array('mem_flag'=>"0"))->result();
+		return $result;	
+	}
+	
 	function getAllWeekRange_byYear($year){
 		//$year = date('Y');
 		$week_date_range = array();

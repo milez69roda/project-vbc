@@ -228,7 +228,11 @@ var generatereports = {
 	},
 	
 	pdfinvoice: function(){ 
-		window.location = 'reports/invoicepdf/?startdate='+$('#startdate').val()+'&enddate='+$('#enddate').val(); 
+		
+		var formfields = $('#searchForminvoice').serialize();
+		
+		//window.location = 'reports/invoicepdf/?startdate='+$('#startdate').val()+'&enddate='+$('#enddate').val(); 
+		window.location = 'reports/invoicepdf/?'+formfields; 
 	},
 	
 	pdfinvoicemember: function(ref){

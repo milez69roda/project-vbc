@@ -18,17 +18,18 @@ class Export extends MY_Controller {
 		
 		$sheet = new PHPExcel();		
 
-		$startDate 	= (isset($_POST['startdate']))?$this->input->post('startdate'):date('Y-m-d');
-		$endDate 	= (isset($_POST['enddate']))?$this->input->post('enddate'):date('Y-m-d');
-		$reportType = $this->input->post('report_type');
-		$report_page = $this->input->post('report_page');
+		$startDate 		= (isset($_POST['startdate']))?$this->input->post('startdate'):date('Y-m-d');
+		$endDate 		= (isset($_POST['enddate']))?$this->input->post('enddate'):date('Y-m-d');
+		$member_type 	= $this->input->post('member_type');
+		$reportType 	= $this->input->post('report_type');
+		$report_page 	= $this->input->post('report_page');
 		
 		$title = '';
 		
 		if( $report_page == "membership" ){
 			if($reportType == 0){
 				$title 		= 'Signup';
-				$records 	= $this->report->signups($startDate, $endDate);
+				$records 	= $this->report->signups($member_type, $startDate, $endDate);
 			} 
 			
 			if($reportType == 1){

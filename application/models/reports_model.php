@@ -6,10 +6,13 @@ class Reports_Model extends CI_Model {
 		parent::__construct(); 
 	}  
 	
-    public function signups($startdate, $enddate){ 
+    public function signups($member_type = 0, $startdate, $enddate){ 
 		
 		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.create_date", false);
 		$this->db->where("DATE_FORMAT(club_transaction.create_date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
+		if( $member_type > 0 ){
+			$this->db->where("mem_type", $member_type);
+		}
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction.create_date', 'asc');
 		$results = $this->db->get('club_transaction')->result();

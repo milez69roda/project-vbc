@@ -83,14 +83,15 @@ class Reports extends MY_Controller {
 		
 		$this->load->model('Reports_model', 'report');
 		
-		$startDate 	= $this->input->get('startdate');
-		$endDate 	= $this->input->get('enddate');
-		$reportType = $this->input->get('report_type');
+		$startDate 		= $this->input->get('startdate');
+		$endDate 		= $this->input->get('enddate');
+		$reportType 	= $this->input->get('report_type');
+		$member_type 	= $this->input->get('member_type');
 		$data = array();
 		
 		if($reportType == 0){
 			$data['title'] = 'Signup';
-			$data['records'] = $this->report->signups($startDate, $endDate);
+			$data['records'] = $this->report->signups($member_type, $startDate, $endDate);
 		} 
 		
 		if($reportType == 1){
@@ -117,6 +118,8 @@ class Reports extends MY_Controller {
 			$data['title'] = 'Credit Card';
 			$data['records'] = $this->report->creditcard($startDate, $endDate);
 		} 
+		
+		$data['membership_type'] = $this->common_model->getMembershipTypeList();
 		
 		$this->load->view('header'); 
 		$this->load->view('reports/membership_reports', $data); 
@@ -157,32 +160,50 @@ class Reports extends MY_Controller {
 	
 	public function invoice(){
 		 
-		$data = array();
-		
 		$this->load->model('Reports_model', 'report'); 
-		$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
-		$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
-		$type	 	= (isset($_GET['report_type']))?$this->input->get('report_type'):0;
-				
+		
+		$data = array();
+		$startDate 	= '';
+		$endDate  	= '';
+		$ref 		= '';
+		
+		if( !isset($_GET['bypass']) ){
+			$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+			$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		}
+		$type	 		= (isset($_GET['report_type']))?$this->input->get('report_type'):0; 
+		
+		if( isset($_GET['ref']) AND $_GET['ref'] != '' ){
+			$ref	 	= $this->input->get('ref');	
+		}
+		
 		$data['title'] = 'Invoice';
-		$data['records'] = $this->report->invoice('', $startDate, $endDate, $type);		
+		$data['records'] = $this->report->invoice($ref, $startDate, $endDate, $type);		
 		
 		//print_r($data['records']);
 		//echo $this->db->last_query();
 		$this->load->view('header'); 
 		$this->load->view('reports/invoice_reports', $data); 
 		$this->load->view('footer');			
-	}		
+	}	 
 	
 	public function invoicepdf(){ 
-		 
+		
+		$this->load->model('Reports_model', 'report');  
 		$data = array(); 
-		$data['title'] = 'Invoice'; 
-
-		$this->load->model('Reports_model', 'report'); 
-		$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
-		$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
-		$type	 	= (isset($_GET['report_type']))?$this->input->get('report_type'):0;
+		$startDate 	= '';
+		$endDate  	= '';
+		$ref 		= '';
+		
+		if( !isset($_GET['bypass']) ){
+			$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+			$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		}
+		$type	 		= (isset($_GET['report_type']))?$this->input->get('report_type'):0; 
+		
+		if( isset($_GET['ref']) AND $_GET['ref'] != '' ){
+			$ref	 	= $this->input->get('ref');	
+		}
 				  
  		require(APPPATH .'third_party/fpdf.php'); 
  		require(APPPATH .'libraries/PDF.php');
@@ -194,7 +215,7 @@ class Reports extends MY_Controller {
 		
 		// Data loading
 		 
-		$results = $this->report->invoice('', $startDate, $endDate, $type);	
+		$results = $this->report->invoice($ref, $startDate, $endDate, $type);	
 	
 		$data_content = array();
 		foreach($results as $row){
