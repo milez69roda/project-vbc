@@ -1049,8 +1049,8 @@ class Common_Model extends CI_Model {
 
 		$data['subject'] = $subject;
 		$data['message'] = $message;	
-		//$data['to'] = array('name'=>$name, 'email'=>$email);	 
-		$data['to'] = array('name'=>'Carmelo Roda', 'email'=>'carmelo_roda@yahoo.com');	 
+		$data['to'] = array('name'=>$name, 'email'=>$email);	 
+		//$data['to'] = array('name'=>'Carmelo Roda', 'email'=>'carmelo_roda@yahoo.com');	 
 		$data['attachements'] = array('terms.pdf');	 
 		return $data;
 	}	

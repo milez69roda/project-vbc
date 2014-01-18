@@ -252,9 +252,42 @@ class Reports_Model extends CI_Model {
 			$this->db->where("DATE_FORMAT(scheduled_payments.Order_Date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'", null, false);
 		}		
 		
+		$this->db->order_by('scheduled_payments.Order_Date', 'ASC');
+		
 		$this->db->join('club_transaction', 'club_transaction.pay_ref = scheduled_payments.Merchant_Ref', 'LEFT OUTER');
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
 		$results = $this->db->get('scheduled_payments')->result();	
+		
+		return $results;
+	}
+	
+	
+	function invoice_individual($ref, $startdate, $enddate, $status = 0){
+	 
+		$this->db->select("ai_fname, ai_lname, scheduled_payments.Merchant_Ref, Amount,  status, IF(STATUS = 'Accepted', Amount, '' ) AS 'success', IF(STATUS != 'Accepted', Amount, '' )AS 'failed', DATE_FORMAT(Order_Date, '%d/%m/%Y') as Order_Date", false);
+		
+		//$this->db->where('scheduled_payments.status', 'Accepted');
+		
+		if( $status > 0 ){
+			if( $status == 1) $this->db->where('scheduled_payments.status', 'Accepted');
+			else $this->db->where("scheduled_payments.status != 'Accepted'", null, false);
+		}
+		
+		if( $ref != '' ){
+			$this->db->where('scheduled_payments.Merchant_Ref', $ref);
+		}
+		
+		if($startdate != '' ){
+			$this->db->where("DATE_FORMAT(scheduled_payments.Order_Date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'", null, false);
+		}		
+		
+		$this->db->order_by('scheduled_payments.Order_Date', 'ASC');
+		
+		$this->db->join('club_transaction', 'club_transaction.pay_ref = scheduled_payments.Merchant_Ref', 'LEFT OUTER');
+		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
+		$results = $this->db->get('scheduled_payments')->result();	
+		
+		
 		
 		return $results;
 	}

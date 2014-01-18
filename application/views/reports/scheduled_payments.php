@@ -2,7 +2,14 @@
 	var processing = false;
 	var scheduledpayments = {
 		
-		 
+		 delete: function(id){
+		 	if(confirm('Confirm delete?')){
+		 		$.post('reports/ajax_deleteschedulepayment',{id:id}, function(response){
+		 			alert(response);
+		 			oTable.fnDraw();
+		 		});
+		 	}
+		 }
 		
 	}
 

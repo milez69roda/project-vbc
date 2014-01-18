@@ -1,4 +1,5 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php //if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
    
 class PDF extends FPDF { 
 
@@ -158,20 +159,18 @@ class PDF extends FPDF {
             $failed = $row[2];   
             $success = $row[3]; 
 			
+			$this->SetTextColor(0);
+			
 			$mem_name = explode('- S',$info->mem_name);
-			 
             $this->Cell($w[0],6,$mem_name[0],'L', $fill);
             $this->Cell($w[1],6,$row[0],'L', $fill); 
             $this->Cell($w[2],6,$row[1],'L', $fill); 
-				
-			$this->SetTextColor(255,0,0);
-			$this->Cell(25,6,@number_format($failed,2, '.', ','),'LR',0,'L', $fill);
-			$this->SetTextColor(0);
-			$this->Cell(25,6,@number_format($success,2, '.', ','),'LR',0,'R', $fill );
-			
 			if( $success > 0  ){
+				$this->Cell($w[3],6,@number_format($success,2, '.', ','),'LR',0,'R', $fill );
 				$total_due["'".$row[1]."'"][] = $success;
             }else{
+				$this->SetTextColor(255,0,0);
+				$this->Cell($w[3],6,'-'.@number_format($failed,2, '.', ','),'LR',0,'L', $fill);
 				$total_due["'".$row[1]."'"][] = '-'.$failed;
             }
 			$this->Ln();
@@ -181,13 +180,11 @@ class PDF extends FPDF {
         } 
 		
 		$past_due = 0;
-		$subtotal = 0;
 		foreach($total_due as $amnt){
 			$s = array_sum($amnt);	
 			if( $s <= 0){
 				$past_due += abs($s);
 			}
-			$subtotal += $info->pay_amt; 
 		}
         //$this->Ln();
         // Closing line
@@ -196,25 +193,14 @@ class PDF extends FPDF {
         $this->Cell(25,7,number_format($total_failed,2, '.', ','),'T', 0, 'L');
 		$this->Cell(25,7,'','T', 0, 'R'); */
 		
-		//$this->Ln();
-		$this->Cell(140,7,'Sub Total ','T', 0, 'R');   
-		$this->Cell(50,7, number_format(@$total_success,2, '.', ','),'T', 0, 'R');
-		
-		$this->Ln();
-		$this->Ln();
-		
-		$this->Cell(140,7,'Payment Made ',0, 0, 'R');  
-		$this->SetTextColor(255,0,0);
-		$this->Cell(50,7,'(-) SGD'.number_format(@$total_success,2, '.', ','),0, 0, 'R');
-		
-		$this->SetTextColor(0);
-		$this->Ln();
-		$this->Cell(140,7,'Payment to be collected ',0, 0, 'R');
-		$this->Cell(50,7,'SGD'.number_format(@$subtotal,2, '.', ','),0, 0, 'R');	
-		
+		$this->Cell(190,7,'','T', 0, 'R');
 		$this->Ln(); 
-		$this->SetFont('','B', '14');
-		$this->Cell(140,7,'Balance Due ',0, 0, 'R'); 
-        $this->Cell(50,7,'SGD'.number_format(@$past_due,2, '.', ','),0, 0, 'R'); 
-    }	 
-}   
+		$this->Cell(140,7,'Balance Due','T', 0, 'R');
+        //$this->Cell(40,7,number_format($total),'T', 0, 'R');
+        $this->Cell(50,7,number_format($past_due,2, '.', ','),'T', 0, 'R');
+		 
+    }	
+      
+}  
+
+?> 

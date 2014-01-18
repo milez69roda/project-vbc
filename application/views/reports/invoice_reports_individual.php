@@ -55,7 +55,7 @@
 	 	</div>
 		
 		<div class="filterribbon" style="" >
-			<form name="searchForminvoice" id="searchForminvoice" method="get" action="reports/invoice/" >
+			<form name="searchForminvoice" id="searchForminvoice" method="get" action="reports/invoiceindividual/" >
 				<input type="hidden" name="ref" id="ref" value="<?php echo @$_GET['ref'] ?>" />
  				<div class="pull-right" >	 
 					&nbsp;		  
@@ -95,7 +95,7 @@
 					<td><strong>Name</strong></td>  
 					<td><strong>Ref No.</strong></td>  
 					<td><strong>Date</strong></td>     
-					<td align="center"><strong>Amount</strong></td>   
+					<td align="center" colspan="2"><strong>Amount</strong></td>   
 				</tr>
 			</thead>
 			<tbody>
@@ -110,34 +110,53 @@
 			?>
 				<tr>  
 					<td><?php echo $row->ai_fname.' '.$row->ai_lname; ?></td> 	
-					<td><a href="reports/invoiceindividual/?bypass=1&ref=<?php echo $row->Merchant_Ref; ?>" ><?php echo $row->Merchant_Ref; ?></a></td> 	
+					<td><?php echo $row->Merchant_Ref; ?></td> 	
 					<td><?php echo $row->Order_Date; ?></td>
+					<td style="color:red; text-align:right"><?php echo ($row->failed > 0)?'-'.$row->failed:''; ?></td>
+					<td style="text-align:right"><?php echo $row->success; ?></td>
 					<?php 
 						if($row->failed > 0){
-							echo '<td style="text-align:left; color:red">-'.$row->failed.'</td>';  
+							//echo '<td style="text-align:left; color:red">-'.$row->failed.'</td>';  
 							$total_due["'".$row->Order_Date."'"][] = '-'.$row->failed;
 							
 						}else{
-							echo '<td style="text-align:right">'.$row->success.'</td>'; 	
+							//echo '<td style="text-align:right">'.$row->success.'</td>'; 	
 							$total_due["'".$row->Order_Date."'"][] = $row->success;
 						}
 					?>	
 				</tr>
 			<?php endforeach; ?>
-				<tr>  
+				<!--<tr>  
 					<td>&nbsp;</td> 	
 					<td>&nbsp;</td> 	
 					<td style="color:red; font-weight: bold">Total Failed Payment</td> 	
-					<td style="color:red; font-weight: bold; text-align:left"><?php echo number_format($amount_failed, 2, '.', ','); ?></td> 	
-			 	
+					<td style="color:red; font-weight: bold; text-align:right"><?php echo number_format($amount_failed, 2, '.', ','); ?></td> 	
+					<td>&nbsp;</td> 	
 				</tr>
 				<tr>  
 					<td>&nbsp;</td> 	
 					<td>&nbsp;</td> 	
-					<td style="color:green; font-weight: bold">Total Success Payment</td> 	 
+					<td style="color:green; font-weight: bold">Total Success Payment</td> 	
+					<td>&nbsp;</td> 	
 					<td style="color:green; font-weight: bold; text-align:right"><?php echo number_format($amount_sucess, 2, '.', ','); ?></td> 	
-				</tr>
- 	
+				</tr>-->
+
+				<tr>  
+					<td>&nbsp;</td>   	
+					<td>&nbsp;</td> 	
+					<td style="color:red; font-weight: bold; text-align: right">Past Due:</td> 
+					<?php
+						$past_due = 0;
+						foreach($total_due as $amnt){
+							$s = array_sum($amnt);	
+							if( $s <= 0){
+								$past_due += abs($s);
+							}
+						}
+ 
+					?>						
+					<td style="color:red; font-weight: bold; text-align:right"><?php echo number_format($past_due, 2, '.', ','); ?></td> 	
+				</tr>				
 			</tbody>
 		
 			

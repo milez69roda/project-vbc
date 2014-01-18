@@ -221,10 +221,12 @@ var membershiptransaction = {
 var generatereports = {
 
 	export: function(){
-		form = $("#searchForm");
-		$.post('export/download', form.serialize(), function(result){
+		form = $("#searchForm").serialize();
+		window.location = 'export/download/?'+form;
+		
+		/* $.post('export/download', form.serialize(), function(result){
 			window.location = result;
-		}); 
+		}); */ 
 	},
 	
 	pdfinvoice: function(){ 
@@ -232,7 +234,14 @@ var generatereports = {
 		var formfields = $('#searchForminvoice').serialize();
 		
 		//window.location = 'reports/invoicepdf/?startdate='+$('#startdate').val()+'&enddate='+$('#enddate').val(); 
-		window.location = 'reports/invoicepdf/?'+formfields; 
+		var ref = jQuery.trim($("#ref").val());
+		if(  ref === '' ){
+			 window.location = 'reports/invoicepdf/?'+formfields; 
+		}else{
+			window.location = 'reports/invoicepdfmember/?'+formfields; 
+		}
+		
+		//window.location = 'reports/invoicepdf/?'+formfields; 
 	},
 	
 	pdfinvoicemember: function(ref){

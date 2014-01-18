@@ -217,7 +217,9 @@ class Schedule_payment_model extends CI_Model {
 			elseif( $row->status == 'Rejected' ) $rows[] = '<span class="label label-warning">'.$row->status.'</span>'; 
 			elseif( $row->status == 'Suspend' )	$rows[] = '<span class="label label-default">'.$row->status.'</span>'; 
 			else $rows[] = '';
-			$rows[] = $row->date_created; 
+			$rows[] = $row->date_created.' '.(($this->uaccess)?'<a href="javascript:void(0)" onclick="scheduledpayments.delete('.$row->id.')">Delete</a>':'');
+ 			
+ 			
  
 			$output['aaData'][] = $rows;
 		  

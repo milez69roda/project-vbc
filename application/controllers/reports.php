@@ -79,6 +79,21 @@ class Reports extends MY_Controller {
 		$this->payments->get_list();
 	} 
 	
+	public function ajax_deleteschedulepayment(){
+
+		if($_POST){
+			$id = $this->input->post('id');
+
+			$this->db->where('id', $id);
+			if($this->db->delete('scheduled_payments') ){
+				echo 'Delete Successfully';
+			}else{
+				echo 'Failed to Delete';
+			}
+		}
+
+	}
+
 	public function membership(){
 		
 		$this->load->model('Reports_model', 'report');
@@ -187,6 +202,35 @@ class Reports extends MY_Controller {
 		$this->load->view('footer');			
 	}	 
 	
+	public function invoiceindividual(){
+		 
+		$this->load->model('Reports_model', 'report'); 
+		
+		$data = array();
+		$startDate 	= '';
+		$endDate  	= '';
+		$ref 		= '';
+		
+		if( !isset($_GET['bypass']) ){
+			$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+			$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		}
+		$type	 		= (isset($_GET['report_type']))?$this->input->get('report_type'):0; 
+		
+		if( isset($_GET['ref']) AND $_GET['ref'] != '' ){
+			$ref	 	= $this->input->get('ref');	
+		}
+		
+		$data['title'] = 'Invoice';
+		$data['records'] = $this->report->invoice($ref, $startDate, $endDate, $type);		
+		
+		//print_r($data['records']);
+		//echo $this->db->last_query();
+		$this->load->view('header'); 
+		$this->load->view('reports/invoice_reports_individual', $data); 
+		$this->load->view('footer');			
+	}	
+	
 	public function invoicepdf(){ 
 		
 		$this->load->model('Reports_model', 'report');  
@@ -223,18 +267,28 @@ class Reports extends MY_Controller {
 		} 
 		$pdf->AddPage();
 		$pdf->setContents($data_header,$data_content); 
+		ob_clean();
 		$pdf->Output('invoice_'.strtotime('now').'.pdf', 'D');  
 	 	
 	}		
 	
 	public function invoicepdfmember(){ 
 		 
-		$data = array(); 
-		$data['title'] = 'Invoice'; 
-		$ref = $_GET['ref'];
-		$type = $_GET['report_type'];
-		
 		$this->load->model('Reports_model', 'report');  
+		$data = array(); 
+		$startDate 	= '';
+		$endDate  	= '';
+		$ref 		= '';
+		
+		if( !isset($_GET['bypass']) ){
+			$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+			$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		}
+		$type	 		= (isset($_GET['report_type']))?$this->input->get('report_type'):0; 
+		
+		if( isset($_GET['ref']) AND $_GET['ref'] != '' ){
+			$ref	 	= $this->input->get('ref');	
+		}
 				  
  		require(APPPATH .'third_party/fpdf.php'); 
  		require(APPPATH .'libraries/PDF.php');
@@ -242,19 +296,24 @@ class Reports extends MY_Controller {
 		$pdf = new PDF('P','mm','Letter');
 		$pdf->AliasNbPages();
 		// Column headings
-		$data_header = array('Name', 'Ref No.', 'Date', 'Failed', 'Success');
+		$data_header = array('Membership', 'Status', 'Due Date', 'Amount');
 		
 		// Data loading
 		 
-		$results = $this->report->invoice($ref, '', '',$type);		
+		$results = $this->report->invoice($ref, $startDate, $endDate, $type);	 
 		$data_content = array();
 		foreach($results as $row){
-			$data_content[] = array($row->ai_fname.' '.$row->ai_lname, $row->Merchant_Ref, $row->Order_Date, $row->failed, $row->success);
+			$data_content[] = array( $row->status, $row->Order_Date, $row->failed, $row->success, );
 		} 
+		
+		$this->db->where('pay_ref', $ref);
+		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id');
+		$info = $this->db->get('club_transaction')->row();
+		
 		$pdf->AddPage();
-		$pdf->setContents($data_header,$data_content); 
+		$pdf->individual($info, $data_header,$data_content); 
+		ob_end_clean();
 		$pdf->Output('invoice_'.strtotime('now').'.pdf', 'D');  
-	 	
 	}
 }
 

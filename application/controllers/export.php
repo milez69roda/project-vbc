@@ -18,11 +18,11 @@ class Export extends MY_Controller {
 		
 		$sheet = new PHPExcel();		
 
-		$startDate 		= (isset($_POST['startdate']))?$this->input->post('startdate'):date('Y-m-d');
-		$endDate 		= (isset($_POST['enddate']))?$this->input->post('enddate'):date('Y-m-d');
-		$member_type 	= $this->input->post('member_type');
-		$reportType 	= $this->input->post('report_type');
-		$report_page 	= $this->input->post('report_page');
+		$startDate 		= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
+		$endDate 		= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+		$member_type 	= $this->input->get('member_type');
+		$reportType 	= $this->input->get('report_type');
+		$report_page 	= trim($this->input->get('report_page'));
 		
 		$title = '';
 		
@@ -114,14 +114,21 @@ class Export extends MY_Controller {
 		//Create a writer to write values to.
 		$sheet_writer = PHPExcel_IOFactory::createWriter($sheet, 'Excel2007');
 
-		//Setup headers to download the excel file.
-		/*header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment;filename="att_report_'.date('dMy').'.xls"');
-		header('Cache-Control: max-age=0');*/
-		$filename1 = 'files/'.str_replace(' ','_',$title).'_'.strtotime('now').'.xlsx';
-		$sheet_writer->save($filename1);
 
-		echo $filename1;	
+		$filename1 = ''.str_replace(' ','_',$title).'_'.strtotime('now').'.xlsx';
+		$sheet_writer->save('files/'.$filename1);
+
+		///echo $filename1;	
+		
+		//Setup headers to download the excel file.
+		/* header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$filename1.'"');
+		header('Cache-Control: max-age=0');	 */	
+		
+		$data = file_get_contents('files/'.$filename1); // Read the file's contents
+		$name = $filename1;
+		ob_clean();
+		force_download($name, $data); 		
 	}
 }
 

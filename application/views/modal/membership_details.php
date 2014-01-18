@@ -209,7 +209,7 @@
 				</div>
 				<br style="clear:both" />
 				<form role="form" method="post" enctype="multipart/form-data"  action="membership/do_upload">
-					<input type="file" name="file" style="width:78px; float:left" id="upload_images"/>
+					<input type="file" name="file" style="width:90px; float:left; margin-top: 5px; margin-bottom:5px; text-indent: 5px;" id="upload_images"/>
 					<span id="photoprocessing" style="display:none;float:left; color:green; font-weigth:bold">Uploading photo...</span>	
 					<button type="submit" id="btn">Upload Photo!</button> 
 					<br style="clear:both"/>
@@ -311,8 +311,11 @@
 									<tr>
 										<td><strong>Phone</strong></td>
 										<td>
-											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-sm-4"/>
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><button type="button" id="btn_show_more" class="btn btn-default btn-xs" title="Show More"><span class="glyphicon glyphicon-arrow-down" style="font-size:15px"></button>
+											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-sm-4"/><br/><br/>
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											<button type="button" id="btn_show_more" class="btn btn-default btn-xs" title="Show More">
+												<span class="glyphicon glyphicon-arrow-down" style="font-size:15px">
+											</button>
 										</td>
 									</tr>	 
 									
@@ -527,7 +530,7 @@
 								<div class="form-group">
 									<label for="reson" class="col-sm-3 control-label">Amount: (SGD)</label>
 									<div class="col-sm-3">
-										<input type="text" class="form-control" id="other_amount" name="other_amount" value="<?php echo $row->pay_amt; ?>" readonly> 
+										<input type="text" class="form-control" id="other_amount" name="other_amount" value="<?php echo $row->pay_amt; ?>" > 
 									</div>
 								</div>	
 								<div class="form-group">
@@ -614,7 +617,7 @@
 						</select>	
 						</div>-->	
 						<!--<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.pdfinvoicemember('<?php echo $row->pay_ref?>')">Generete PDF Invoice</button>-->			
-						<a class="btn btn-warning btn-sm" href="reports/invoice/?bypass=1&ref=<?php echo $row->pay_ref?>">Generete Invoice</a>
+						<a class="btn btn-warning btn-sm" href="reports/invoiceindividual/?bypass=1&ref=<?php echo $row->pay_ref?>">Generete Invoice</a>
 						<br />
 						<br />
 					</div>

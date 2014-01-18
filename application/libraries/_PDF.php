@@ -1,4 +1,5 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php //if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
    
 class PDF extends FPDF { 
 
@@ -198,23 +199,25 @@ class PDF extends FPDF {
 		
 		//$this->Ln();
 		$this->Cell(140,7,'Sub Total ','T', 0, 'R');   
-		$this->Cell(50,7, number_format(@$total_success,2, '.', ','),'T', 0, 'R');
+		$this->Cell(50,7, number_format($total_success,2, '.', ','),'T', 0, 'R');
 		
 		$this->Ln();
 		$this->Ln();
 		
 		$this->Cell(140,7,'Payment Made ',0, 0, 'R');  
 		$this->SetTextColor(255,0,0);
-		$this->Cell(50,7,'(-) SGD'.number_format(@$total_success,2, '.', ','),0, 0, 'R');
+		$this->Cell(50,7,'(-) SGD'.number_format($total_success,2, '.', ','),0, 0, 'R');
 		
 		$this->SetTextColor(0);
 		$this->Ln();
 		$this->Cell(140,7,'Payment to be collected ',0, 0, 'R');
-		$this->Cell(50,7,'SGD'.number_format(@$subtotal,2, '.', ','),0, 0, 'R');	
+		$this->Cell(50,7,'SGD'.number_format($subtotal,2, '.', ','),0, 0, 'R');	
 		
 		$this->Ln(); 
 		$this->SetFont('','B', '14');
 		$this->Cell(140,7,'Balance Due ',0, 0, 'R'); 
-        $this->Cell(50,7,'SGD'.number_format(@$past_due,2, '.', ','),0, 0, 'R'); 
+        $this->Cell(50,7,'SGD'.number_format($past_due,2, '.', ','),0, 0, 'R');
+		 
     }	 
 }   
+?> 
