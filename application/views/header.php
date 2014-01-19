@@ -30,6 +30,20 @@
 	 <script src="assets/js/jquery-2.0.3.min.js"></script>
 	 
 	 <script> var oTable; </script>
+	
+	<style>
+	
+		#upload_images{
+			 width:92px;
+		}
+		
+		@-moz-document url-prefix() { 
+		  #upload_images {
+			 width:85px;
+		  }
+		}
+	</style>	
+	 
   </head>
 
   <body>

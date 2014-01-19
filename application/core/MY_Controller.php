@@ -8,6 +8,7 @@ class MY_Controller extends CI_Controller {
 	protected $user_id;
 	public $terms_desc;
 	public $terms_active;
+	public $payment_type;
 	
 	function __construct(){
 		parent::__construct();
@@ -19,7 +20,7 @@ class MY_Controller extends CI_Controller {
 		$this->logged_in 	= $this->session->userdata('logged_in'); 
 		$this->user_id 		= $this->session->userdata('vbc_userid'); 
 		$this->user_name 	= $this->session->userdata('vbc_username');
-		$this->uaccess 	= $this->session->userdata('vbc_uaccess');
+		$this->uaccess 		= $this->session->userdata('vbc_uaccess');
 		
 		$this->terms_desc = array(
 			TERM_ACTIVE 		=> 'Activated/Reactivated',
@@ -32,7 +33,9 @@ class MY_Controller extends CI_Controller {
 			TERM_EXTEND_12 		=> 'Extend 12 Months' 
 		);		
 
-		$this->terms_active = array(TERM_ACTIVE, TERM_ROLLING_MONTLY, TERM_EXTEND_6, TERM_EXTEND_12 ); //collection of active term indicator		
+		$this->terms_active = array(TERM_ACTIVE, TERM_ROLLING_MONTLY, TERM_EXTEND_6, TERM_EXTEND_12 ); //collection of active term indicator	
+		$this->payment_type = json_decode(PAYMENT_TYPE, true);	
+ 
 	}  
 }
 

@@ -242,6 +242,9 @@ class Reports extends MY_Controller {
 		if( !isset($_GET['bypass']) ){
 			$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
 			$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+			
+			$data['report_date']['startDate'] = date('d/m/Y', strtotime($startDate));	
+			$data['report_date']['endDate'] = date('d/m/Y', strtotime($endDate));			
 		}
 		$type	 		= (isset($_GET['report_type']))?$this->input->get('report_type'):0; 
 		
@@ -265,8 +268,11 @@ class Reports extends MY_Controller {
 		foreach($results as $row){
 			$data_content[] = array($row->ai_fname.' '.$row->ai_lname, $row->Merchant_Ref, $row->Order_Date, $row->failed, $row->success, );
 		} 
+		
+		$data['content'] = $data_content;
+		
 		$pdf->AddPage();
-		$pdf->setContents($data_header,$data_content); 
+		$pdf->setContents($data_header,$data); 
 		ob_clean();
 		$pdf->Output('invoice_'.strtotime('now').'.pdf', 'D');  
 	 	
@@ -283,6 +289,9 @@ class Reports extends MY_Controller {
 		if( !isset($_GET['bypass']) ){
 			$startDate 	= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
 			$endDate 	= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
+			
+			$data['report_date']['startDate'] = date('d/m/Y', strtotime($startDate));	
+			$data['report_date']['endDate'] = date('d/m/Y', strtotime($endDate));	
 		}
 		$type	 		= (isset($_GET['report_type']))?$this->input->get('report_type'):0; 
 		
@@ -310,8 +319,12 @@ class Reports extends MY_Controller {
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id');
 		$info = $this->db->get('club_transaction')->row();
 		
+		$data['header'] 	= $data_header;
+		$data['content']	= $data_content;
+		
+		
 		$pdf->AddPage();
-		$pdf->individual($info, $data_header,$data_content); 
+		$pdf->individual($info, $data); 
 		ob_end_clean();
 		$pdf->Output('invoice_'.strtotime('now').'.pdf', 'D');  
 	}

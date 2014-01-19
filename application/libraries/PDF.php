@@ -33,9 +33,12 @@ class PDF extends FPDF {
     } 
 
     // Better table
-    function setContents($header, $data)
+    function setContents($header, $content)
     {
-
+		
+		$data 	= $content['content'];
+		$rdate 	= $content['report_date'];		
+		
         $this->SetFont('Arial','B',12);
         //company name
         $this->Cell(150,7,'Vanda Boxing Club',0,0,'L');
@@ -54,8 +57,14 @@ class PDF extends FPDF {
         
         $this->SetFont('Arial','I',11);
         $this->Cell(90,5,'Date: '.date('F d, Y'),0,0,'R');
-        $this->Ln(10);
+        
 
+		$this->Ln();  
+		//$this->SetFont('Arial','',9);
+		$this->Cell(190,5,'Report as of  '.(isset($content['report_date'])?$rdate['startDate'].' - '.$rdate['endDate']:'all dates'),0,0,'R');	 
+ 
+		
+		$this->Ln(10);
         $this->SetFont('Arial','',12);
         // Column widths
 		
@@ -94,8 +103,12 @@ class PDF extends FPDF {
     }
 	
 	
-    function individual($info, $header, $data){
-
+    function individual($info, $headers){
+	
+		$header = $headers['header'];
+		$data 	= $headers['content'];
+		$rdate 	= $headers['report_date'];
+		
         $this->SetFont('Arial','B',14);
         //company name
         $this->Cell(150,7,'Vanda Boxing Club Pte Ltd',0,0,'L');
@@ -113,16 +126,20 @@ class PDF extends FPDF {
 		$this->Cell(100,5,'Singapore',0,0,'L');
        
 		$this->Ln();        
-		$this->Cell(155,5,'Terms: ',0,0,'R');
-		$this->Cell(35,5,'Due On Receipt',0,0,'R');
+		$this->Cell(150,5,'Terms: ',0,0,'R');
+		$this->Cell(40,5,'Due On Receipt',0,0,'R');
 		
-	    $this->Ln(); 
-		
+	    $this->Ln();  
         $this->Cell(100,5,'Bill To: ('.$info->pay_ref.') '.$info->ai_fname.', '.$info->ai_lname,0,0,'L');
         $this->SetFont('Arial','',9);
-        $this->Cell(55,5,'Invoice Date: ',0,0,'R');
-        $this->Cell(35,5,date('d M Y'),0,0,'R');
-        
+        $this->Cell(50,5,'Invoice Date: ',0,0,'R');
+        $this->Cell(40,5,date('d M Y'),0,0,'R');
+		
+		$this->Ln();  
+		$this->SetFont('Arial','',9);
+		$this->Cell(150,5,'Report as of ',0,0,'R');	 
+		$this->Cell(40,5,(isset($headers['report_date'])?$rdate['startDate'].' - '.$rdate['endDate']:'All Dates'),0,0,'R');        
+		
 		$this->Ln(10);
 
         $this->SetFont('Arial','',9);

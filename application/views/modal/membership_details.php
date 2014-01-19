@@ -209,7 +209,7 @@
 				</div>
 				<br style="clear:both" />
 				<form role="form" method="post" enctype="multipart/form-data"  action="membership/do_upload">
-					<input type="file" name="file" style="width:90px; float:left; margin-top: 5px; margin-bottom:5px; text-indent: 5px;" id="upload_images"/>
+					<input type="file" name="file" style="float:left; margin-top: 5px; margin-bottom:5px; text-indent: 5px;" id="upload_images"/>
 					<span id="photoprocessing" style="display:none;float:left; color:green; font-weigth:bold">Uploading photo...</span>	
 					<button type="submit" id="btn">Upload Photo!</button> 
 					<br style="clear:both"/>
@@ -312,9 +312,10 @@
 										<td><strong>Phone</strong></td>
 										<td>
 											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-sm-4"/><br/><br/>
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											<button type="button" id="btn_show_more" class="btn btn-default btn-xs" title="Show More">
-												<span class="glyphicon glyphicon-arrow-down" style="font-size:15px">
+											 
+											<button type="button" id="btn_show_more" class="btn btn-default btn-xs" title="Show More" style="margin-left: 140px">
+												<!--<span class="glyphicon glyphicon-arrow-down" style="font-size:15px">-->
+												<img style="width: 25px; height: 20px" src="assets/img/arrow_down.jpg" />
 											</button>
 										</td>
 									</tr>	 
@@ -362,7 +363,10 @@
 										<td>
 											<textarea name="mh_medicine" class="col-sm-10" rows="2"><?php echo $row->mh_medicine; ?></textarea>
 											<br style="clear:both"/>
-											<button type="button" id="btn_show_less" class="btn btn-default btn-xs" title="Show Less" style="margin-left: 140px"><span class="glyphicon glyphicon-arrow-up" style="font-size:15px"></button>
+											<button type="button" id="btn_show_less" class="btn btn-default btn-xs" title="Show Less" style="margin-left: 140px">
+												<!--<span class="glyphicon glyphicon-arrow-up" style="font-size:15px">-->
+												<img style="width: 25px; height: 20px" src="assets/img/arrow_up.jpg" />
+											</button>
 										</td>
 									</tr>
 									
@@ -415,10 +419,12 @@
 													$option = '<option value="'.TERM_ROLLING_MONTLY.'">Rolling Montly </option>';
 													if( $membership_type_month == 6 ){ $option .= '<option value="'.TERM_EXTEND_6.'">Extend 6 Months</option>'; }
 													if( $membership_type_month == 12 ){ $option .= '<option value="'.TERM_EXTEND_12.'">Extend 12 Months</option>'; }
-													$option .= '<option value="'.TERM_EXPIRED.'">Expired</option>'; 
-													$option .= '<option value="'.TERM_SUSPENSION.'">Suspension</option>'; 
-													$option .= '<option value="'.TERM_TERMINATION.'">Termination</option>'; 
-													$option .= '<option value="'.TERM_DELETED.'">Delete</option>'; 
+													if( $this->uaccess ){
+														$option .= '<option value="'.TERM_EXPIRED.'">Expired</option>'; 
+														$option .= '<option value="'.TERM_SUSPENSION.'">Suspension</option>'; 
+														$option .= '<option value="'.TERM_TERMINATION.'">Termination</option>'; 
+														$option .= '<option value="'.TERM_DELETED.'">Delete</option>'; 
+													}
 												}
 												echo $option;
 											?> 
@@ -550,6 +556,8 @@
 										<option value="<?php echo PAYMENT_TYPE_VISA; ?>">Visa</option>
 										<option value="<?php echo PAYMENT_TYPE_MASTERCARD; ?>">Mastercard</option>
 										<option value="<?php echo PAYMENT_TYPE_CHEQUE; ?>">Cheque</option>
+										<option value="<?php echo PAYMENT_TYPE_TAX_WITH_GST; ?>">TAX with GST</option>
+										<option value="<?php echo PAYMENT_TYPE_TAX_WITH_OUT_GST; ?>">TAX w/out GST</option>
 									</select>
 									</div>
 								</div>	
@@ -575,6 +583,7 @@
 										<tr>
 											<td><strong>Date/Time</strong></td>
 											<td><strong>Due date</strong></td>
+											<td><strong>Mode</strong></td>
 											<td><strong>Amount</strong></td>
 											<td><strong>Desc/Reason</strong></td>
 											<td><strong>Action By</strong></td>
@@ -587,13 +596,16 @@
 											<td></td>
 											<td></td>
 											<td></td>
+											<td></td>
 										</tr>
 									<?php foreach( $schedulepayements_results as $otherpay ):
-											if( $otherpay->transaction_type == 1  ):
+											if( $otherpay->transaction_type > 0  ):
 										?>
 										<tr>
 											<td><?php echo $otherpay->date_created; ?></td>
 											<td><?php echo date('d/m/Y',strtotime($otherpay->Tran_Date)); ?></td>
+											<?php $payment_type = $this->payment_type[$otherpay->transaction_type]; ?>
+											<td><?php echo substr($payment_type,13,strlen($payment_type)); ?></td>
 											<td><?php echo $otherpay->Amount; ?></td>
 											<td><?php echo $otherpay->reason; ?></td>
 											<td><?php echo $otherpay->uploaded_by; ?></td>

@@ -42,7 +42,7 @@ define('WEBSITE_TITLE',		'Project VBC Admin');
 
 define('PROFILE_IMAGE_PATH','photo');
 
-
+//TERM, set also on the core/My_Controller
 define('TERM_ACTIVE',			'0'); //Active
 define('TERM_EXPIRED',			'1'); //Expired
 define('TERM_SUSPENSION',		'2'); //Suspension
@@ -66,15 +66,30 @@ define('PAYMENT_CC_MONTLY',		0); //Payment Monthly
 define('PAYMENT_CC_FULL',		1); //Payment full
 
 //used in the shedule payment table
-define('PAYMENT_TYPE_CC',			0); //Credit card
-define('PAYMENT_TYPE_CASH',			1); //cash
-define('PAYMENT_TYPE_MAILORDER',	2); //mail oder
-define('PAYMENT_TYPE_NETS',			3); //nets
-define('PAYMENT_TYPE_VISA',			4); //visa
-define('PAYMENT_TYPE_MASTERCARD',	5); //mastercard
-define('PAYMENT_TYPE_CHEQUE',		6); //cheque
-define('PAYMENT_TYPE_WITH_GST',		7); //with GST
-define('PAYMENT_TYPE_WITH_OUT_GST',	8); //without GST
+//$payment_type is used also on the core/My_Controller.php
+$payment_type = array(1=>'PAYMENT_TYPE_CC', 
+			2=>'PAYMENT_TYPE_CASH',	 
+			3=>'PAYMENT_TYPE_MAILORDER', 
+			4=>'PAYMENT_TYPE_NETS', 
+			5=>'PAYMENT_TYPE_VISA',	 
+			6=>'PAYMENT_TYPE_MASTERCARD', 
+			7=>'PAYMENT_TYPE_CHEQUE', 
+			8=>'PAYMENT_TYPE_TAX_WITH_GST', 
+			9=>'PAYMENT_TYPE_TAX_WITH_OUT_GST' 
+		);
+		
+define('PAYMENT_TYPE_CC',			1); //Credit card
+define('PAYMENT_TYPE_CASH',			2); //cash
+define('PAYMENT_TYPE_MAILORDER',	3); //mail oder
+define('PAYMENT_TYPE_NETS',			4); //nets
+define('PAYMENT_TYPE_VISA',			5); //visa
+define('PAYMENT_TYPE_MASTERCARD',	6); //mastercard
+define('PAYMENT_TYPE_CHEQUE',		7); //cheque
+define('PAYMENT_TYPE_TAX_WITH_GST',		8); //with GST
+define('PAYMENT_TYPE_TAX_WITH_OUT_GST',	9); //without GST
+
+
+define('PAYMENT_TYPE',	json_encode($payment_type)); //without GST
  
 define('FPDF_FONTPATH',APPPATH .'third_party/fpdf/font/');
 /* End of file constants.php */
