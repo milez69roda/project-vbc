@@ -34,12 +34,14 @@
 		$("#btn_show_more").click(function(){
 			$('.tr_hide_show').show();
 			$(this).hide();
+			$("#btn_show_less").show()
 		});
 		
 		$("#btn_show_less").click(function(){
+		
 			$(".tr_hide_show").hide();
 			$("#btn_show_more").show();
-			
+			$(this).hide();
 		}); 
 
 		$(".modal").draggable({
@@ -129,6 +131,30 @@
 		 
 	
 </script>
+<style>
+	.btn-file {
+		position: relative;
+		overflow: hidden; 
+		font-size: 12px;
+		margin: 3px 0; 
+		padding: 1px 24px; 	
+	}
+	.btn-file input[type=file] {
+		position: absolute;
+		top: 0;
+		right: 0;
+		/*min-width: 100%;
+		min-height: 100%;*/
+
+		font-size: 999px;
+		text-align: right;
+		filter: alpha(opacity=0);
+		opacity: 0;
+		background: red;
+		cursor: inherit;
+		display: block;
+	}
+</style>
 
 <!-- Modal -->
 <div class="modal-dialog" style="width: 900px" id="myModal">
@@ -209,7 +235,12 @@
 				</div>
 				<br style="clear:both" />
 				<form role="form" method="post" enctype="multipart/form-data"  action="membership/do_upload">
-					<input type="file" name="file" style="float:left; margin-top: 5px; margin-bottom:5px; text-indent: 5px;" id="upload_images"/>
+					<!--<input type="file" name="file" style="float:left; margin-top: 5px; margin-bottom:5px; text-indent: 5px;" id="upload_images"/>-->
+
+					<span class="btn btn-default btn-file" style="float:left">
+						Browse <input type="file" id="upload_images">
+					</span>							
+					
 					<span id="photoprocessing" style="display:none;float:left; color:green; font-weigth:bold">Uploading photo...</span>	
 					<button type="submit" id="btn">Upload Photo!</button> 
 					<br style="clear:both"/>
@@ -311,12 +342,7 @@
 									<tr>
 										<td><strong>Phone</strong></td>
 										<td>
-											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-sm-4"/><br/><br/>
-											 
-											<button type="button" id="btn_show_more" class="btn btn-default btn-xs" title="Show More" style="margin-left: 140px">
-												<!--<span class="glyphicon glyphicon-arrow-down" style="font-size:15px">-->
-												<img style="width: 25px; height: 20px" src="assets/img/arrow_down.jpg" />
-											</button>
+											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-sm-4"/><br/><br/>  
 										</td>
 									</tr>	 
 									
@@ -361,18 +387,30 @@
 									<tr class="tr_hide_show" style="display:none">
 										<td><strong>Medication Taken:</strong></td>
 										<td>
-											<textarea name="mh_medicine" class="col-sm-10" rows="2"><?php echo $row->mh_medicine; ?></textarea>
-											<br style="clear:both"/>
-											<button type="button" id="btn_show_less" class="btn btn-default btn-xs" title="Show Less" style="margin-left: 140px">
-												<!--<span class="glyphicon glyphicon-arrow-up" style="font-size:15px">-->
-												<img style="width: 25px; height: 20px" src="assets/img/arrow_up.jpg" />
-											</button>
+											<textarea name="mh_medicine" class="col-sm-10" rows="2"><?php echo $row->mh_medicine; ?></textarea> 
 										</td>
 									</tr>
 									
 									<tr>
 										<td></td>
-										<td align="right"><button type="submit" class="btn btn-primary">Save</button></td>
+										<td>
+											<div class="pull-left">
+												<button type="button" id="btn_show_more" class="btn btn-default btn-xs" title="Show More" style="margin-left: 140px">
+													<!--<span class="glyphicon glyphicon-arrow-down" style="font-size:15px">-->
+													<img style="width: 25px; height: 20px" src="assets/img/arrow_down.jpg" />
+												</button> 
+												
+												<button type="button" id="btn_show_less" class="btn btn-default btn-xs" title="Show Less" style="margin-left: 140px; display:none">
+													<!--<span class="glyphicon glyphicon-arrow-up" style="font-size:15px">-->
+													<img style="width: 25px; height: 20px" src="assets/img/arrow_up.jpg" />
+												</button>												
+											</div>
+
+											<div class="pull-right">																					
+												<button type="submit" class="btn btn-primary">Save</button>
+											</div>
+											<br style="clear:both" />
+										</td>
 									</tr>									
 									
 								</table> 
