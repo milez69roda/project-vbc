@@ -1,0 +1,130 @@
+
+/*USE `vbc_vandastore`;*/
+
+/* Alter table in target */
+ALTER TABLE `club_membership` 
+	ADD COLUMN `ai_trial_session` smallint(6)   NULL DEFAULT '0' after `ipAdd`, 
+	ADD COLUMN `cm_staff_id` int(11)   NULL after `ai_trial_session`, 
+	ADD COLUMN `cm_staff_name` varchar(100)  COLLATE latin1_swedish_ci NULL after `cm_staff_id`, 
+	ADD COLUMN `photo` text  COLLATE latin1_swedish_ci NULL after `cm_staff_name`, COMMENT='';
+
+/* Alter table in target */
+ALTER TABLE `club_transaction` 
+	CHANGE `pay_amt_orig` `pay_amt_orig` varchar(50)  COLLATE latin1_swedish_ci NULL after `exp_stat`, 
+	CHANGE `promo_id` `promo_id` int(11)   NULL after `pay_amt_orig`, 
+	CHANGE `ct_promo_code` `ct_promo_code` varchar(8)  COLLATE latin1_swedish_ci NULL after `promo_id`, 
+	CHANGE `ct_promo_name` `ct_promo_name` varchar(100)  COLLATE latin1_swedish_ci NULL after `ct_promo_code`, 
+	ADD COLUMN `deleted` smallint(6)   NULL DEFAULT '0' after `ct_promo_name`, 
+	ADD COLUMN `deleted_reason` varchar(255)  COLLATE latin1_swedish_ci NULL after `deleted`, 
+	ADD COLUMN `deleted_user` varchar(50)  COLLATE latin1_swedish_ci NULL after `deleted_reason`, 
+	CHANGE `ct_promo_flag` `ct_promo_flag` smallint(6)   NULL DEFAULT '0' after `deleted_user`, 
+	ADD COLUMN `term_type` smallint(6)   NULL DEFAULT '0' COMMENT 'checks constant config' after `ct_promo_flag`, 
+	ADD COLUMN `term_updated` datetime   NULL after `term_type`, 
+	ADD COLUMN `termination_date` date   NULL after `term_updated`, 
+	ADD COLUMN `suspension_date` date   NULL after `termination_date`, 
+	ADD KEY `transaction_mem_id_index`(`mem_id`), COMMENT='';
+
+/* Create table in target */
+CREATE TABLE `club_transaction_freebies`(
+	`f_id` int(11) NOT NULL  auto_increment , 
+	`tran_id` int(11) NULL  , 
+	`f_desc` varchar(150) COLLATE latin1_swedish_ci NULL  , 
+	`date_created` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP , 
+	`f_type` varchar(15) COLLATE latin1_swedish_ci NULL  , 
+	`added_by` varchar(20) COLLATE latin1_swedish_ci NULL  , 
+	`mem_id` int(11) NULL  , 
+	PRIMARY KEY (`f_id`) 
+) ENGINE=InnoDB DEFAULT CHARSET='latin1';
+
+
+/* Create table in target */
+CREATE TABLE `club_transaction_notes`(
+	`id` int(11) NOT NULL  auto_increment , 
+	`notes` text COLLATE latin1_swedish_ci NULL  , 
+	`trans_id` int(11) NULL  , 
+	`mem_id` int(11) NULL  , 
+	`created_date` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP  on update CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP , 
+	`added_by` int(11) NULL  , 
+	PRIMARY KEY (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET='latin1';
+
+
+/* Create table in target */
+CREATE TABLE `club_transaction_terms`(
+	`id` int(11) NOT NULL  auto_increment , 
+	`tran_id` int(11) NULL  , 
+	`term_type` varchar(15) COLLATE latin1_swedish_ci NULL  , 
+	`date_created` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP , 
+	`term_status` smallint(6) NULL  DEFAULT '0' , 
+	`added_by` varchar(40) COLLATE latin1_swedish_ci NULL  , 
+	`term_reason` varchar(255) COLLATE latin1_swedish_ci NULL  , 
+	`mem_id` int(11) NULL  , 
+	PRIMARY KEY (`id`) , 
+	KEY `terms_tran_id_index`(`tran_id`) 
+) ENGINE=InnoDB DEFAULT CHARSET='latin1';
+
+
+/* Alter table in target */
+ALTER TABLE `gear_admin_login` 
+	ADD COLUMN `access_type` smallint(6)   NULL DEFAULT '0' COMMENT '0 regular 1 admin' after `status_flag`, 
+	ADD COLUMN `fullname` varchar(100)  COLLATE latin1_swedish_ci NULL after `access_type`, 
+	ADD COLUMN `email` varchar(255)  COLLATE latin1_swedish_ci NULL after `fullname`, 
+	ADD COLUMN `date_created` timestamp   NULL DEFAULT CURRENT_TIMESTAMP after `email`, 
+	ADD COLUMN `added_by` varchar(50)  COLLATE latin1_swedish_ci NULL after `date_created`, COMMENT='';
+
+/* Create table in target */
+CREATE TABLE `log_sent_mails`(
+	`id` int(11) NOT NULL  auto_increment , 
+	`date_created` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP  on update CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP , 
+	`lm_status` smallint(6) NULL  DEFAULT '0' , 
+	`lm_desc` varchar(100) COLLATE latin1_swedish_ci NULL  , 
+	`lm_sent_by` varchar(50) COLLATE latin1_swedish_ci NULL  , 
+	UNIQUE KEY `id`(`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET='latin1';
+
+
+/* Alter table in target */
+ALTER TABLE `promo_codes` 
+	CHANGE `is_active` `is_active` smallint(6)   NULL DEFAULT '1' after `promo_val`, 
+	CHANGE `company_name` `company_name` varchar(255)  COLLATE latin1_swedish_ci NULL after `is_active`, COMMENT='';
+
+/* Alter table in target */
+ALTER TABLE `scheduled_payments` 
+	ADD COLUMN `Currency` varchar(5)  COLLATE latin1_swedish_ci NULL after `Tran_Date`, 
+	CHANGE `Amount` `Amount` varchar(20)  COLLATE latin1_swedish_ci NULL after `Currency`, 
+	CHANGE `Payment_Ref` `Payment_Ref` varchar(20)  COLLATE latin1_swedish_ci NULL after `Amount`, 
+	CHANGE `status` `status` varchar(20)  COLLATE latin1_swedish_ci NULL after `Payment_Ref`, 
+	CHANGE `date_created` `date_created` timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP after `status`, 
+	ADD COLUMN `uploaded_by` varchar(100)  COLLATE latin1_swedish_ci NULL after `date_created`, 
+	ADD COLUMN `transaction_type` smallint(6)   NULL DEFAULT '0' COMMENT '0 upload 1 manual' after `uploaded_by`, 
+	ADD COLUMN `reason` varchar(255)  COLLATE latin1_swedish_ci NULL after `transaction_type`, 
+	ADD COLUMN `pay_overide` smallint(6)   NULL DEFAULT '0' after `reason`, COMMENT='';
+
+/* Create table in target */
+CREATE TABLE `sessions`(
+	`session_id` varchar(40) COLLATE latin1_swedish_ci NOT NULL  DEFAULT '0' , 
+	`ip_address` varchar(45) COLLATE latin1_swedish_ci NOT NULL  DEFAULT '0' , 
+	`user_agent` varchar(120) COLLATE latin1_swedish_ci NOT NULL  , 
+	`last_activity` int(10) unsigned NOT NULL  DEFAULT '0' , 
+	`user_data` text COLLATE latin1_swedish_ci NOT NULL  , 
+	PRIMARY KEY (`session_id`) , 
+	KEY `last_activity_idx`(`last_activity`) 
+) ENGINE=InnoDB DEFAULT CHARSET='latin1';
+
+
+/* Create table in target */
+CREATE TABLE `staffs`(
+	`id` int(11) NOT NULL  auto_increment , 
+	`staff_name` varchar(100) COLLATE latin1_swedish_ci NULL  , 
+	`staff_type` varchar(100) COLLATE latin1_swedish_ci NULL  , 
+	`photo_link` text COLLATE latin1_swedish_ci NULL  , 
+	`isactive` smallint(6) NULL  DEFAULT '1' , 
+	`date_created` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP  on update CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP , 
+	PRIMARY KEY (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET='latin1';
+
+
+UPDATE club_transaction SET term_type = 1 WHERE exp_stat = '1';
+UPDATE club_transaction SET term_type = 0 WHERE exp_stat = '0';
+
+

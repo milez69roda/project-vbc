@@ -48,14 +48,11 @@
 $active_group = 'default';
 $active_record = TRUE;
 
+
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '';
-$db['default']['database'] = 'vandaboxing_db';
-/* $db['default']['hostname'] = 'sql310.byethost8.com';
-$db['default']['username'] = 'b8_13661247';
-$db['default']['password'] = 'itsmilo';
-$db['default']['database'] = 'b8_13661247_vbc'; */
+$db['default']['username'] = 'vbc_vanda';
+$db['default']['password'] = 'control';
+$db['default']['database'] = 'vbc_vandastore'; 
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
