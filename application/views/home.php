@@ -78,12 +78,12 @@
 		</div> 
 		
 	</div>
-	<div class="row">
+	<!--<div class="row">
 		<p>What to be display</p> 
 		<p>Payment Transaction
 			<ul>
 				<li>Failed to upload previous Schedule Payment</li>
-				<!--<li>Schedule payment with status [Suspend, Rejected]</li>
+				<li>Schedule payment with status [Suspend, Rejected]</li>
 					<ol> 
 						<li>Plan: Manual adding of payment on the schedule payment table to clear the failed payment. Need some clarification with willi</li>
 					</ol>
@@ -92,7 +92,7 @@
 						<li>Need to verify with willi if he would like to automatic update membership terms or status if the schedule payment is failed[rejected,suspend].
 							if payment is rejected or suspend maybe it automatically update the status to inactive with terms of suspend[reason suspend or rejected payment via schedule payment].
 						</li>
-					</ol>-->
+					</ol>
 			</ul>
 		</p>
 		<p>Member with 35 days before expiry</p>
@@ -101,4 +101,4 @@
 	</div>
 	<div class="row">
 		 		
-	</div>      
+	</div> -->     

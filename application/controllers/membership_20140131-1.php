@@ -173,7 +173,7 @@ class Membership extends MY_Controller {
 			$schedule_payment_date 	= date('Y').'-'.date('m').'-'.$signup_day[2];
 
 			if( strtotime($schedule_payment_date) <= strtotime(date('Y-m-d')) ){
-				
+				 
 				$duedate = date('Y').'-'.date('m').'-'.date('d',strtotime($row->active_date)); 				
 				$check_payment = $this->schedule_payment_model->get(" Merchant_Ref = '{$row->pay_ref}' AND Tran_Date BETWEEN '".date('Y-m-d',strtotime('-15 days '.$duedate))."' AND '".date('Y-m-d', strtotime($duedate.' +15 days ' ))."' ", 1);
 						

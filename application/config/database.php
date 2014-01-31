@@ -50,8 +50,8 @@ $active_record = TRUE;
 
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'vbc_vanda';
-$db['default']['password'] = 'control';
+$db['default']['username'] = 'root';
+$db['default']['password'] = '';
 $db['default']['database'] = 'vbc_vandastore'; 
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';

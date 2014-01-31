@@ -174,10 +174,7 @@ class Membership extends MY_Controller {
 
 			if( strtotime($schedule_payment_date) <= strtotime(date('Y-m-d')) ){
 				
-				$duedate = date('Y').'-'.date('m').'-'.date('d',strtotime($row->active_date)); 				
-				$check_payment = $this->schedule_payment_model->get(" Merchant_Ref = '{$row->pay_ref}' AND Tran_Date BETWEEN '".date('Y-m-d',strtotime('-15 days '.$duedate))."' AND '".date('Y-m-d', strtotime($duedate.' +15 days ' ))."' ", 1);
-						
-				//$check_payment = $this->schedule_payment_model->get(" Merchant_Ref = '{$row->pay_ref}' AND Tran_Date BETWEEN '".date('Y-m-d',strtotime('first day of last month'))."' AND '".date('Y-m-d', strtotime('last day of last month'))."' ", 1);				
+				$check_payment = $this->schedule_payment_model->get(" Merchant_Ref = '{$row->pay_ref}' AND Tran_Date BETWEEN '".date('Y-m-d',strtotime('first day of last month'))."' AND '".date('Y-m-d',strtotime('last day of last month'))."' ", 1);
 				//echo $this->db->last_query();
 				$check_payment = @$check_payment[0];	
 				if( count($check_payment) == 0 ){
@@ -315,10 +312,10 @@ class Membership extends MY_Controller {
 		$set['ai_fname'] 		= $this->input->post('firstname');
 		$set['ai_lname'] 		= $this->input->post('lastname');
 		$set['ai_email'] 		= $this->input->post('email');
-
+		
 		$birthday 				= explode('/',$this->input->post('birthday'));		
 		$birthday 				= date('Y-m-d', strtotime($birthday[2].'-'.$birthday[1].'-'.$birthday[0]));			
-		$set['ai_dob'] 			= $birthday;		
+		$set['ai_dob'] 		= $birthday;
 		
 		$set['unit'] 			= $this->input->post('unit');
 		$set['street1'] 		= $this->input->post('street1');

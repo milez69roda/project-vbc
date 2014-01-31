@@ -42,7 +42,7 @@ class Login extends CI_Controller {
 						
 						redirect(base_url().'admin');
 					}  
-				}elseif( $row->status_flag == '0' ){ 
+				}elseif( @$row->status_flag == '0' ){ 
 					$data['msg'] = ($flag_error)?'<div class="alert alert-danger"><p>Account is disabled</p></div>':'';
 				}else{	
 					$data['msg'] = ($flag_error)?'<div class="alert alert-danger"><p>Username or Password is Incorrect</p></div>':'';

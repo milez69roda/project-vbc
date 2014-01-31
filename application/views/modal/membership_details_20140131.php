@@ -299,7 +299,7 @@
 									<tr>
 										<td><strong>Email</strong></td>
 										<td><input type="text" name="email" value="<?php echo $row->ai_email; ?>" class="col-sm-8" /></td>
-									</tr>									
+									</tr>
 									<tr>
 										<td><strong>Birthday</strong></td>
 										<td><input type="text" name="birthday" id="birthday" value="<?php echo date('d/m/Y',strtotime($row->ai_dob)); ?>" class="col-sm-4" />dd/mm/yyyy</td>
