@@ -135,6 +135,7 @@ class Membership extends MY_Controller {
 		
 		$sql = "SELECT club_transaction.*, photo, ai_nric, ai_fname, ai_lname, ai_email, ai_dob, ai_hp, postalcode, country, street1, street2, unit, 
 					emg_unit, emg_street1, emg_street2, emg_country, emg_postalcode,
+					ec_first, ec_last, ec_phone, ec_relationshoip,					
 					mh_curr_condi, mh_medicine
 				FROM club_transaction 
 				LEFT OUTER JOIN club_membership ON club_membership.mem_id = club_transaction.mem_id 
@@ -319,6 +320,11 @@ class Membership extends MY_Controller {
 		$birthday 				= explode('/',$this->input->post('birthday'));		
 		$birthday 				= date('Y-m-d', strtotime($birthday[2].'-'.$birthday[1].'-'.$birthday[0]));			
 		$set['ai_dob'] 			= $birthday;		
+		
+		$set['ec_first'] 		= $this->input->post('ec_first');
+		$set['ec_last'] 		= $this->input->post('ec_last');
+		$set['ec_phone'] 		= $this->input->post('ec_phone');
+		$set['ec_relationshoip']= $this->input->post('ec_relationshoip');
 		
 		$set['unit'] 			= $this->input->post('unit');
 		$set['street1'] 		= $this->input->post('street1');
@@ -572,6 +578,7 @@ class Membership extends MY_Controller {
 		}
 		
 		$set['date'] 			= date('Y-m-d H:i:s');
+		$set['mode'] 			= $this->payment_type[$paytment_type];
 		$set['Order_Date'] 		= date('d/m/Y',strtotime($duedate)); //overide date format
 		$json['data'] = $set;
 		

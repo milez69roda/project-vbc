@@ -357,9 +357,30 @@
 											<input type="text" name="phone" value="<?php echo $row->ai_hp; ?>" class="col-sm-4"/><br/><br/>  
 										</td>
 									</tr>	 
-									
 									<tr  class="tr_hide_show" style="display:none"> 
-										<td colspan="2" style="background-color:#ccc"><strong>Emergency contact's address</strong></td>
+										<td colspan="2" style="background-color:#ccc"><strong>Emergency Contact</strong></td>
+									</tr>	 
+									<tr class="tr_hide_show" style="display:none">
+										<td><strong>Name (First Last)</strong></td>
+										<td>
+											<input type="text" name="ec_first" value="<?php echo $row->ec_first; ?>" placeholder="First name" class="col-sm-5"/> 
+											<input type="text" name="ec_last" value="<?php echo $row->ec_last; ?>" placeholder="Last Name" class="col-sm-6"/> 
+										</td>
+									</tr>		 
+									<tr class="tr_hide_show" style="display:none">
+										<td><strong>Phone</strong></td>
+										<td>
+											<input type="text" name="ec_phone" value="<?php echo $row->ec_phone; ?>" placeholder="Phone" class="col-sm-4"/> 											
+										</td>
+									</tr>	 
+									<tr class="tr_hide_show" style="display:none">
+										<td><strong>Relationship</strong></td>
+										<td>
+											<input type="text" name="ec_relationshoip" value="<?php echo $row->ec_relationshoip; ?>" placeholder="Relationship" class="col-sm-4"/> 											
+										</td>
+									</tr>										
+									<tr  class="tr_hide_show" style="display:none"> 
+										<td colspan="2" style="background-color:#ccc"><strong>Emergency Contact's Address</strong></td>
 									</tr>	 
 									<tr class="tr_hide_show" style="display:none">
 										<td><strong>Address (Unit#/St.)</strong></td>

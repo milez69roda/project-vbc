@@ -73,7 +73,19 @@
 			$("#sel_sort_view").change(function(){
 				
 				oTable.fnDraw();
-			})	
+			});
+
+			//disable the autofilter on search
+			$('.dataTables_filter input')
+			.unbind('keypress keyup')
+			.bind('keyup', function(e){
+			  //if ($(this).val().length < 3 && e.keyCode != 13) return;
+			  //oTable.fnFilter($(this).val()); 
+			  if(e.keyCode == 13){
+				oTable.fnFilter($(this).val());
+			  }	
+			  
+			});				
 		
 	});
 

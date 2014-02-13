@@ -11,6 +11,7 @@ class Membership_Model extends CI_Model {
 		$sel_sort_view = trim($this->input->get('sel_sort_view'));
 	   //'ai_nric', 
 		$aColumns = array('tran_id', 'club_transaction.update_date', 'pay_ref', 'club_transaction.mem_id', 'ai_fname', 'mem_name', 'pay_amt', 'ai_hp', 'ai_email', 'active_date', 'exp_date' );
+		$aColumnsSearchable = array('pay_ref', 'ai_fname', 'ai_hp', 'ai_email');
 		
 		/* Indexed column (used for fast and accurate table cardinality) */
 		$sIndexColumn = "club_transaction.tran_id";
@@ -94,17 +95,22 @@ class Membership_Model extends CI_Model {
 				
 				$sWhere .= " AND (";        
 				
-				for ( $i=0 ; $i<count($aColumns) ; $i++ ){ 
-						
-						if( $aColumns[$i] == 'ai_fname'){
+				for ( $i=0 ; $i<count($aColumnsSearchable) ; $i++ ){  
+				
+						if( $aColumnsSearchable[$i] == 'ai_fname'){ 
+							$name = explode('+',strtolower($_GET['sSearch'])); 
 							
-							$names = explode(' ',$_GET['sSearch']);
-							foreach($names as $name){
-								$sWhere .= "LOWER(ai_fname) LIKE '%".mysql_real_escape_string( $name )."%' OR ";
-								$sWhere .= "LOWER(ai_lname) LIKE '%".mysql_real_escape_string( $name )."%' OR ";
-							}
+							if(count($name)>1){
+								if(trim($name[0]) != '')
+									$sWhere .= " (LOWER(ai_fname) = '".mysql_real_escape_string( $name[0] )."' AND ";								
+								if(trim($name[1]) != '')
+									$sWhere .= "LOWER(ai_lname) = '".mysql_real_escape_string( $name[1] )."') OR ";
+							}else{
+								$sWhere .= "LOWER(ai_fname) LIKE '%".mysql_real_escape_string( $name[0] )."%' OR ";
+								$sWhere .= "LOWER(ai_lname) LIKE '%".mysql_real_escape_string( $name[0] )."%' OR ";
+							}							
 						}else{
-							$sWhere .= "LOWER(".$aColumns[$i].") LIKE '%".mysql_real_escape_string( $_GET['sSearch'] )."%' OR ";
+							$sWhere .= " LOWER(".$aColumnsSearchable[$i].") LIKE '%".mysql_real_escape_string( $_GET['sSearch'] )."%' OR ";
 						}
 				}
 				$sWhere = substr_replace( $sWhere, "", -3 );
@@ -112,17 +118,16 @@ class Membership_Model extends CI_Model {
 		}
 		
 		/* Individual column filtering */
-		for ( $i=0 ; $i<count($aColumns) ; $i++ ){
+		for ( $i=0 ; $i<count($aColumnsSearchable) ; $i++ ){
 				if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' ){
 					if ( $sWhere == "" ) {
 							$sWhere = "WHERE ";
 					}else {
 							$sWhere .= " AND";
 					}
-					$sWhere .= "LOWER(".$aColumns[$i].") LIKE '%".mysql_real_escape_string($_GET['sSearch_'.$i])."%' ";
+					$sWhere .= "LOWER(".$aColumnsSearchable[$i].") LIKE '%".mysql_real_escape_string($_GET['sSearch_'.$i])."%' ";
 				}
-		} 
-		
+		}  
 		/*
 		 * SQL queries
 		 * Get data to display

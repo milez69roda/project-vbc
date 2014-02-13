@@ -8,7 +8,7 @@ $(document).ready( function () {
 			"bProcessing": true,
 			"bServerSide": true,
 			"sAjaxSource": "membership/ajax_membership_transaction",
-			"bPaginate": true,
+			"bPaginate": true,		 
 			"oLanguage": {
 				"sLengthMenu": "Show _MENU_ Rows",
 				"sSearch": "Search: "
@@ -22,9 +22,9 @@ $(document).ready( function () {
 			],
 			"fnServerParams": function( aoData ){
 				aoData.push( { "name": "sel_sort_view", "value": $("#sel_sort_view").val() } );   
-			}						
+			} 		
 	}); 
-	
+
 	$("#sel_sort_view").change(function(){ 
 		oTable.fnDraw();
 		$('div.dataTables_filter input').focus();
@@ -65,12 +65,13 @@ $(document).ready( function () {
 						<option value="3">by Expired</option> 
 						<option value="4">by Suspension</option> 
 						<option value="6">by Termination</option> 
-						<option value="5">by Current Members</option>
+						<option value="5" selected>by Current Members</option>
 					</select>
 				</div> 
 			  </div>
 			</form>  
 		</div>
+		<p class="text-right" style="width:98%; color:orange">To search for lastname and firstname please use this format john+doe</p>
  	</div>
 	
 	<div class="row">

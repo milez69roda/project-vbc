@@ -59,7 +59,7 @@ var membershiptransaction = {
 		if( !processing ){ 
 			data = $(form).serialize()	
 			processing = true;
-			$.post('membership/ajax_membership_update_details',data, function(json){
+			$.post('membership/ajax_membership_update_details/?_t='+(new Date).getTime(),data, function(json){
 				processing = false;
 				if(json.status){							
 					alert(json.msg);
@@ -85,7 +85,7 @@ var membershiptransaction = {
 			if( confirm('Do you want to Submit?') ){	
 				processing = true;
 				data = $(form).serialize();
-				$.post('membership/ajax_membership_freebies_save',data, function(json){
+				$.post('membership/ajax_membership_freebies_save/?_t='+(new Date).getTime(),data, function(json){
 					processing = false;
 					if(json.status){							
 						alert(json.msg); 
@@ -100,7 +100,7 @@ var membershiptransaction = {
 						$('#freebies-button-add').show();
 						$("#freebies_div").hide();	 						
 						
-						oTable.fnDraw();
+						//oTable.fnDraw();
 					}else{
 						alert(json.msg);
 					}
@@ -122,7 +122,7 @@ var membershiptransaction = {
 			if( confirm('Do you want to Submit?') ){
 				processing = true;
 				data = $(form).serialize();
-				$.post('membership/ajax_membership_terms_save',data, function(json){
+				$.post('membership/ajax_membership_terms_save/?_t='+(new Date).getTime(),data, function(json){
 					processing = false;
 					if(json.status){							
 						alert(json.msg);  
@@ -130,7 +130,7 @@ var membershiptransaction = {
 							window.location = document.URL;
 							//console.log(document.URL);
 						//}
-						oTable.fnDraw();
+						//oTable.fnDraw();
 					}else{
 						alert(json.msg);
 					}
@@ -150,13 +150,14 @@ var membershiptransaction = {
 			if( confirm('Do you want to submit payment?') ){
 				processing = true;
 				data = $(form).serialize();
-				$.post('membership/ajax_membership_otherpayment_save',data, function(json){
+				$.post('membership/ajax_membership_otherpayment_save/?_t='+(new Date).getTime(),data, function(json){
 					processing = false;
 					if(json.status){							
 						alert(json.msg);  
 						var tr = '<tr>';
 							tr += '<td>'+json.data.date+'</td>';
 							tr += '<td>'+json.data.Order_Date+'</td>';
+							tr += '<td>'+json.data.mode+'</td>';
 							tr += '<td>'+json.data.Amount+'</td>';
 							tr += '<td>'+json.data.reason+'</td>';
 							tr += '<td>'+json.data.uploaded_by+'</td>';
@@ -166,8 +167,8 @@ var membershiptransaction = {
 						$("#otherpayment_div").hide();							
 						$("#other_desc").val('');							
 						
-						if( typeof oTable !== 'undefined' ) oTable.fnDraw();
-						else window.location = document.URL;
+						//if( typeof oTable !== 'undefined' ) oTable.fnDraw();
+						//else window.location = document.URL;
 					}else{
 						alert(json.msg);
 					}
