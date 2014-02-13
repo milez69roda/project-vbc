@@ -16,7 +16,7 @@
     <div id="footer">
       <div class="container"> 
 		<!--<p class="credit">Page Load in {elapsed_time}s</a></p>-->
-		<p class="credit"> &copy 2013 | <a href="<?php echo base_url(); ?>"><?php echo WEBSITE_TITLE ?></a></p>
+		<p class="credit"> &copy; 2013 | <a href="<?php echo base_url(); ?>"><?php echo WEBSITE_TITLE ?></a></p>
       </div>
     </div>
 

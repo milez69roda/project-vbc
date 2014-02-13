@@ -8,7 +8,7 @@ $(document).ready( function () {
 			"bProcessing": true,
 			"bServerSide": true,
 			"sAjaxSource": "membership/ajax_membership_transaction",
-			"bPaginate": true,		 
+			"bPaginate": true,
 			"oLanguage": {
 				"sLengthMenu": "Show _MENU_ Rows",
 				"sSearch": "Search: "
@@ -24,13 +24,25 @@ $(document).ready( function () {
 				aoData.push( { "name": "sel_sort_view", "value": $("#sel_sort_view").val() } );   
 			}						
 	}); 
-
+	
 	$("#sel_sort_view").change(function(){ 
 		oTable.fnDraw();
 		$('div.dataTables_filter input').focus();
 	});	  
 	
 	$('div.dataTables_filter input').focus();
+	
+	//disable the autofilter on search
+	$('.dataTables_filter input')
+	.unbind('keypress keyup')
+	.bind('keyup', function(e){
+	  //if ($(this).val().length < 3 && e.keyCode != 13) return;
+	  //oTable.fnFilter($(this).val()); 
+	  if(e.keyCode == 13){
+	  	oTable.fnFilter($(this).val());
+	  }	
+	  
+	});		
 });
 
 </script>
