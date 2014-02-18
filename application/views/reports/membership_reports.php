@@ -14,12 +14,20 @@
 		});
 		 
 		
-		$("#report_type").change(function(){
+		/* $("#report_type").change(function(){
 			var v = this.value;
 			if(v == 0){
 				$("#div_member_type").fadeIn();
 			}else{
 				$("#div_member_type").fadeOut();
+			}
+		}); */
+		$("#option2").change(function(){
+			var v = this.value;
+			if(v == 0){
+				$("#daterange").fadeOut();
+			}else{
+				$("#daterange").fadeIn();
 			}
 		});
 
@@ -31,7 +39,7 @@
 		<!--<div class="pull-right filterribbon" style=" width: 680px; background-color: #333; box-shadow: 0 1px 3px #888888; color: #fff; height: 45x; text-shadow: 0 0 0 #000000; padding: 6px 14px 6px 15px; " >-->
 		
 		<div>
-			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <a href="reports/membership">Membership</a> <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <?php echo $title ?></h4>  
+			<h4>Report <span class="glyphicon glyphicon-chevron-right" style="color:#333"></span> <a href="reports/membership">Membership</a> </h4>  
 	 	</div>
 		
 		<div class="filterribbon" style="" >
@@ -44,12 +52,12 @@
 					<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.export()"><span class="glyphicon glyphicon-save" style="font-size:15px"></span>Export</button>
 				</div>
 
-				<div class="pull-right" style="padding-left: 20px"> 
+				<div id="daterange" class="pull-right" style="padding-left: 20px; <?php echo (!isset($_GET['option2']) OR $_GET['option2'] == 0)?'display:none':'' ?>"> 
 					<label>From: </label><input id="startdate" class="datepicker input-small " style="width:100px; padding: 6px 12px;" type="text" value="<?php echo  (isset($_GET['startdate']) AND $_GET['startdate']!='')?date("Y-m-d", strtotime($_GET['startdate'])):date("Y-m-d"); ?>" name="startdate">
 					<label>To:</label> <input id="enddate" class="datepicker input-small" style="width:100px; padding: 6px 12px;"  type="text" value="<?php echo (isset($_GET['enddate']) AND $_GET['enddate']!='')?date("Y-m-d", strtotime($_GET['enddate'])):date("Y-m-d"); ?>" name="enddate"> 						
 				</div>
 				
-				<div id="div_member_type" class="pull-right" style="<?php echo (!isset($_GET['report_type']) OR $_GET['report_type'] == 0)?'':'display:none' ?>"> 
+				<!--<div id="div_member_type" class="pull-right" style="<?php echo (!isset($_GET['report_type']) OR $_GET['report_type'] == 0)?'':'display:none' ?>"> 
 					<select name="member_type" class="form-control" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;">
 						<option value="-1">All</option>
 						<?php foreach($membership_type as $row): ?>
@@ -69,8 +77,24 @@
 						<option value="5" <?php echo (isset($_GET['report_type']) && $_GET['report_type'] == 5)?'selected':'' ?>>Credit Card</option>
 					</select>
 					
-			    </div>		 
+			    </div>-->		 
 
+				<div class="pull-right" > 
+					<select name="option2" id="option2" class="form-control" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;">
+						<option value="0" <?php echo (isset($_GET['option2']) && $_GET['option2'] == 0)?'selected':'' ?>>Current and Active</option>	
+						<option value="1" <?php echo (isset($_GET['option2']) && $_GET['option2'] == 1)?'selected':'' ?>>Terminated</option>	
+						<option value="2" <?php echo (isset($_GET['option2']) && $_GET['option2'] == 2)?'selected':'' ?>>Suspended</option>	
+					</select> 
+				</div>			 
+
+				<div class="pull-right"> 
+					<select name="option1" class="form-control" style="color: #333333; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;">
+						<option value="0" <?php echo (isset($_GET['option1']) && $_GET['option1'] == 0)?'selected':'' ?>>Full Payment</option>	
+						<option value="1" <?php echo (isset($_GET['option1']) && $_GET['option1'] == 1)?'selected':'' ?>>Cash Payment</option>	
+						<option value="2" <?php echo (isset($_GET['option1']) && $_GET['option1'] == 2)?'selected':'' ?>>Credit Card</option>	
+					</select> 
+				</div>				
+				
 				<div class="pull-right" style="font-size: 12px"><span class="glyphicon glyphicon-list" style="padding-top: 8px"></span> Filters: &nbsp;	</div>
 		     	
 			</form>

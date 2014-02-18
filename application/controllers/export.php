@@ -20,13 +20,19 @@ class Export extends MY_Controller {
 
 		$startDate 		= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
 		$endDate 		= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
-		$member_type 	= $this->input->get('member_type');
-		$reportType 	= $this->input->get('report_type');
-		$report_page 	= trim($this->input->get('report_page'));
+		$option1 		= $this->input->get('option1');
+		$option2 		= $this->input->get('option2');
 		
-		$title = '';
+		/* $member_type 	= $this->input->get('member_type');
+		$reportType 	= $this->input->get('report_type'); 
+		$report_page 	= trim($this->input->get('report_page'));*/
 		
-		if( $report_page == "membership" ){
+		$title = 'membership_report';
+		
+		
+		$records = $this->report->membership($option1, $option2, $startDate, $endDate);
+		
+		/* if( $report_page == "membership" ){
 			if($reportType == 0){
 				$title 		= 'Signup';
 				$records 	= $this->report->signups($member_type, $startDate, $endDate);
@@ -64,7 +70,7 @@ class Export extends MY_Controller {
 			$records 	= $this->report->freebies($startDate, $endDate, $reportType);	 
 		}else{
 		
-		}
+		} */
 		
 		//delete files
 		list($usec, $sec) = explode(" ", microtime());

@@ -6,9 +6,61 @@ class Reports_Model extends CI_Model {
 		parent::__construct(); 
 	}  
 	
+	
+    public function membership($option1, $option2, $startdate, $enddate){ 
+		
+		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, DATE_FORMAT(club_transaction.create_date, '%d/%m/%Y') AS create_date, DATE_FORMAT(club_transaction.exp_date, '%d/%m/%Y') AS exp_date", false);
+		//$this->db->where("DATE_FORMAT(club_transaction.create_date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
+		
+		 
+		if( $option1 == 0 ){ //Full Payment
+			$this->db->where('full_payment', '1');
+			$this->db->where('pay_status', '3');
+		}else if($option1 == 1){ //Cash Payment
+			//$this->db->where('payment_mode', '2');
+			$this->db->or_where(" (payment_mode = '2' OR payment_mode = '1') ", null, false);
+			$this->db->where('pay_status', '3');
+		}else if($option1 == 2){ //Credit Card
+			$this->db->where('payment_mode', '0');
+			$this->db->where('pay_status', '3');
+		}else{
+		
+		}
+		
+		if( $option2 == 0 ){ //current and active
+			$this->db->where('term_type', 0);
+		}else if($option2 == 1){ //terminated
+			$this->db->where('term_type', 3);
+			$this->db->where("DATE_FORMAT(club_transaction.termination_date,'%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
+		}else if($option2 == 2){//suspended
+			$this->db->where('term_type', 2);
+			$this->db->where("DATE_FORMAT(club_transaction.suspension_date,'%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
+		}else{
+		
+		}
+		
+		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
+		$this->db->order_by('club_transaction.create_date', 'asc');
+		$results = $this->db->get('club_transaction')->result();
+		$result['header'] = array( 
+								'pay_ref'=>'Ref', 
+								'full_name'=>'Name', 
+								'ai_nric'=>'NRIC/FIN No',
+								'mem_name'=>'Membership', 
+								'pay_amt'=>'Amount', 
+								/* 'ai_hp'=>'Phone', 
+								'ai_email'=>'Email', */ 
+								'create_date'=>'Signup Date',
+								'exp_date'=>'Expiry Date'
+								);
+		$result['results'] = $results;
+		
+		return $result;
+	}	
+	
     public function signups($member_type = 0, $startdate, $enddate){ 
 		
-		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.create_date", false);
+		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, DATE_FORMAT(club_transaction.create_date, '%d/%m/%Y') AS create_date, DATE_FORMAT(club_transaction.exp_date, '%d/%m/%Y') AS exp_date", false);
 		$this->db->where("DATE_FORMAT(club_transaction.create_date, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
 		if( $member_type > 0 ){
 			$this->db->where("mem_type", $member_type);
@@ -22,9 +74,11 @@ class Reports_Model extends CI_Model {
 								'ai_nric'=>'NRIC/FIN No',
 								'mem_name'=>'Membership', 
 								'pay_amt'=>'Amount', 
-								'ai_hp'=>'Phone', 
-								'ai_email'=>'Email', 
-								'create_date'=>'Signup Date');
+								/* 'ai_hp'=>'Phone', 
+								'ai_email'=>'Email', */ 
+								'create_date'=>'Signup Date',
+								'exp_date'=>'Expiry Date'
+								);
 		$result['results'] = $results;
 		
 		return $result;
@@ -32,7 +86,7 @@ class Reports_Model extends CI_Model {
 	
     public function termination($startdate, $enddate){ 
 		
-		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email,club_transaction.termination_date", false);
+		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt,DATE_FORMAT(club_transaction.create_date, '%d/%m/%Y') AS create_date, DATE_FORMAT(club_transaction.exp_date, '%d/%m/%Y') AS exp_date, DATE_FORMAT(club_transaction.termination_date, '%d/%m/%Y') AS termination_date", false);
 		$this->db->where("term_type = ".TERM_TERMINATION." AND DATE_FORMAT(club_transaction.termination_date,'%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
 		$this->db->join('club_membership', 'club_membership.mem_id = club_transaction.mem_id', 'LEFT OUTER');
 		$this->db->order_by('club_transaction.termination_date', 'asc');
@@ -43,8 +97,10 @@ class Reports_Model extends CI_Model {
 								'ai_nric'=>'NRIC/FIN No',
 								'mem_name'=>'Membership', 
 								'pay_amt'=>'Amount', 
-								'ai_hp'=>'Phone', 
-								'ai_email'=>'Email', 
+								/* 'ai_hp'=>'Phone', 
+								'ai_email'=>'Email', */ 
+								'create_date'=>'Signup Date',
+								'exp_date'=>'Expiry Date',
 								'termination_date'=>'Termination Date');
 		$result['results'] = $results;
 		
@@ -54,7 +110,7 @@ class Reports_Model extends CI_Model {
 	//need to be cleared
     public function suspension($startdate, $enddate){ 
 		
-		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, ai_hp, ai_email, club_transaction_terms.date_created, term_reason ", false);
+		$this->db->select("pay_ref, CONCAT(ai_fname,' ', ai_lname) AS full_name, ai_nric, mem_name, pay_amt, DATE_FORMAT(club_transaction.create_date, '%d/%m/%Y') AS create_date, DATE_FORMAT(club_transaction.exp_date, '%d/%m/%Y') AS exp_date, DATE_FORMAT(club_transaction_terms.date_created, '%d/%m/%Y') AS date_created, term_reason ", false);
 		$this->db->where("club_transaction_terms.term_type = ".TERM_SUSPENSION." AND DATE_FORMAT(club_transaction_terms.date_created, '%Y-%m-%d' ) BETWEEN '$startdate' AND '$enddate'");
 		$this->db->join('club_transaction', 'club_transaction.tran_id = club_transaction_terms.tran_id', 'LEFT OUTER');
 		$this->db->join('club_membership', 'club_membership.mem_id= club_transaction_terms.mem_id', 'LEFT OUTER');
@@ -66,8 +122,10 @@ class Reports_Model extends CI_Model {
 								'ai_nric'=>'NRIC/FIN No',
 								'mem_name'=>'Membership', 
 								'pay_amt'=>'Amount', 
-								'ai_hp'=>'Phone', 
-								'ai_email'=>'Email', 
+								/* 'ai_hp'=>'Phone', 
+								'ai_email'=>'Email',  */
+								'create_date'=>'Signup Date',
+								'exp_date'=>'Expiry Date',
 								'date_created'=>'Suspension Date', 
 								'term_reason'=>'Reason');
 		$result['results'] = $results;

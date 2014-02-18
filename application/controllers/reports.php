@@ -100,11 +100,16 @@ class Reports extends MY_Controller {
 		
 		$startDate 		= $this->input->get('startdate');
 		$endDate 		= $this->input->get('enddate');
-		$reportType 	= $this->input->get('report_type');
-		$member_type 	= $this->input->get('member_type');
-		$data = array();
+		$option1 		= $this->input->get('option1');
+		$option2 		= $this->input->get('option2');
+		/* $reportType 	= $this->input->get('report_type');
+		$member_type 	= $this->input->get('member_type'); */
+		$data = array('records'=>'');
 		
-		if($reportType == 0){
+		if($_GET){ 
+			$data['records'] = $this->report->membership($option1, $option2, $startDate, $endDate);
+		}
+		/* if($reportType == 0){
 			$data['title'] = 'Signup';
 			$data['records'] = $this->report->signups($member_type, $startDate, $endDate);
 		} 
@@ -132,7 +137,9 @@ class Reports extends MY_Controller {
 		if($reportType == 5){
 			$data['title'] = 'Credit Card';
 			$data['records'] = $this->report->creditcard($startDate, $endDate);
-		} 
+		}  */
+		
+		//echo $this->db->last_query();
 		
 		$data['membership_type'] = $this->common_model->getMembershipTypeList();
 		
