@@ -20,7 +20,7 @@ class Membership extends MY_Controller {
 	public function ajax_membership_transaction(){
 		
 		$this->load->model('Membership_Model', 'membership');	
-		$this->membership->get();
+		$this->membership->get($this->uaccess );
 	}	
 	
 	public function temporary(){
@@ -129,6 +129,9 @@ class Membership extends MY_Controller {
 		$this->load->model('Freebies_model', 'freebies_model');
 		$this->load->model('Schedule_payment_model', 'schedule_payment_model');
 		
+		$check_payment_status = array('Suspend' => 'Suspended', 'Rejected'=>'Rejected', 'Accepted'=>'Accepted' );
+		
+		
 		$token = $this->input->post('token');
 		//$mem_id = $this->common_model->deccrypData($token);
 		$mem_id = $token;
@@ -149,23 +152,26 @@ class Membership extends MY_Controller {
 		$row 								= $this->db->query($sql)->row();
 		$data['row'] 						= $row;
 		
+		//check for date expirate and alert
+		$exp_date = strtotime($row->exp_date);
+		$now = strtotime(date('Y-m-d'));
+
+		$timeDiff = $exp_date-$now; 
+		$numberDays = $timeDiff/86400;  // 86400 seconds in one day  
+		$numberDays = intval($numberDays);	// and you might want to convert to integer			
 		
 		if( $row->pay_status == PAY_STATUS_3 AND $row->payment_mode == PAYMENT_MODE_CC AND $row->full_payment == PAYMENT_CC_MONTLY AND in_array($row->term_type, $this->terms_active) ){
 			
-			//check for date expirate and alert
-			$exp_date = strtotime($row->exp_date);
-			$now = strtotime(date('Y-m-d'));
-
-			$timeDiff = $exp_date-$now; 
-			$numberDays = $timeDiff/86400;  // 86400 seconds in one day  
-			$numberDays = intval($numberDays);	// and you might want to convert to integer		
-			
-			if( $numberDays < 36 ){
+	 	
+			if( $numberDays < 36  AND $row->term_type != TERM_ROLLING_MONTLY ){
 				
 				if( $numberDays < 0 ){
-					$data['alerts'][] = '<p>Expiry date was already past more than a month(s)</p>'; 
+					//$data['alerts'][] = '<p>Expiry date was already past more than a month(s)</p>'; 
+					//$data['alerts'][] = '<p>'.$numberDays.' days to expiry</p>'; 
+					$data['alerts'][] = '<p>'.abs($numberDays).' days past due</p>'; 
 				}else{
-					$data['alerts'][] = '<p>'.$numberDays.' days before membership expires</p>'; 
+					//$data['alerts'][] = '<p>'.$numberDays.' days before membership expires</p>'; 
+					$data['alerts'][] = '<p>'.$numberDays.' days to expiry</p>'; 
 				}
 			}
 			
@@ -186,7 +192,7 @@ class Membership extends MY_Controller {
 					$data['alerts'][] = '<p>No Payment has been made yet on '.date('d/m/Y',strtotime($schedule_payment_date)).' due date</p>';
 				}else{
 					if($check_payment->status != 'Accepted'){
-						$data['alerts'][] = '<p>Payment for '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment->status.'</p>';
+						$data['alerts'][] = '<p>Payment for '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment_status[$check_payment->status].'</p>';
 					}
 				}
 			}else{
@@ -194,7 +200,7 @@ class Membership extends MY_Controller {
 				$check_payment = @$check_payment[0];	 
 				if( count($check_payment) > 0 ){ 
 					if( $check_payment->status != 'Accepted' ){
-						$data['alerts'][] = '<p>Last payment of '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment->status.'</p>';
+						$data['alerts'][] = '<p>Last payment of '.date('d/m/Y',strtotime($check_payment->Tran_Date)).' was '.$check_payment_status[$check_payment->status].'</p>';
 					}
 				}
 
@@ -202,24 +208,38 @@ class Membership extends MY_Controller {
 		}elseif( $row->pay_status == PAY_STATUS_3 AND $row->payment_mode == PAYMENT_MODE_CASH AND in_array($row->term_type, $this->terms_active) ){
 		
 			//check for date expirate and alert
-			$exp_date = strtotime($row->exp_date);
+			/* $exp_date = strtotime($row->exp_date);
 			$now = strtotime(date('Y-m-d'));
 
 			$timeDiff = $exp_date-$now; 
 			$numberDays = $timeDiff/86400;  // 86400 seconds in one day  
-			$numberDays = intval($numberDays);	// and you might want to convert to integer		
+			$numberDays = intval($numberDays);	// and you might want to convert to integer */		
 			
-			if( $numberDays < 36 ){
+			if( $numberDays < 36  AND $row->term_type != TERM_ROLLING_MONTLY){
 				
 				if( $numberDays < 0 ){
-					$data['alerts'][] = '<p>Expired date was already past more than a month(s)</p>'; 
+					//$data['alerts'][] = '<p>'.$numberDays.' days to expiry</p>'; 
+					$data['alerts'][] = '<p>'.abs($numberDays).' days past due</p>'; 
+					//$data['alerts'][] = '<p>Expired date was already past more than a month(s)</p>'; 
 				}else{
-					$data['alerts'][] = '<p>'.$numberDays.' days before membership expired</p>'; 
+					//$data['alerts'][] = '<p>'.$numberDays.' days before membership expired</p>'; 
+					$data['alerts'][] = '<p>'.$numberDays.' days to expiry</p>'; 
 				}
 			}
 		
 		}else{
-
+		
+			if( $numberDays < 36  AND $row->term_type != TERM_ROLLING_MONTLY){
+				
+				if( $numberDays < 0 ){
+					//$data['alerts'][] = '<p>'.$numberDays.' days to expiry</p>'; 
+					$data['alerts'][] = '<p>'.abs($numberDays).' days past due</p>'; 
+					//$data['alerts'][] = '<p>Expired date was already past more than a month(s)</p>'; 
+				}else{
+					//$data['alerts'][] = '<p>'.$numberDays.' days before membership expired</p>'; 
+					$data['alerts'][] = '<p>'.$numberDays.' days to expiry</p>'; 
+				}
+			}	 
 		}		
 		  
 		$data['membership_type_month'] 		= @$this->common_model->getMembershipType($row->mem_type)->month; 
@@ -340,7 +360,7 @@ class Membership extends MY_Controller {
 		
 		$set['mh_curr_condi'] 	= $this->input->post('mh_curr_condi');
 		$set['mh_medicine'] 	= $this->input->post('mh_medicine');
-		
+		 
 		$this->db->where('mem_id', $mem_id);
 		if( $this->db->update('club_membership', $set) ){
 			$response['status'] = true;
@@ -361,6 +381,30 @@ class Membership extends MY_Controller {
 		
 		echo json_encode($response);
 	}
+	
+	public function ajax_membership_delete(){
+	
+		$json = array('status'=>false, 'url'=>'', 'msg'=>'Failed to Delete');	
+		
+		$mem_id = $this->input->post("delid");
+		$info = $this->db->get_where('club_transaction', array('mem_id'=>$mem_id))->row();
+		
+		if( $info->pay_status == '0' AND $this->uaccess ){
+		
+			$sql= "delete  FROM `club_transaction` WHERE mem_id = '".$mem_id."' limit 1"; 
+			if($this->db->query($sql) ){
+			
+				$this->db->delete('club_membership', array('mem_id'=>$mem_id));
+				
+				$json['status'] = true;
+				$json['url'] 	= base_url().'membership/';
+				$json['msg'] 	= 'Delete Successfully';
+			}		
+		}
+		
+		echo json_encode($json);		
+	
+	}	
 	
 	//upload profile photo
 	function do_upload() { 

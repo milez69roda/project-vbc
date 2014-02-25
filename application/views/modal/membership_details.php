@@ -302,7 +302,7 @@
 									</tr>									
 									<tr>
 										<td><strong>Birthday</strong></td>
-										<td><input type="text" name="birthday" id="birthday" value="<?php echo date('d/m/Y',strtotime($row->ai_dob)); ?>" class="col-sm-4" />dd/mm/yyyy</td>
+										<td><input type="text" name="birthday" id="birthday" value="<?php echo date('d/m/Y',strtotime($row->ai_dob)); ?>" class="col-sm-4" />&nbsp; dd/mm/yyyy</td>
 									</tr>									
 									<tr>
 										<td><strong>Amount</strong></td>
@@ -487,7 +487,7 @@
 												if( !in_array($row->term_type, $this->terms_active) ){
 													$option = '<option value="'.TERM_ACTIVE.'"> Activate / Reactivate </option>';
 												}else{
-													$option = '<option value="'.TERM_ROLLING_MONTLY.'">Rolling Montly </option>';
+													$option = '<option value="'.TERM_ROLLING_MONTLY.'">Rolling Monthly </option>';
 													if( $membership_type_month == 6 ){ $option .= '<option value="'.TERM_EXTEND_6.'">Extend 6 Months</option>'; }
 													if( $membership_type_month == 12 ){ $option .= '<option value="'.TERM_EXTEND_12.'">Extend 12 Months</option>'; }
 													if( $this->uaccess ){
@@ -700,7 +700,7 @@
 						</select>	
 						</div>-->	
 						<!--<button type="button" class="btn btn-warning btn-sm" onclick="generatereports.pdfinvoicemember('<?php echo $row->pay_ref?>')">Generete PDF Invoice</button>-->			
-						<a class="btn btn-warning btn-sm" href="reports/invoiceindividual/?bypass=1&ref=<?php echo $row->pay_ref?>">Generete Invoice</a>
+						<a class="btn btn-warning btn-sm" href="reports/invoiceindividual/?bypass=1&ref=<?php echo $row->pay_ref?>">Generate Invoice</a>
 						<br />
 						<br />
 					</div>

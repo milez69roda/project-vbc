@@ -39,11 +39,12 @@ var membershiptransaction = {
 		if( !processing ){ 
 			if( confirm('Do you want to delete?') ){
 				processing = true;
-				$.post('membership/ajax_membership_transaction_delete',{delid:delid}, function(json){
+				$.post('membership/ajax_membership_delete?_t='+(new Date).getTime(),{delid:delid}, function(json){
 					processing = false;
 					if(json.status){							
 						alert(json.msg);
-						window.location = json.url;
+						//window.location = json.url;
+						if( typeof oTable !== 'undefined' ) oTable.fnDraw();
 					}else{
 						alert(json.msg);
 					}
@@ -215,6 +216,12 @@ var membershiptransaction = {
 		}
 
 		return false;	
+	}
+}
+
+var updates = {
+	modal: function(){
+	
 	}
 }
 

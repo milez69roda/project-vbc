@@ -20,18 +20,27 @@ class Export extends MY_Controller {
 
 		$startDate 		= (isset($_GET['startdate']))?$this->input->get('startdate'):date('Y-m-d');
 		$endDate 		= (isset($_GET['enddate']))?$this->input->get('enddate'):date('Y-m-d');
-		$option1 		= $this->input->get('option1');
-		$option2 		= $this->input->get('option2');
+
 		
 		/* $member_type 	= $this->input->get('member_type');
-		$reportType 	= $this->input->get('report_type'); 
-		$report_page 	= trim($this->input->get('report_page'));*/
+		$reportType 	= $this->input->get('report_type'); */
+		$report_page 	= trim(@$this->input->get('report_page'));
 		
 		$title = 'membership_report';
 		
-		
-		$records = $this->report->membership($option1, $option2, $startDate, $endDate);
-		
+		if( $report_page == "terms" ){
+			$title 		= 'Terms';
+			$reportType 	= $this->input->get('report_type'); 
+			$records 	= $this->report->terms($startDate, $endDate, $reportType);	 
+		}elseif( $report_page == "freebies" ){
+			$title 		= 'Freebies';
+			$reportType 	= $this->input->get('report_type'); 
+			$records 	= $this->report->freebies($startDate, $endDate, $reportType);	 
+		}else{		
+			$option1 		= $this->input->get('option1');
+			$option2 		= $this->input->get('option2');		
+			$records = $this->report->membership($option1, $option2, $startDate, $endDate);
+		}
 		/* if( $report_page == "membership" ){
 			if($reportType == 0){
 				$title 		= 'Signup';

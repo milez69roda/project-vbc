@@ -27,7 +27,7 @@ class MY_Controller extends CI_Controller {
 			TERM_EXPIRED 		=> 'Expired',
 			TERM_SUSPENSION 	=> 'Suspension',
 			TERM_TERMINATION 	=> 'Termination',
-			TERM_ROLLING_MONTLY => 'Rolling Montly',
+			TERM_ROLLING_MONTLY => 'Rolling Monthly',
 			TERM_DELETED 		=> 'Deleted',
 			TERM_EXTEND_6 		=> 'Extend 6 Months',
 			TERM_EXTEND_12 		=> 'Extend 12 Months' 

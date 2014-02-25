@@ -6,7 +6,7 @@ class Membership_Model extends CI_Model {
 		parent::__construct(); 
 	}  
 	
-    function get(){
+    function get($uaccess ){
    
 		$sel_sort_view = trim($this->input->get('sel_sort_view'));
 	   //'ai_nric', 
@@ -269,8 +269,11 @@ class Membership_Model extends CI_Model {
 					$rows[] = ($row->active_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->active_date));
 					$rows[] = ($row->exp_date == "0000-00-00")?'':date('d/m/Y',strtotime($row->exp_date));  
 					//$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>|<a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$row->tran_id.'\')">Delete</a>|<a href="javascript:void(0)" onclick="membershiptransaction.activate(\''.$row->pay_ref.'\')">ACT</a>';	
-					$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a>';	
-					
+					if( $this->uaccess  ){
+						$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a> | <a href="javascript:void(0)" onclick="membershiptransaction.delete(\''.$enc_mem_id.'\')">Delete</a>';	
+					}else{
+						$rows[] = '<a href="'.$link_details.'" onclick="membershiptransaction.details(\''.$enc_mem_id.'\')">Details</a> ';	
+					}
 					$output['aaData'][] = $rows;
 				} 
 			}  
